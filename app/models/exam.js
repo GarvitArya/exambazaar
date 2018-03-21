@@ -10,6 +10,7 @@ var examSchema = mongoose.Schema({
     fullname: {type: String},
     exam_page_name: {type: String},
     coaching_page_name: {type: String},
+    coaching_page_slug: {type: String},
     top_coaching_name: {type: String},
     urlslug: {type: String},
     top_coaching_urlslug: {type: String},

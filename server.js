@@ -370,7 +370,8 @@ var allStates = [
 '/topCoaching/:categoryName/:subCategoryName',
 '/reviews/:top_coaching_urlslug',
 '/stream/:categoryName/:subCategoryName/:cityName',
-'/ebinternal/c/:topURLSlug',
+/*'/:topURLSlug',*/
+'/:examslug/:cityslug',
 '/ebinternal/school',
 '/stream/:categoryName/:subCategoryName/:cityName/:coachingId',
 '/thankyou',

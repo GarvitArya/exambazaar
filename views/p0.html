@@ -207,15 +207,22 @@
             <div layout="row" layout-align="start center" class="paddingTB5h text-center width100" hide-xs>
                 <div layout="row" layout-align="start center" class="width100" layout-wrap>
                     <div layout="column" layout-align="center center" flex-gt-sm="25" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
-                    <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">
-                    <!--ui-sref="category({ categoryName:{{'stream.name'}} })"-->    
+                    <!--<div layout="row" layout-align="center center" class="p0Button width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">   
                         <div class="p0Icon">
                             <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
                         </div>
                         <div flex layout="row" layout-align="start center" class="">
                             <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
                         </div>
-                    </div>
+                    </div>-->
+                    <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="findCoaching2({ examslug:{{'streamexams[stream.stream][0].coaching_page_slug'}}, cityslug:{{'searchCitySlug'}} })">   
+                        <div class="p0Icon">
+                            <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
+                        </div>
+                        <div flex layout="row" layout-align="start center" class="">
+                            <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
+                        </div>
+                    </div>    
                     </div>
                 </div>
             </div>
@@ -223,15 +230,22 @@
             <div layout="row" layout-align="start center" class="paddingTB5h text-center width100" hide-gt-xs>
                 <div layout="row" layout-align="start center" class="width100" layout-wrap>
                     <div layout="column" layout-align="center center" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
-                    <div layout="row" layout-align="center center" class="p0ButtonXS width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">
-                    <!--ui-sref="category({ categoryName:{{'stream.name'}} })"-->    
+                    <!--<div layout="row" layout-align="center center" class="p0ButtonXS width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">  
                         <div class="p0Icon">
                             <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
                         </div>
                         <div flex layout="row" layout-align="start center" class="">
                             <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
                         </div>
-                    </div>
+                    </div>-->
+                    <div layout="row" layout-align="center center" class="p0ButtonXS width100" ui-sref="findCoaching2({ examslug:{{'streamexams[stream.stream][0].coaching_page_slug'}}, cityslug:{{'searchCitySlug'}} })">  
+                        <div class="p0Icon">
+                            <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
+                        </div>
+                        <div flex layout="row" layout-align="start center" class="">
+                            <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
+                        </div>
+                    </div>    
                     </div>
                 </div>
             </div>    

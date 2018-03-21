@@ -87,7 +87,7 @@ router.get('/', function(req, res) {
 router.get('/basic', function(req, res) {
     //console.log('Here');
     exam
-        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1, seoname: 1, active:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1, urlslug: 1})
+        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1, seoname: 1, active:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1, urlslug: 1,coaching_page_slug: 1 })
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){
@@ -234,7 +234,7 @@ router.get('/streamexam', function(req, res) {
             var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, logo: a.logo, rank: a.rank, active: a.active, name: a.name, degreeblogs: []};});
 
             var allActiveExams = exam
-                .find({stream: {$exists: true}},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1, urlslug: 1, exam_page_name: 1, top_coaching_name: 1, top_coaching_urlslug: 1})
+                .find({stream: {$exists: true}},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1, urlslug: 1, exam_page_name: 1, top_coaching_name: 1, top_coaching_urlslug: 1, coaching_page_name: 1, coaching_page_slug: 1})
                 .sort("-rank")
                 .exec(function (err, allActiveExams) {
                 if (!err){
@@ -343,11 +343,49 @@ router.get('/examUrlSlug/:examUrlSlug', function(req, res) {
 router.get('/exambasic/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
-        .findOne({'name': examName}, {logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1, top_coaching_urlslug: 1})
+        .findOne({'name': examName}, {logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1, top_coaching_urlslug: 1, coaching_page_slug: 1})
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);
             res.json(thisExam);
+        } else {throw err;}
+    });
+});
+
+function slugify(string) {
+  return string
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+};
+
+router.get('/coaching_page_slug', function(req, res) {
+    
+    var allExams = exam
+        .find({}, {coaching_page_name: 1})
+        .exec(function (err, allExams) {
+        if (!err){
+            res.json(true);
+            
+            allExams.forEach(function(thisExam, index){
+                if(thisExam.coaching_page_name){
+                    var examCoachingName = thisExam.coaching_page_name + " Coaching";
+                    var coaching_page_slug = slugify(examCoachingName);
+                    if(coaching_page_slug){
+                        thisExam.coaching_page_slug = coaching_page_slug;
+                        thisExam.save(function(err, thisExam) {
+                            if (err) return console.error(err);
+                            console.log("Exam saved " + thisExam._id);
+                        });
+                    }
+                }
+                
+            });
         } else {throw err;}
     });
 });

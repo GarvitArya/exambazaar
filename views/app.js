@@ -945,6 +945,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamPapers = function() {
             return $http.get('/api/exams/papers');
         };
+        this.coaching_page_slug = function() {
+            return $http.get('/api/exams/coaching_page_slug');
+        };
+        
     }]);
         
     exambazaar.service('SendGridService', ['$http', function($http) {
@@ -1779,12 +1783,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getUrlslugs = function() {
             return $http.get('/api/urlslugs');
         };
+        this.fillcount = function() {
+            return $http.get('/api/urlslugs/fillcount');
+        };
+        
         this.getAllUrlslugs = function() {
             return $http.get('/api/urlslugs/all');
         };
-        this.getUrlslugByName = function(urlslugName) {
-            return $http.get('/api/urlslugs/urlslug/'+urlslugName, {urlslugName: urlslugName});
+        this.getUrlslugByName = function(examcityslug) {
+            return $http.post('/api/urlslugs/urlslug', examcityslug);
         };
+        this.geturlslugByExamCity = function(examCityName) {
+            return $http.post('/api/urlslugs/geturlslugByExamCity', examCityName);
+        };
+        
+        
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/urlslugs/addLogo',newLogoForm);
         };
@@ -2535,6 +2548,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
             
+            
+            $scope.$watch('searchCity', function (newValue, oldValue, rootScope){
+                if(newValue){   
+                    $rootScope.searchCitySlug = slugify(newValue);
+                }
+            });
             $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
             $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 28,000+ institutes in 100+ cities";
             $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching, 926e173632ea3a4e567a";
@@ -2841,8 +2860,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("p4Controller2", 
     [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', 'thisStreamExamCity', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification, thisStreamExamCity){
         
+        
+        
         var topURLSlug = $stateParams.topURLSlug;
+        var examslug = $stateParams.examslug;
+        var cityslug = $stateParams.cityslug;
         var slugInfo = thisStreamExamCity.data;
+        
+        var cURL = "https://www.exambazaar.com/" + examslug + "/" + cityslug;
+        $scope.canonicalFlip = true;
+        $scope.canonicalUrl = cURL;
+        console.log("Canonical URL is: " + $scope.canonicalUrl);
         
         $scope.categoryName = slugInfo.streamName;
         $scope.subCategoryName = slugInfo.examName;
@@ -2863,9 +2891,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.setSearch = function(){
             if($scope.selectedStream && $scope.selectedCity){
                 
-                var title = $rootScope.streamexams[$scope.selectedStream.stream][0].seoname + " Coaching in " + $scope.selectedCity.name;
-                var slug = slugify(title);
-                $state.go('findCoaching2', {topURLSlug: slug});
+                //var title = $rootScope.streamexams[$scope.selectedStream.stream][0].seoname + " Coaching in " + $scope.selectedCity.name;
+                
+                var examslug = $rootScope.streamexams[$scope.selectedStream.stream][0].coaching_page_slug;
+                var cityslug = slugify($scope.selectedCity.name);
+                
+                /*var slug = slugify(title);
+                $state.go('findCoaching2', {topURLSlug: slug});*/
+                $state.go('findCoaching2', {examslug: examslug, cityslug: cityslug});
+                
                 //$state.go('findCoaching', {categoryName: $scope.selectedStream.streamName, subCategoryName: $rootScope.streamexams[$scope.selectedStream.stream][0].name, cityName: $scope.selectedCity.name});
             
             }else{
@@ -2878,7 +2912,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($scope.selectedStream && $scope.selectedCity){
                 var title = exam.seoname + " Coaching in " + $scope.selectedCity.name;
                 var slug = slugify(title);
-                $state.go('findCoaching2', {topURLSlug: slug});
+                
+                //var title = $rootScope.streamexams[$scope.selectedStream.stream][0].seoname + " Coaching in " + $scope.selectedCity.name;
+                
+                var examName = exam.coaching_page_name + " Coaching";
+                var examslug = exam.coaching_page_slug;
+                var cityslug = slugify($scope.selectedCity.name);
+                
+                
+                $state.go('findCoaching2', {examslug: examslug, cityslug: cityslug});
             
             }else{
                 Notification.warning({message: 'Please select stream & city!',  positionY: 'top', positionX: 'right', delay: 5000});
@@ -3132,11 +3174,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("p4Controller", 
-    [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification){
+    [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', 'thisurlslug', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification, thisurlslug){
         
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
+        var thisurlslug = thisurlslug.data;
+        
+        if(thisurlslug){
+            var cURL = "https://www.exambazaar.com/" + thisurlslug.examslug + "/" + thisurlslug.cityslug;
+            $scope.canonicalFlip = true;
+            $scope.canonicalUrl = cURL;
+            console.log("Canonical URL is: " + $scope.canonicalUrl);
+        }
         
         $scope.examBadgeClass = function(thisExam){
             
@@ -17508,6 +17558,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });       
             };
             
+            $scope.fillcount = function(){
+                
+                urlslugService.fillcount().success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             $scope.buildUrlslugs = function(){
                 var urlslugForm = {};
                 urlslugService.bulksave(urlslugForm).success(function (data, status, headers) {
@@ -32040,6 +32102,14 @@ function getLatLng(thisData) {
                 console.log('Error ' + data + ' ' + status);
             });
         };
+        $scope.coaching_page_slug = function () {
+            ExamService.coaching_page_slug().success(function (data, status, headers) {
+                $scope.showSavedDialog();
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+        };    
             
         $scope.addExam = function () {
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
@@ -36196,34 +36266,13 @@ function getLatLng(thisData) {
                     function(blogpostService,$stateParams){
                     return blogpostService.suggestedblogs($stateParams.subCategoryName);
                 }],*/
-                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
-                }],
-                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
-                }],
-                
-            }
-        })
-        .state('findCoaching2', {
-            url: '/ebinternal/c/:topURLSlug',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    
-                },
-                'body':{
-                    templateUrl: 'p4.html',
-                    controller: 'p4Controller2',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisStreamExamCity: ['urlslugService','$stateParams',
+                thisurlslug: ['urlslugService','$stateParams',
                     function(urlslugService,$stateParams){
-                    return urlslugService.getUrlslugByName($stateParams.topURLSlug);
+                    var examCityName = {
+                        examName: $stateParams.subCategoryName,
+                        cityName: $stateParams.cityName,
+                    };   
+                    return urlslugService.geturlslugByExamCity(examCityName);
                 }],
                 loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
@@ -36234,6 +36283,7 @@ function getLatLng(thisData) {
                 
             }
         })
+        
         .state('school', {
             url: '/ebinternal/school',
             views: {
@@ -39780,8 +39830,70 @@ function getLatLng(thisData) {
                 }],
                 
             }
+        })
+        .state('findCoaching2', {
+            url: '/:examslug/:cityslug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'p4.html',
+                    controller: 'p4Controller2',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStreamExamCity: ['urlslugService','$stateParams',
+                    function(urlslugService,$stateParams){
+                    var examcityslug = {
+                        examslug: $stateParams.examslug,
+                        cityslug: $stateParams.cityslug,
+                    };  
+                    return urlslugService.getUrlslugByName(examcityslug);
+                }],
+                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
+                }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
+                
+            }
         });
-        
+        /*.state('findCoaching2', {
+            url: '/:topURLSlug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'p4.html',
+                    controller: 'p4Controller2',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStreamExamCity: ['urlslugService','$stateParams',
+                    function(urlslugService,$stateParams){
+                    return urlslugService.getUrlslugByName($stateParams.topURLSlug);
+                }],
+                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
+                }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
+                
+            }
+        });
+        */
             //$locationProvider.html5Mode(true).hashPrefix('#');
             $locationProvider.html5Mode(true);
             //$locationProvider.hashPrefix("!");

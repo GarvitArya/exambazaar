@@ -72,7 +72,11 @@ router.post('/bulksave', function(req, res) {
         allExams.forEach(function(thisExam, eindex){
             allCities.forEach(function(thisCity, cindex){
                 var title = thisExam.coaching_page_name + " Coaching in " + thisCity.name;
+                var title1 = thisExam.coaching_page_name + " Coaching";
+                var title2 = thisCity.name;
                 var slug = slugify(title);
+                var slug1 = slugify(title1);
+                var slug2 = slugify(title2);
                 
                 var existingUrlslug = urlslug.findOne({ 'slug': slug },function (err, existingUrlslug) {
                 if(existingUrlslug){
@@ -88,6 +92,8 @@ router.post('/bulksave', function(req, res) {
                 }else{
                    var this_urlslug = new urlslug({
                         slug : slug,
+                        examslug : slug1,
+                        cityslug : slug2,
                         title : title,
                         stream : thisExam.stream,
                         exam : thisExam._id,
@@ -143,6 +149,44 @@ router.get('/', function(req, res) {
     } else {throw err;}
     });
 });
+
+router.get('/fillcount', function(req, res) {
+    var allurlslugs = urlslug.find({}, function(err, allurlslugs) {
+    if (!err){
+        res.json(true);
+        allurlslugs.forEach(function(thisUrlSlug, uindex){
+            var thiscity = thisUrlSlug.city;
+            var thisexam = thisUrlSlug.exam;
+            
+            var thiscity = city
+                .findOne({ '_id': thiscity },{name : 1})
+                .exec(function (err, thiscity) {
+                if (!err){ 
+                    var cityName = thiscity.name;
+                    coaching.count({city: cityName, exams: thisexam }, function(err, docs) {
+                    if (!err){
+                        
+                        thisUrlSlug.count = docs;
+                        thisUrlSlug.save(function(err, thisUrlSlug) {
+                            if (err) return console.error(err);
+                            console.log(thisUrlSlug._id + " saved!");
+                        });
+                        
+                        
+                    } else {throw err;}
+                    });
+                    
+                    
+                } else {throw err;}
+            });
+            
+        });
+        
+        
+        
+    } else {throw err;}
+    });
+});
     
 router.get('/count', function(req, res) {
     urlslug.count({}, function(err, docs) {
@@ -169,7 +213,93 @@ router.get('/edit/:urlslugId', function(req, res) {
     });
 });
 
-router.get('/urlslug/:urlslugName', function(req, res) {
+router.post('/urlslug', function(req, res) {
+    var examcityslug = req.body;
+    
+    var examslug = examcityslug.examslug;
+    var cityslug = examcityslug.cityslug;
+    //console.log("Urlslug is " + urlslugName);
+    var thisUrlslug = urlslug
+        .findOne({ 'examslug': examslug, 'cityslug': cityslug },{})
+        .exec(function (err, thisUrlslug) {
+        if (!err){
+            if(thisUrlslug){
+                
+                var uexam = thisUrlslug.exam;
+                var ucity = thisUrlslug.city;
+                var slugInfo = {
+                        
+                };
+                
+                var thisExam = exam
+                .findOne({ '_id': uexam },{name: 1, stream: 1})
+                .exec(function (err, thisExam) {
+                if (!err){
+                    slugInfo.examName = thisExam.name;
+                    var ustream = thisExam.stream;
+                    
+                    var thisStream = stream
+                    .findOne({ '_id': ustream },{name: 1})
+                    .exec(function (err, thisStream) {
+                    if (!err){
+                        console.log(thisStream);
+                        slugInfo.streamName = thisStream.name;
+                        var thisCity = city
+                        .findOne({ '_id': ucity },{name: 1})
+                        .exec(function (err, thisCity) {
+                        if (!err){
+                            slugInfo.cityName = thisCity.name;
+                            res.json(slugInfo);
+                        } else {throw err;}
+                        });
+                    }else {throw err;}
+                    });
+                } else {throw err;}
+                });
+                
+            }else{
+                res.json(null);
+            }
+            
+            //process.exit();
+        } else {throw err;}
+    });
+});
+
+router.post('/geturlslugByExamCity', function(req, res) {
+    var examCityName = req.body;
+    
+    var examName = examCityName.examName;
+    var cityName = examCityName.cityName;
+    var cityslug = slugify(cityName);
+    
+    var thisExam = exam
+        .findOne({ 'name': examName},{name: 1, _id: 1, coaching_page_name: 1})
+        .exec(function (err, thisExam) {
+            
+            if(thisExam){
+                
+                var examTitle = thisExam.coaching_page_name + " Coaching";
+                var examslug = slugify(examTitle);
+                var examcityslug = {
+                    examslug: examslug,
+                    cityslug: cityslug,
+                };
+                res.json(examcityslug);
+                
+                
+            }else{
+                res.json(null);
+            }
+    });
+    
+    
+    
+});
+
+router.post('/streamExamCity', function(req, res) {
+    
+    var thisUrlslug = req.body;
     var urlslugName = req.params.urlslugName;
     //console.log("Urlslug is " + urlslugName);
     var thisUrlslug = urlslug
