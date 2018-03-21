@@ -11,6 +11,7 @@ var urlslugSchema = mongoose.Schema({
     stream: { type: Schema.ObjectId, ref: 'stream' },
     exam: { type: Schema.ObjectId, ref: 'exam' },
     city: { type: Schema.ObjectId, ref: 'city' },
+    count: { type: Number },
 });
 urlslugSchema.plugin(deepPopulate);
 module.exports = mongoose.model('urlslug', urlslugSchema);
