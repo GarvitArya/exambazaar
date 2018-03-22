@@ -1,3 +1,4 @@
-# Educhronicle.com
+# Exambazaar.com
 
-[Educhronicle.com](https://www.educhronicle.com)
+[Exambazaar.com](https://www.exambazaar.com/)
+What are you looking for?
