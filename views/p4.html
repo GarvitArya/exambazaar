@@ -475,7 +475,8 @@
             
             <div infinite-scroll='allCoachings.nextPage()' infinite-scroll-disabled='allCoachings.busy' infinite-scroll-distance='1' layout="column" layout-align="start start" class="width100">
                 
-                <div layout="column"  ng-repeat="coachingGroup in allCoachings.items | orderBy: ['-examCirfScore','-count','expertReview', 'logo']" class="fourthFont width100 marginB20">
+                <div layout="column"  ng-repeat="coachingGroup in allCoachings.items | orderBy: ['expertReview']" class="fourthFont width100 marginB20">
+                    <!--| orderBy: ['-examCirfScore','-count','expertReview', 'logo']-->
                     <div layout="row" layout-align="center center" layout-xs="column" ng-if="$index%7 == 1" class="min10vh padding20 width100 blueBackground text-white marginB20 font14">
                         <div class="marginR20">Would you like us to do an Expert Review for you?</div>
                         <md-button class="md-danger md-small tolowercase font14 margin0" ui-sref="contact" target="_blank"> 

@@ -2818,7 +2818,7 @@ router.post('/CoachingStream', function(req, res) {
                     logo: { $addToSet: "$logo" },
                     latlng: { $addToSet: "$latlng" },
                 }},
-                {$sort:{"count":-1, "_id.groupName": 1 }},
+                {$sort:{"expertReview":1, "count":-1, "_id.groupName": 1 }},
                 {$limit: skip + limit},
                 {$skip: skip},
 
