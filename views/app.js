@@ -2463,6 +2463,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $rootScope.searchCity = cityName;
                 
             };
+            
             var getLocationFromIP = function(){
                 if($cookies.getObject('ip')){
                     var ip = $cookies.getObject('ip');
@@ -2496,7 +2497,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.detectLocation = function(){
                 $geolocation.getCurrentPosition({
-                timeout: 60000
+                timeout: 6000
                  }).then(function(position) {
                     $cookies.putObject('userlocation', position);
                     $scope.userlocation = position;
@@ -2544,6 +2545,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                 );   
             };
+            $rootScope.searchCity = 'Delhi';
             $scope.detectLocation();
             
             
