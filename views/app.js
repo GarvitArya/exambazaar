@@ -36173,7 +36173,7 @@ function getLatLng(thisData) {
             }
         })
         .state('coachingPreTest', {
-            url: '/pre-jee-test',
+            url: '/iit-jee-pre-test',
             views: {
                 'header':{
                     templateUrl: 'header.html',
