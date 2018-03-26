@@ -13583,7 +13583,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
                 }
             }else{
-                if($state.current.name == 'pbc' || $state.current.name == 'pbc2'){
+                if($state.current.name == 'pbc' || $state.current.name == 'pbc2' || $state.current.name == 'coachingPreTest'){
                     console.log('Reloading');
                     $state.reload();
                 }
@@ -13763,7 +13763,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.sessionuser = sessionuser;
                 
                 
-                if($state.current.name == 'pbc' || $state.current.name == 'pbc2'){
+                if($state.current.name == 'pbc' || $state.current.name == 'pbc2' || $state.current.name == 'coachingPreTest'){
                     $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
                 }
                 
@@ -22759,7 +22759,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     
             };
             
-            $rootScope.pageTitle = "IIT JEE Coaching Pre-test (For Class 10th to 11th moving students)";
+            $rootScope.pageTitle = "IIT JEE Coaching Pre-Test (For Class 10th to 11th moving students)";
             $rootScope.pageDescription = "Get upto 25% discount for admission at Pooja Bansal Classes, Jaipur, Elite Batch of 30 | IIT Coaching in Jaipur for Xth to XIth moving Students";
             $rootScope.pageKeywords = "IIT Coaching in jaipur, coaching in jaipur, jee coaching in jaipur, iit coaching discount, pooja bansal classes admission, coaching discount";
             $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pretest_fb_banner.png";
