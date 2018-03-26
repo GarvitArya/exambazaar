@@ -22760,7 +22760,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $rootScope.pageTitle = "IIT JEE Coaching Pre-Test (For Class 10th to 11th moving students)";
-            $rootScope.pageDescription = "Get upto 25% discount for admission at Pooja Bansal Classes, Jaipur, Elite Batch of 30 | IIT Coaching in Jaipur for Xth to XIth moving Students";
+            $rootScope.pageDescription = "Get upto 25% discount for admission at IIT JEE Coaching of your choice near you | IIT Coaching for Xth to XIth moving Students";
             $rootScope.pageKeywords = "IIT Coaching in jaipur, coaching in jaipur, jee coaching in jaipur, iit coaching discount, pooja bansal classes admission, coaching discount";
             $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pretest_fb_banner.png";
     }]);
