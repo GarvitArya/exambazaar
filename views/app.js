@@ -36173,7 +36173,7 @@ function getLatLng(thisData) {
             }
         })
         .state('coachingPreTest', {
-            url: '/pre-jee-coaching-test',
+            url: '/pre-jee-test',
             views: {
                 'header':{
                     templateUrl: 'header.html',

@@ -380,7 +380,7 @@ var allStates = [
 '/pbcAdmission',    
 '/pooja-bansal-classes-jaipur-admission-2018',
 '/pbc',
-'/pre-jee-coaching-test',
+'/pre-jee-test',
     
 ];
 
