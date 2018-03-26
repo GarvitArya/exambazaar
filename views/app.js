@@ -22697,6 +22697,74 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]);
     
+    exambazaar.controller("coachingPreTestController", 
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize){
+            if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.signup = data;
+                    
+                    var viewForm = {
+                        state: $state.current.name,
+                        claim: false
+                    };
+                    if($scope.user && $scope.user.userId){
+                        viewForm.user = $scope.user.userId
+                    }
+                    //console.log(JSON.stringify(viewForm));
+                    if($cookies.getObject('ip')){
+                        var ip = $cookies.getObject('ip');
+                        viewForm.ip = ip;
+                    }
+                    viewService.saveview(viewForm).success(function (data, status, headers) {
+                        //console.log('View Marked');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
+                    
+                });
+            }
+            }else{
+                var viewForm = {
+                    state: $state.current.name,
+                    claim: false
+                };
+                if($scope.user && $scope.user.userId){
+                    viewForm.user = $scope.user.userId
+                }
+                //console.log(JSON.stringify(viewForm));
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    viewForm.ip = ip;
+                }
+                viewService.saveview(viewForm).success(function (data, status, headers) {
+                    //console.log('View Marked');
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });
+                
+            }
+            $scope.startPBCTest = function(){
+                
+                if (screenSize.is('xs')){
+                    $state.go('mobileassessment', {testId: '5aae0cae3bacc109b0907d30'});
+
+                }else{
+                    $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
+                }
+                    
+            };
+            
+            $rootScope.pageTitle = "IIT JEE Coaching Pre-test (For Class 10th to 11th moving students)";
+            $rootScope.pageDescription = "Get upto 25% discount for admission at Pooja Bansal Classes, Jaipur, Elite Batch of 30 | IIT Coaching in Jaipur for Xth to XIth moving Students";
+            $rootScope.pageKeywords = "IIT Coaching in jaipur, coaching in jaipur, jee coaching in jaipur, iit coaching discount, pooja bansal classes admission, coaching discount";
+            $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pretest_fb_banner.png";
+    }]);
+        
     exambazaar.controller("pbcController", 
         [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize){
             if($cookies.getObject('sessionuser')){
@@ -36098,6 +36166,22 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'pbc.html',
                     controller: 'pbcController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('coachingPreTest', {
+            url: '/pre-jee-coaching-test',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+
+                },
+                'body':{
+                    templateUrl: 'jee-main-pre-test.html',
+                    controller: 'coachingPreTestController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'

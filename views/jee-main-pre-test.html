@@ -1,0 +1,289 @@
+<style>
+    input[type="text"],input[type="email"], input[type="password"]
+    {
+        font-size: 13px;
+        color: #333333;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 20px;
+        padding-right: 5px;
+        border: solid 1px gainsboro;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus, input[type="password"]:hover, input[type="password"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .availText{
+        color: white;
+    }
+    .availText:hover{
+        color: #FF5A5F;
+    }
+    a.readLink{
+        color: black;
+    }
+    a.readLink:hover{
+        color: #20C39A;
+    }
+    .column1{
+        padding: 2px;
+    }
+    .column2{
+        padding: 2px;
+    }
+    .numberLogo{
+        height: 75px;
+    }
+    
+    .blogHeader{
+        min-height: 50vh;
+        width:100%;
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+    .blogHeaderxs{
+        min-height: 60vh;
+        width:100%;
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+    .blogContent{
+        text-align: left;
+    }
+    .facultyPhoto{
+        height: 200px;
+        border-radius: 10%;
+    }
+</style>
+
+
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div layout="column" layout-align="start start" class="textBlack whiteBackground p0baseFont width100">
+    <div hide-xs layout="row" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url(images/pbc/pretest_banner4.png)'}">
+        <!--<div layout="row" layout-align="center center" class="width100">
+        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="padding20 text-white text-center ">
+            <div layout="column" layout-align="center center" id="blogPostHeader" class="transaprentBackground padding20">
+                
+                <h2 class="text-white h2Font margin10 blogSubTitle">
+                    Exambazaar brings upto 25% off on fees
+                </h2>
+                
+            </div>
+            
+        </div>
+        </div>-->
+    </div>
+    <div hide-gt-xs layout="row" layout-align="center center" class="width100 blogHeaderxs" ng-style="{'background-image':'url(images/pbc/landing_page_mobile.jpg)'}">
+    </div>
+    
+    <div layout="row" layout-align="center center" class="width100">
+    <div flex-xs="90" flex-gt-xs="90" layout="column" layout-align="start start" class="width100">
+        
+    <div layout="column" layout-align="start start" class="width100 marginT20 marginB10">    
+        <h1 class="pageTitleFont marginTB5 bold">
+            Exambazaar's IIT JEE Pre-Test
+        </h1>
+        <h3 class="h3Font marginT10">
+            For Class 10th to 11th moving students
+        </h3> 
+    </div>
+    <!--<div layout="row" layout-xs="column" layout-align="start start" class="width100 whiteSmokeBorder whiteSmokeBackground paddingTB10 marginB20">
+        <div flex layout="column" layout-align="center center" class="width100 greyRightBorder padding10">
+            <div class=" subBaseFont">
+                2018 Batch Dates
+            </div>
+            <div class="h3Font">4 Apr | 2 May | 6 Jun | 27 Jun</div>
+        </div>
+        <div flex layout="column" layout-align="center center" class="width100 greyRightBorder padding10">
+            <div class=" subBaseFont">
+                Fees
+            </div>
+            <div class="h3Font">
+                Rs 95, 000 per year + GST
+            </div>
+        </div>
+        <div flex layout="column" layout-align="center center" class="width100 padding10">
+            <div class="subBaseFont">
+                EB Price (upto 25% off)
+            </div>
+            <div class="h3Font">
+                Rs 71, 250 per year + GST
+            </div>
+        </div>
+        
+        
+    </div>
+    -->
+    <h2 class="width100 h2Font marginTB10 paddingLR20 paddingB10 gainsboroBottomBorder">
+        How does it work?
+    </h2>
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB20">
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="start start" flex class="">
+            
+            <div layout="row" layout-align="start start" class="width100 marginB10 paddingB10">
+                <div class="paddingLR10">
+                    <img src="icons/p0/s3/1-s.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR20">
+                    <h2 class="margin0 h2Font">
+                    Write the Exambazaar IIT JEE Pre-Test
+                    </h2>
+                    <div class="marginT10">
+                    The scholarship test consists of Physics, Chemistry & Maths question of Class X level. Only Class IX to X moving students are eligible.
+                    </div>
+                </div>
+            </div>
+            
+            <div layout="row" layout-align="start start" class="width100 marginTB10 paddingTB10">
+                <div class="paddingLR10">
+                    <img src="icons/p0/s3/3-s.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR20">
+                    <h2 class="margin0 h2Font">
+                    Receive the Amazon Voucher
+                    </h2>
+                    <div class="marginT10">
+                    If you score more than 75% in the test, you will be eligible for a free Amazon Voucher Worth Rs. 500 after verification.
+                    </div>
+                </div>
+            </div>
+            <div layout="row" layout-align="start start" class="width100 marginTB10 paddingTB10">
+                <div class="paddingLR10">
+                    <img src="icons/p0/s3/2-s.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR20">
+                    <h2 class="margin0 h2Font">
+                    Claim your Voucher
+                    </h2>
+                    <div class="marginT10">
+                    Please add your academic details in EB within 7 days as instructed! You may also receive a 25% scholarship on your Coaching Fees.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div hide-xs flex-gt-xs="10">
+        
+        </div>
+        <div hide-xs flex-gt-xs="10" class="gainsboroLeftBorder min40vh">
+        
+        </div>
+        <div flex-gt-xs="30" flex-xs="100" layout="column" layout-align="start start" class="width100 " ng-controller="headerController">
+            <h2 class="width100 h2Font whiteSmokeBottomBorder paddingB20 marginB10">
+                Attempt Pre Coaching Test Now
+            </h2>
+            <form  name="signupForm" class="width100" ng-if="!user">
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" class="width100">
+                    <input type="text" placeholder="Name" class="width100 loginInput" ng-model="signup.name"  only-letters required>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" class="width100 ">
+                    <input type="email" placeholder="Email" class="width100 loginInput" ng-model="signup.email"  required>
+                </div>
+            </div>
+             
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="row" layout-align="start center"  class="width100 ">
+                <div layout="column" flex>
+                    <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
+
+                </div>
+                <div layout="row" layout-align="start center" flex ng-if="showVerifyOTP" class="paddingL10">
+                    <md-button class="md-saveNext md-small font10 margin0 width100" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+
+                    <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width100 loginInput" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
+
+
+                    <div ng-if="OTPsent && OTPVerified" class="text-primary font24 bold">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                </div>
+                </div>
+                <div layout="column" layout-align="end end" flex ng-if="showVerifyOTP" class=" width100">
+                <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+                <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+                <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" class="width100 ">
+                    <input type="password" placeholder="Password" class="width100 loginInput" ng-model="signup.password"  ng-minlength="6" required>
+                </div>
+                <div layout="row" layout-align="end center" ng-messages="signupForm.signup.password.$error" class="danger font8 text-right width100 ">
+                    Password should be at least 6 characters long
+                </div>
+            </div>    
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <md-button ng-disabled="checkSignupForm()" ng-click="signupUser()" class="md-small md-saveNext width100 tolowercase" >
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Start Now
+                </md-button>
+                
+            </div>
+            </form>
+            
+            
+            <form  name="signupForm" class="width100" ng-if="user">
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" class="width100 ">
+                    <input type="text" placeholder="Name" class="width100 loginInput" ng-model="user.basic.name"  only-letters required>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" class="width100 ">
+                    <input type="email" placeholder="Email" class="width100 loginInput" ng-model="user.email"  required>
+                </div>
+            </div>
+             
+            <div layout="column" layout-align="start center" class="width100 marginTB10">
+                
+                <div layout="row" layout-align="start center"  class="width100 ">
+                <div layout="column" flex>
+                    <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="user.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
+
+                </div>
+                <div layout="row" layout-align="start center" flex ng-if="showVerifyOTP" class="paddingL10">
+                    <md-button class="md-saveNext md-small font10 margin0" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+
+                    <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width100 loginInput" ng-model="user.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
+
+
+                    <div ng-if="OTPsent && OTPVerified" class="text-primary font24 bold">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                </div>
+                </div>
+                <div layout="column" layout-align="end end" flex ng-if="showVerifyOTP" class=" width100">
+                <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+                <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+                <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+                </div>
+            </div>
+              
+            <div layout="column" layout-align="start center" class="width100 marginTB10 padding10">
+                <md-button  ng-click="startPBCTest()" class="md-small md-saveNext width100 tolowercase" >
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Start the Test
+                </md-button>
+                
+            </div>
+            </form>
+            
+        </div>
+    </div>
+     
+   
+    </div>
+    </div>
+</div>
