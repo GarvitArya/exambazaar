@@ -2428,7 +2428,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var topStates = [];
                     var topStateNames = [];
                     $rootScope.top100Cities = top100Cities;
-                    $rootScope.top75Cities = $rootScope.top100Cities.slice(0,74);
+                    $rootScope.top75Cities = $rootScope.top100Cities.slice(0,75);
                     top100Cities.forEach(function(thisCityState, cIndex){
                         if(topStates.length > 0){
                             topStateNames = topStates.map(function(a) {return a.state;});

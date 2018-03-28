@@ -161,7 +161,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/topcities', function(req, res) {
-    var limit = 100;
+    var limit = 200;
     city.find({active: true}, {name:1, state: 1, count:1, _id: 0}, function(err, docs) {
     if (!err){ 
         //console.log(docs);

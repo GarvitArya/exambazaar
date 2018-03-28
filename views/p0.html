@@ -1036,10 +1036,10 @@
                 </div>
             
             </div>
-            <div layout="row" layout-align="center center" ng-repeat="state in topStates | orderBy:['state']" class="width100" hide-xs>
+            <div layout="row" layout-align="center center" ng-repeat="state in topStates | orderBy:['state']" class="width100 font10" hide-xs>
                 <div flex="20">{{state.state}}</div>
                 <div flex>
-                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities | orderBy:'toString()'">
+                    <span class="marginR1 marginB1 font10 narrowLine" ng-repeat="thisCity in state.cities | orderBy:'toString()'">
                         <a id="linkFont" ng-click="setSearchCity(thisCity)">{{thisCity}}</a><span ng-if="!$last"> | </span>
                     </span>
                 </div>
