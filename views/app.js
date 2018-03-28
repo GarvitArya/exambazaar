@@ -22810,7 +22810,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.pageTitle = "Coaching Pre-Test (For Class 10th to 11th moving students)";
             $rootScope.pageDescription = "Get upto 25% discount for admission at IIT JEE, NEET, CLAT and CA CPT Coaching of your choice near you | Coaching for Xth to XIth moving Students";
             $rootScope.pageKeywords = "IIT Coaching in jaipur, NEET Coaching in jaipur, CLAT Coaching in jaipur, CA CPT Coaching in jaipur, coaching in jaipur, coaching discount";
-            $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pretest_fb_banner.png";
+            $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/banner.jpg";
     }]);
     exambazaar.controller("coachingPreTestController", 
         [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize){
