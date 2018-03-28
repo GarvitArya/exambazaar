@@ -544,6 +544,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.EventsEmail = function() {
             return $http.post('/api/emails/EventsEmail');
         };
+        this.coachingDiscountEmail = function() {
+            return $http.post('/api/emails/coachingDiscountEmail');
+        };
+        
         this.OfficialPapersEmail = function() {
             return $http.post('/api/emails/OfficialPapersEmail');
         };
@@ -33504,6 +33508,30 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                          EmailService.EventsEmail().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            $scope.coachingDiscountEmail = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.coachingDiscountEmail().success(function (thisData, status, headers) {
                             
                             Notification.success("All done!");
                         })
