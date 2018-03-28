@@ -13593,7 +13593,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
                 }
             }else{
-                if($state.current.name == 'pbc' || $state.current.name == 'pbc2' || $state.current.name == 'coachingPreTest'){
+                if($state.current.name == 'pbc' || $state.current.name == 'pbc2' || $state.current.name == 'coachingPreTest' || $state.current.name == 'coachingPreTestGeneric'){
                     console.log('Reloading');
                     $state.reload();
                 }
@@ -13777,7 +13777,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
                 }
                 if($state.current.name == 'coachingPreTestGeneric'){
-                    
+                    $rootScope.$emit("interestRegistered", {user: $scope.sessionuser});
                     //if(signup.coachingExam)
                     var newAdmissionInterest = {
                         user: $scope.sessionuser._id,
@@ -22802,6 +22802,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
 
             };
+            
+            $rootScope.$on("interestRegistered", function(event, data){
+                if(data && data.user){
+                    $scope.user = data.user;
+                    if($scope.interest.coachingExam == 'IIT JEE'){
+                        $scope.startPBCTest();
+                    }else{
+                        $scope.interestRegistered = true;
+                    }
+                    
+                }
+            });
             $scope.interestRegistered = false;
             
             $scope.interest = {};
