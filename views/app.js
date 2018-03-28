@@ -513,6 +513,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.blogInvite = function() {
             return $http.post('/api/emails/blogInvite');
         };
+        this.descriptionInvite = function() {
+            return $http.post('/api/emails/descriptionInvite');
+        };
         
         this.welcomeEmail = function(email) {
             return $http.post('/api/emails/welcomeEmail', email);
@@ -1822,6 +1825,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/streams/addLogo',newLogoForm);
         };
+        
+    }]);
+    exambazaar.service('admissionInterestService', ['$http', function($http) {
+        this.saveAdmissionInterest = function(thisAdmissionInterest) {
+            return $http.post('/api/admissionInterests/save', thisAdmissionInterest);
+        };
+        
         
     }]);
     exambazaar.service('admissionService', ['$http', function($http) {
@@ -12828,7 +12838,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'ExamService', 'testService', 'SidebarJS','$timeout', '$window', '$mdSidenav', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, ExamService, testService, SidebarJS,$timeout, $window, $mdSidenav){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'ExamService', 'testService', 'SidebarJS','$timeout', '$window', '$mdSidenav', 'admissionInterestService', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, ExamService, testService, SidebarJS,$timeout, $window, $mdSidenav, admissionInterestService){
             
             $scope.maintenance = false;
             
@@ -13766,6 +13776,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'pbc' || $state.current.name == 'pbc2' || $state.current.name == 'coachingPreTest'){
                     $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
                 }
+                if($state.current.name == 'coachingPreTestGeneric'){
+                    
+                    //if(signup.coachingExam)
+                    var newAdmissionInterest = {
+                        user: $scope.sessionuser._id,
+                        year: '2018',
+                        coachingExam: $scope.signup.coachingExam,
+                    };
+                    admissionInterestService.saveAdmissionInterest(newAdmissionInterest).success(function (data, status, headers) {
+                        console.log(data);
+                    });
+                    if($scope.signup.coachingExam == 'IIT JEE'){
+                        $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
+                    }
+                    
+                    
+                }
+                
                 
             })
             .error(function (data, status, header, config) {
@@ -22697,6 +22725,93 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]);
     
+    exambazaar.controller("coachingPreTestGenericController", 
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', 'admissionInterestService', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize, admissionInterestService){
+            if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.signup = data;
+                    
+                    var viewForm = {
+                        state: $state.current.name,
+                        claim: false
+                    };
+                    if($scope.user && $scope.user.userId){
+                        viewForm.user = $scope.user.userId
+                    }
+                    //console.log(JSON.stringify(viewForm));
+                    if($cookies.getObject('ip')){
+                        var ip = $cookies.getObject('ip');
+                        viewForm.ip = ip;
+                    }
+                    viewService.saveview(viewForm).success(function (data, status, headers) {
+                        //console.log('View Marked');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
+                    
+                });
+            }
+            }else{
+                var viewForm = {
+                    state: $state.current.name,
+                    claim: false
+                };
+                if($scope.user && $scope.user.userId){
+                    viewForm.user = $scope.user.userId
+                }
+                //console.log(JSON.stringify(viewForm));
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    viewForm.ip = ip;
+                }
+                viewService.saveview(viewForm).success(function (data, status, headers) {
+                    //console.log('View Marked');
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });
+                
+            }
+            $scope.startPBCTest = function(){
+                
+                if (screenSize.is('xs')){
+                    $state.go('mobileassessment', {testId: '5aae0cae3bacc109b0907d30'});
+
+                }else{
+                    $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
+                }
+                    
+            };
+            $scope.registerInterest = function(){
+                var newAdmissionInterest = {
+                    user: $scope.user._id,
+                    year: '2018',
+                    coachingExam: $scope.interest.coachingExam,
+                };
+                admissionInterestService.saveAdmissionInterest(newAdmissionInterest).success(function (data, status, headers) {
+                    console.log(data);
+                });
+                if($scope.interest.coachingExam == 'IIT JEE'){
+                    $scope.startPBCTest();
+                }else{
+                    $scope.interestRegistered = true;
+                }
+
+            };
+            $scope.interestRegistered = false;
+            
+            $scope.interest = {};
+            $scope.coachingExams = ['IIT JEE', 'NEET', 'CLAT', 'CA CPT'];
+            
+            $rootScope.pageTitle = "Coaching Pre-Test (For Class 10th to 11th moving students)";
+            $rootScope.pageDescription = "Get upto 25% discount for admission at IIT JEE, NEET, CLAT and CA CPT Coaching of your choice near you | Coaching for Xth to XIth moving Students";
+            $rootScope.pageKeywords = "IIT Coaching in jaipur, NEET Coaching in jaipur, CLAT Coaching in jaipur, CA CPT Coaching in jaipur, coaching in jaipur, coaching discount";
+            $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pretest_fb_banner.png";
+    }]);
     exambazaar.controller("coachingPreTestController", 
         [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize){
             if($cookies.getObject('sessionuser')){
@@ -33188,6 +33303,17 @@ function getLatLng(thisData) {
     
     exambazaar.controller("manageUsersController", 
         [ '$scope', 'UserService', 'viewService', 'EmailService','$http','$state', '$rootScope', '$mdDialog', '$timeout', 'Notification', function($scope, UserService, viewService, EmailService, $http,$state, $rootScope, $mdDialog, $timeout, Notification){
+            
+            $scope.descriptionInvite = function() {
+                
+                EmailService.descriptionInvite().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });  
+            };
+            
             $scope.properNames = function(){
                 UserService.properNames().success(function (data, status, headers) {
                     if(data){
@@ -36182,6 +36308,22 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'jee-main-pre-test.html',
                     controller: 'coachingPreTestController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('coachingPreTestGeneric', {
+            url: '/2018',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+
+                },
+                'body':{
+                    templateUrl: 'pre-test.html',
+                    controller: 'coachingPreTestGenericController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
