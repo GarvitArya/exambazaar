@@ -540,7 +540,7 @@
         <div layout="row" layout-align="start center" ng-if="sessionuser.userId" >
         <ul class="nav navbar-nav marginL10 marginR40">
             
-        <li class="dropdown" ng-if="sessionuser.userType != 'Partner'">
+        <li class="dropdown">
             <a rel="nofollow" href="" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" id="profileMenu">
                 <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle" ng-if="sessionuser.image && sessionuser.image != ''"/>
                 <div ng-if="!sessionuser.image || sessionuser.image == ''"><i class="fa fa-user-circle-o font40" aria-hidden="true"></i></div>
