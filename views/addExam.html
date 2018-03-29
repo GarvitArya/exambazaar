@@ -110,7 +110,7 @@
             </div>
             <div layout="row" layout-align="start center" ng-repeat="existingExam in exams | orderBy: ['-active', '-rank']" ng-if="existingExam.stream._id == stream._id" class="width100 greyDashedBottomBorder">
                 
-                <div flex="20" layout="row" layout-align="start center" class="bold "><a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank"  id="reviewLink">{{existingExam.displayname}}</a></div>
+                <div flex="20" layout="row" layout-align="start center" class="bold "><a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank"  id="reviewLink">{{existingExam.exam_page_name}}</a></div>
                 
                 <div layout="row" layout-align="start center" flex="5">
                     <span ng-if="existingExam.active">

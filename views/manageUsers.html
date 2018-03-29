@@ -151,6 +151,12 @@
                         </md-button>
                     </div>
                     <div layout="column" layout-align="start start">
+                        <md-button class="md-signup md-small editFont" ng-click="coachingDiscountEmail(thisuser._id)" ng-if="thisuser.userType == 'Master'">
+                        Send Coaching Discount Email
+                        </md-button>
+                    </div>
+                    
+                    <div layout="column" layout-align="start start">
                         <md-button class="md-signup md-small editFont" ng-click="OfficialPapersEmail(thisuser._id)" ng-if="thisuser.userType == 'Master'">
                         Send Official Papers Email
                         </md-button>

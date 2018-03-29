@@ -38,6 +38,7 @@ var coachingSchema = mongoose.Schema({
     state: String,
     pincode: String,
     logoChecked:{type: Boolean,default: false},
+    checkMobile:{type: Boolean,default: false},
     logo: String,
     newlogo: String,
     logoBackup: String,

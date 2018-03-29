@@ -17388,6 +17388,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList){
             
+            
+            $scope.sanitizeMobiles = function(){
+                coachingService.sanitizeMobiles().success(function (data, status, headers) {
+                    console.log('Mobiles sanitized');
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;

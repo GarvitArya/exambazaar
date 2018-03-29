@@ -2203,54 +2203,87 @@ router.get('/contacts', function(req, res) {
     
 });
 
+
+function sanitizeMobile(mobile){
+    var trimmedmobile = mobile.split(' ').join('').toString();
+    trimmedmobile = trimmedmobile.replace(/\-/g,"");
+    trimmedmobile = trimmedmobile.replace("+(91)", "");
+    trimmedmobile = trimmedmobile.replace("+91", "");
+    //trimmedmobile = trimmedmobile.split('-').join('');
+    //trimmedmobile = trimmedmobile.split('+').join('').toString();
+    var remove = false;
+    if(trimmedmobile.length > 0){
+        //console.log(trimmedmobile);
+        trimmedmobile = trimmedmobile.replace(/^0+/, '');
+    }
+    
+    
+    var mlength = trimmedmobile.length;
+    
+    var validMobile = false;
+    if(mlength < 10){
+        //console.log('Less than 10 digits | ' + mobile + " | " + trimmedmobile);
+        
+        if(mlength < 5){
+            remove = true;
+        }
+    }
+    if(mlength == 10){
+        var firstChar = trimmedmobile.charAt(0);
+        var validFirstChars = ["6","7","8","9"];
+        
+        if(validFirstChars.indexOf(firstChar) != -1){
+            validMobile = true;
+            mobile = trimmedmobile;
+            //console.log('Correct Mobile | ' + mobile);
+        }else{
+            //console.log('Incorrect Mobile | ' + mobile);
+        }
+    }
+    if(mlength > 10){
+        //console.log('More than 10 digits | ' + mobile + " | " + trimmedmobile);
+    }
+    var santizedMobile = {
+        valid: validMobile,
+        mobile: mobile,
+        remove: remove
+    };
+    return(santizedMobile);
+};
+
 router.get('/sanitizeMobiles', function(req, res) {
-    var allProviders = coaching.find({mobile: {$exists: true}}, {mobile:1},function(err, allProviders) {
+    console.log('Starting sanitizing mobiles!');
+    res.json(true);
+    var nCounter = 0;
+    var allProviders = coaching.find({mobile: {$exists: true}, $where:"this.mobile.length>0"}, {mobile:1},function(err, allProviders) {
     if (!err){
-        console.log('Starting sanitizing mobiles!');
-        var incorrectMobiles = [];
-        var elementMobiles = [];
+        console.log('There are ' + allProviders.length + ' coachings!');
         allProviders.forEach(function(thisprovider, index){
             var thisMobiles = thisprovider.mobile;
             
             thisMobiles.forEach(function(thismobile, mindex){
-                if(thismobile.length != 10){
-                    var elementMobile = {
-                        _id: thisprovider._id,
-                        mobile: thismobile
-                    };
-                    incorrectMobiles.push(elementMobile);
-                }
-                var charElem = '-';
-                if(thismobile.indexOf(charElem) != -1){
-                    
-                    var mobiles = thismobile.split(charElem);
-                    console.log(mobiles);
-                    
-                    
-                    
-                    var indices = [];
-                    for(var i=0; i<thismobile.length;i++) {
-                        if (thismobile[i] === charElem) indices.push(i);
-                    }
-                    if(indices.length > 0){
-                        var elementMobile = {
-                            _id: thisprovider._id,
-                            mobile: thismobile,
-                            elements: indices.length
-                        };
-                        elementMobiles.push(elementMobile);
+                var mobileSanity = sanitizeMobile(thismobile);
+                if(mobileSanity.valid){
+                    if(thismobile != mobileSanity.mobile){
+                        nCounter += 1;
+                        console.log(nCounter + ". Changing Mobile from " + thismobile + " to " + mobileSanity.mobile);
+                        thismobile = mobileSanity.mobile;
+                        
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(thisprovider._id + " saved!");
+                        });
                     }
                 }
-                
+                if(mobileSanity.remove){
+                    console.log("Removing Mobile " + thismobile);
+                }
             });
         });
         
-        console.log('There are ' + elementMobiles.length + ' mobiles with elements');
-        var elementIds = elementMobiles.map(function(a) {return a._id;});
-        console.log(elementIds);
-        res.json(elementMobiles);
+        
     } else {throw err;}
-    }); //.limit(500)
+    }).limit(20000);
 });
 
 router.get('/allResults/:examName', function(req, res) {

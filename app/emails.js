@@ -2342,7 +2342,7 @@ router.post('/EventsEmail', function(req, res) {
 
 
 router.post('/coachingDiscountEmail', function(req, res) {
-    console.log('Starting Events Email');
+    console.log('Starting Coaching Discount Email');
     var fromEmail = {
         email: 'team@exambazaar.com',
         name: 'Team Exambazaar'
@@ -2369,10 +2369,10 @@ router.post('/coachingDiscountEmail', function(req, res) {
             var from_email = new helper.Email(fromEmail);
             //email: {$exists: true}, mobile: "9829685919"
             
-            var limit = 1;
-            var skip = 0;
+            var limit = 500;
+            var skip = 3000;
             
-            var allUsers = user.find({email: {$exists: true}, mobile: '9829685919'}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
+            var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
             if (!err){
                 var emailcounter = 0;
                 var counter = 0;
