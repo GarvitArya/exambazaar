@@ -2234,6 +2234,9 @@ function sanitizeMobile(mobile){
         
         if(validFirstChars.indexOf(firstChar) != -1){
             validMobile = true;
+            if(trimmedmobile != mobile){
+                console.log('Changing Mobile from ' + mobile + " to " + trimmedmobile);
+            }
             mobile = trimmedmobile;
             //console.log('Correct Mobile | ' + mobile);
         }else{
@@ -2248,7 +2251,7 @@ function sanitizeMobile(mobile){
         mobile: mobile,
         remove: remove
     };
-    return(santizedMobile);
+    return(mobile);
 };
 
 router.get('/sanitizeMobiles', function(req, res) {
@@ -2258,32 +2261,33 @@ router.get('/sanitizeMobiles', function(req, res) {
     var allProviders = coaching.find({mobile: {$exists: true}, $where:"this.mobile.length>0"}, {mobile:1},function(err, allProviders) {
     if (!err){
         console.log('There are ' + allProviders.length + ' coachings!');
-        allProviders.forEach(function(thisprovider, index){
-            var thisMobiles = thisprovider.mobile;
-            
+        allProviders.forEach(function(thisProvider, index){
+            var newMobiles = [];
+            var thisMobiles = thisProvider.mobile;
+            var anyChange = false;
             thisMobiles.forEach(function(thismobile, mindex){
-                var mobileSanity = sanitizeMobile(thismobile);
-                if(mobileSanity.valid){
-                    if(thismobile != mobileSanity.mobile){
+                var newMobile = sanitizeMobile(thismobile);
+                newMobiles.push(newMobile);
+                
+                if(mindex == thisMobiles.length - 1){
+                    thisProvider.mobile = newMobiles;
+                    thisProvider.save(function(err, thisProvider){
+                        if (err) return console.error(err);
                         nCounter += 1;
-                        console.log(nCounter + ". Changing Mobile from " + thismobile + " to " + mobileSanity.mobile);
-                        thismobile = mobileSanity.mobile;
-                        
-                        thisprovider.save(function(err, thisprovider) {
-                            if (err) return console.error(err);
-                            console.log(thisprovider._id + " saved!");
-                        });
-                    }
-                }
-                if(mobileSanity.remove){
-                    console.log("Removing Mobile " + thismobile);
+                        //console.log(nCounter + '. Coaching saved: ' + thisProvider._id);
+                        //console.log(thisProvider.mobile);
+                    });
+                    
+                    
                 }
             });
+            
+            
         });
         
         
     } else {throw err;}
-    }).limit(20000);
+    }).limit(35000);
 });
 
 router.get('/allResults/:examName', function(req, res) {

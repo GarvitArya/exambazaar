@@ -191,7 +191,7 @@ router.post('/recent', function(req, res) {
     console.log('Starting latest assessments');
     var limit = 8;
     
-    var existingAssessments = assessment.find({$and: [ {"evaluation.score": {$exists: true}}, { "evaluation.score": {$ne: "0"} } ]}, {evaluation: 1, info: 1, user: 1, test: 1, _end: 1},function (err, existingAssessments) {
+    var existingAssessments = assessment.find({user: {$exists: true}, $and: [ {"evaluation.score": {$exists: true}}, { "evaluation.score": {$ne: "0"} } ]}, {evaluation: 1, info: 1, user: 1, test: 1, _end: 1},function (err, existingAssessments) {
         if(existingAssessments){
             var nAssessments = existingAssessments.length;
             var counter = 0;

@@ -3133,6 +3133,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var p4StreamExamsIds = $scope.currentStream.exams.map(function(a) {return a._id;});
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){
                  
+                 if(thisGroup.groupName == "Mahendra's"){
+                      thisGroup.artificialRank = 100;
+                     console.log('I am here');
+                 }else{
+                     thisGroup.artificialRank = 0;
+                 }
                  if(thisGroup.examCirf && thisGroup.examCirf.cirf){
                      thisGroup.examCirfScore = Number(thisGroup.examCirf.cirf) * 5/ 100;
                     
