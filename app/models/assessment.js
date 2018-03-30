@@ -50,6 +50,11 @@ var assessmentSchema = mongoose.Schema({
         coupon: {type: String},
         discountPercent: {type: String},
         _created: { type: Date, default: Date.now },
+    },
+    pbs:{
+        coupon: {type: String},
+        discountPercent: {type: String},
+        _created: { type: Date, default: Date.now },
     }
 });
 assessmentSchema.plugin(deepPopulate);

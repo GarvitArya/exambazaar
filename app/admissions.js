@@ -88,6 +88,49 @@ router.post('/pbcAdmission', function(req, res) {
     });
 });
 
+router.post('/pbsAdmission', function(req, res) {
+    var thisAdmission = req.body;
+    var admissionCoaching = thisAdmission.coaching;
+    var admissionUser = thisAdmission.user;
+    var payment = thisAdmission.payment;
+    
+    var instamojo = instamojoCredential.findOne({}, {},function (err, instamojo) {
+        
+    var existingUser = user.findOne({ _id: admissionUser}, {mobile:1, email:1, basic: 1},function (err, existingUser) {
+        if(existingUser){
+            var headers = { 'X-Api-Key': instamojo.xapikey, 'X-Auth-Token': instamojo.xauthtoken}
+            var payload = {
+              purpose: 'Bansal Classes Srinagar 2018',
+              amount: '500',
+              phone: existingUser.mobile,
+              buyer_name: existingUser.basic.name,
+              //redirect_url: 'http://www.exambazaar.com/pbcAdmission',
+              send_email: false,
+              //webhook: 'http://www.exambazaar.com/webhook/instamojo/',
+              send_sms: false,
+              email: existingUser.email,
+              allow_repeated_payments: false
+            };
+            
+            /*https://www.instamojo.com/api/1.1/payment-requests/*/
+            request.post('https://www.instamojo.com/api/1.1/payment-requests/', {form: payload,  headers: headers}, function(error, response, body){
+              if(!error && response.statusCode == 201){
+                console.log(body);
+                  
+                res.json(JSON.parse(body));  
+              }
+            });
+
+
+
+
+        }else{
+           res.json(null);
+        }
+
+    });
+    });
+});
 router.post('/userAdmission', function(req, res) {
     var thisAdmission = req.body;
     var admissionCoaching = thisAdmission.coaching;

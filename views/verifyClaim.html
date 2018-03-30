@@ -26,14 +26,42 @@
     #twoSections{
         min-height: 80vh;
     }
-    #otpInput{
+    #otpInput1{
         width: 30px;
         height: 30px;
         border: 1px solid #ccc;
         border-radius: 1px;
         margin-left: 10px;
     }
-    #passwordInput{
+    #otpInput2{
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        border-radius: 1px;
+        margin-left: 10px;
+    }
+    #otpInput3{
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        border-radius: 1px;
+        margin-left: 10px;
+    }
+    #otpInput4{
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        border-radius: 1px;
+        margin-left: 10px;
+    }
+    #passwordInput1{
+        background-color : #f7f7f7;
+        font-weight: 100;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+    #passwordInput2{
         background-color : #f7f7f7;
         font-weight: 100;
         font-size: 12px;
@@ -124,7 +152,7 @@
                             </md-option>
                           </md-select>
                         </md-input-container>
-                        <md-button  class="md-green md-small font10" ng-click="sendOTP()" class="width25" ng-if="currStep==1">Send OTP</md-button>
+                        <md-button  class="md-saveNext md-small font10" ng-click="sendOTP()" class="width25" ng-if="currStep==1">Send OTP</md-button>
                     </div>
                     </div>
                     
@@ -142,13 +170,13 @@
                 </div>
                 <div flex ng-if="currStep >= 2" layout="row" layout-align="start center" class="sectionText width100 height100">
                     
-                    <input type="text" class="form-control text-center" ng-model="enterOTP[0]" ng-minlength="1" ng-maxlength="1" id="otpInput" focus-me="currStep==2" only-digits limit-to="1" move-next-on-maxlength>
-                    <input type="text" class="form-control text-center" ng-model="enterOTP[1]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
-                    <input type="text" class="form-control text-center" ng-model="enterOTP[2]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
-                    <input type="text" class="form-control text-center" ng-model="enterOTP[3]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
-                    <md-button  class="md-green md-small font10" ng-click="verifyOTP()" class="width25"  ng-disabled="currStep<2" ng-if="incorrectOTP">Verify</md-button>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[0]" ng-minlength="1" ng-maxlength="1" id="otpInput1" focus-me="currStep==2" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[1]" ng-minlength="1" ng-maxlength="1" id="otpInput2" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[2]" ng-minlength="1" ng-maxlength="1" id="otpInput3" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[3]" ng-minlength="1" ng-maxlength="1" id="otpInput4" only-digits limit-to="1" move-next-on-maxlength>
+                    <md-button  class="md-saveNext md-small font10" ng-click="verifyOTP()" class="width25"  ng-disabled="currStep<2" ng-if="incorrectOTP">Verify</md-button>
                     
-                    <span class="danger" ng-if="enterOTP[0] && enterOTP[1] && enterOTP[2] && enterOTP[3] && incorrectOTP">
+                    <span class="danger font10" ng-if="enterOTP[0] && enterOTP[1] && enterOTP[2] && enterOTP[3] && incorrectOTP">
                         Incorrect OTP, please try again!
                     </span>
                 </div>
@@ -174,7 +202,7 @@
                                     Password
                                 </div>
                                 <div flex>
-                                    <input type="password" placeholder="Password" class="form-control text-center width100 text-left" focus-me="currStep==3" ng-model="userPassword" id="passwordInput" ng-change="updateUserPassword(userPassword)">
+                                    <input type="password" placeholder="Password" class="form-control text-center width100 text-left" focus-me="currStep==3" ng-model="userPassword" id="passwordInput1" ng-change="updateUserPassword(userPassword)">
                                 </div>
                             </div>
                             <div layout="row" layout-align="center center" id="passwordRow">
@@ -182,7 +210,7 @@
                                     Verify Password
                                 </div>
                                 <div flex>
-                                    <input type="password" placeholder="Verify Password" class="form-control text-center width100 text-left" ng-model="verifyPassword"  id="passwordInput" ng-change="updateVerifyPassword(verifyPassword)">
+                                    <input type="password" placeholder="Verify Password" class="form-control text-center width100 text-left" ng-model="verifyPassword"  id="passwordInput2" ng-change="updateVerifyPassword(verifyPassword)">
                                     
                                 </div>
                             </div>

@@ -1848,7 +1848,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.pbcAdmission = function(admissionForm) {
             return $http.post('/api/admissions/pbcAdmission', admissionForm);
         };
-        
+        this.pbsAdmission = function(admissionForm) {
+            return $http.post('/api/admissions/pbsAdmission', admissionForm);
+        };
         
     }]);
     
@@ -11570,7 +11572,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             
         });
-        console.log($scope.examRatingParamValues);
+        //console.log($scope.examRatingParamValues);
         
         if($scope.provider.rating){
             for (var property in $scope.ratingParamValues) {
@@ -13158,7 +13160,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(sIndex != -1){
                     showVal = false;
                 }
-                return showVal;
+                //return showVal;
+                return true;
             };
             $rootScope.showMobileSearch = false;
             $scope.flipMobileSearch = function(){
@@ -22351,6 +22354,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 
                             }
                         }
+                        
+                        if($scope.userAssessment.test == '5abd16ff6dba0f52154a7002' || $scope.userAssessment.test._id == '5abd16ff6dba0f52154a7002'){
+                            
+                            if($scope.userAssessment.evaluation.percentageScore >= 75){
+                                $scope.congratulationsMessage = "You have earned a 25% discount on fees at Bansal Classes, Srinagar";
+                            }else if($scope.userAssessment.evaluation.percentageScore >= 60){
+                                $scope.congratulationsMessage = "You have earned a 10% discount on fees at Bansal Classes, Srinagar";
+                                
+                            }else{
+                                $scope.sorryMessage = "You have earned a 50% discount only on registration for Bansal Classes, Srinagar! Discounts on fees are only applicable if you score > 60% in the Exambazaar Test!";
+                                
+                            }
+                        }
                     }
                     
                 }
@@ -22981,7 +22997,280 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.pageKeywords = "IIT Coaching in jaipur, pooja bansal classes, bansal classes jaipur, coaching in jaipur, jee coaching in jaipur, iit coaching discount, pooja bansal classes admission, pbc discount";
             $rootScope.pageImage = "https://www.exambazaar.com/images/pbc/pbc_admissions.jpg";
     }]);
+    
+        
+    exambazaar.controller("pbsAdmissionController", 
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'assessmentService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, assessmentService, Notification, $location){
+            $scope.userVariables ={
+                genders: [
+                    "Male",
+                    "Female",
+                ],
+                categories:[
+                    'GENERAL',    
+                    'OBC-NCL',    
+                    'SC',
+                    'ST',
+                ],
+            };
+            $scope.col1 = 30;
+            $scope.defaultDate = new Date("1-Jan-1992");
+            
+            var paramsObject = {};
+            var pathArray = $location.absUrl().split('?');
+            var currUrl = pathArray[pathArray.length-1];
+            currUrl.replace(/\?/,'').split('&').map(function(o){ paramsObject[o.split('=')[0]]= o.split('=')[1]});
+            
+            
+            $scope.admissionForm = {
+                name: null,
+                email: null,
+                mobile: null,
+                dob: null,
+                gender: null,
+                category: null,
+                course: "Class X to XI moving",
+                school: null,
+                address: {
+                    line: null,
+                    city: null,
+                    state: null,
+                },
+            };
+            
+            
+            
+            $scope.submitAdmissionHelper = function(){
+                var valid = true;
+                var reasons = [];
+                if(!$scope.user || !$scope.user._id){
+                    valid = false;
+                    reasons.push('Please Signup to proceed ahead.');
+                }
+                if(!$scope.admissionForm.name || $scope.admissionForm.name.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter your Full Name');
+                }
+                if(!$scope.admissionForm.mobile || $scope.admissionForm.mobile.length != 10){
+                    valid = false;
+                    reasons.push('Please Enter 10 digit Mobile Number');
+                }
+                if(!$scope.admissionForm.email || $scope.admissionForm.email.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter your Email Address');
+                }
+                if(!$scope.admissionForm.dob || moment().diff($scope.admissionForm.dob, "years") < 12){
+                    valid = false;
+                    reasons.push('Please Enter Correct Age');
+                }
+                if(!$scope.admissionForm.gender || $scope.admissionForm.gender.length < 1){
+                    valid = false;
+                    reasons.push('Please Select Gender');
+                }
+                if(!$scope.admissionForm.category || $scope.admissionForm.category.length < 1){
+                    valid = false;
+                    reasons.push('Please Select Category');
+                }
+                if(!$scope.admissionForm.school || $scope.admissionForm.school.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter School Name');
+                }
+                if(!$scope.admissionForm.address.line || $scope.admissionForm.address.line.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter Your Address');
+                }
+                if(!$scope.admissionForm.address.city || $scope.admissionForm.address.city.length < 2){
+                    valid = false;
+                    reasons.push('Please Enter Your City');
+                }
+                if(!$scope.admissionForm.address.state || $scope.admissionForm.address.state.length < 2){
+                    valid = false;
+                    reasons.push('Please Enter Your State');
+                }
+                $scope.startErrors = reasons;
+                if(!valid){
+                    Notification.warning({message: "Please submit the form correctly. See errors below!",  positionY: 'top', positionX: 'right', delay: 3000});
+                }else{
+                    $scope.submitAdmission();
+                }
+            };
+            
+            $scope.forceShowForm = false;
+            $scope.flipForceShowForm = function(){
+                $scope.forceShowForm = !$scope.forceShowForm;
+            };
+            $scope.pbcAdmission = function(){
+                var admissionForm = {
+                    user: $scope.user._id,
+                    coaching: '592dc171e5bd6b049831993c',
+                    details: $scope.admissionForm
+                };
+                
+                function onOpenHandler(){
+                    console.log('Payments Modal is Opened');    
+                };
+                function onCloseHandler(){
+                    console.log('Payments Modal is Closed');    
+                };
+                function onPaymentSuccessHandler(response){
+                    console.log('Payment Success');
+                    console.log(response);
+                    
+                    if(response.paymentId && response.status == "success"){
+                        console.log("Payment Id is: " + response.paymentId);
+                        
+                        var newPayment = {
+                            payment_id: response.paymentId,
+                            //details: JSON.parse(response),
+                        };
+                        $scope.userAdmit.payment = newPayment;
+                        console.log(newPayment);
+                        $scope.submitAdmissionHelper();
+
+                    }
+                    
+                };
+                function onPaymentFailureHandler(response){
+                    console.log('Payment Failure');
+                    console.log(response);
+                };
+                Instamojo.configure({
+                    handlers: {
+                      onOpen: onOpenHandler,
+                      onClose: onCloseHandler,
+                      onSuccess: onPaymentSuccessHandler,
+                      onFailure: onPaymentFailureHandler
+                    }
+                });
+                
+                admissionService.pbsAdmission(admissionForm).success(function (data, status, headers) {
+                    //console.log(data);
+                    $scope.instaQuery = data;
+                    Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    
+                    if($scope.instaQuery.success){
+                       
+                        Instamojo.open($scope.instaQuery.payment_request.longurl);
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            
+            
+            $scope.submitAdmission = function(){
+                var admissionForm = {
+                    user: $scope.user._id,
+                    coaching: '592dc171e5bd6b049831993c',
+                    details: $scope.admissionForm,
+                };
+                
+                if($scope.userAdmit && $scope.userAdmit.payment){
+                    admissionForm.payment = $scope.userAdmit.payment;
+                }
+                
+                admissionService.saveAdmission(admissionForm).success(function (data, status, headers) {
+                    Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log(data);
+                    $scope.userAdmit = data;
+                    $scope.admissionForm = $scope.userAdmit.details;
+                    if(!$scope.userAdmit.payment || !$scope.userAdmit.payment.payment_id){
+                        $scope.pbcAdmission();
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                
+                var thisAssessment = {
+                    userId: $scope.user._id,
+                    testId: '5aae0cae3bacc109b0907d30'
+                };
+                
+                assessmentService.usertest(thisAssessment).success(function (assessmentdata, status, headers) {
+                    if(data){
+                        $scope.userAssessment = assessmentdata;
+                        //console.log($scope.userAssessment);
+                        
+                        var admissionForm = {
+                            user: $scope.user._id,
+                            coaching: '5a97bde62aeebc5a97e8c70a',
+                        };
+                        admissionService.getUserAdmission(admissionForm).success(function (data, status, headers) {
+                            if(data){
+                                $scope.userAdmit = data;
+                                $scope.admissionForm = $scope.userAdmit.details;
+                                Notification.primary({message: "Great! We have found your previous submission!",  positionY: 'top', positionX: 'right', delay: 3000});
+                            }else{
+                                $scope.admissionForm.name = $scope.user.basic.name;
+                                $scope.admissionForm.email = $scope.user.email;
+                                $scope.admissionForm.mobile = $scope.user.mobile;
+                                if($scope.user.basic.dob){
+                                    $scope.admissionForm.dob = moment($scope.user.basic.dob);
+                                }
+                                if(!$scope.admissionForm.dob){
+                                    $scope.admissionForm.dob = moment($scope.defaultDate);
+                                }
+                            }
+
+                        })
+                        .error(function (data, status, header, config) {
+                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                        
+                        
+                    }else{
+                        
+                    }
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                
+                    
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            
+            }else{
+                if(!$scope.admissionForm.dob){
+                    $scope.admissionForm.dob = moment($scope.defaultDate);
+                }
+                //$cookies.remove("sessionuser");
+                //$rootScope.$emit("CallBlogLogin", {});
+            }
+            
+        }else{
+            if(!$scope.admissionForm.dob){
+                $scope.admissionForm.dob = moment($scope.defaultDate);
+            }
+            //$cookies.remove("sessionuser");
+            //$rootScope.$emit("CallBlogLogin", {});
+        }
          
+        $rootScope.pageTitle = "Admission in Pooja Bansal Classes | Exambazaar.com";
+    }]);    
     exambazaar.controller("pbcAdmissionController", 
         [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'assessmentService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, assessmentService, Notification, $location){
             $scope.userVariables ={
@@ -23150,8 +23439,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user._id,
                     coaching: '5a97bde62aeebc5a97e8c70a',
                     details: $scope.admissionForm,
-                    
                 };
+                if($scope.test._id == '5abd16ff6dba0f52154a7002'){
+                    admissionForm.coaching = '592dc171e5bd6b049831993c';
+                }
                 if($scope.userAdmit && $scope.userAdmit.payment){
                     admissionForm.payment = $scope.userAdmit.payment;
                 }
@@ -23253,7 +23544,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
          
         $rootScope.pageTitle = "Admission in Pooja Bansal Classes | Exambazaar.com";
-    }]);    
+    }]); 
         
     exambazaar.controller("eqadSummaryController", 
         [ '$scope', '$rootScope', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', 'eqadSummary', 'eqadSolutionSummary', function($scope, $rootScope, $mdDialog, $timeout, examList, streamList, questionService, eqadSummary, eqadSolutionSummary){

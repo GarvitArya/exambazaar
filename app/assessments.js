@@ -664,7 +664,7 @@ router.post('/userevaluate', function(req, res) {
                             existingAssessment.submitted = true;
                             existingAssessment._submit = moment();
                             
-                            if(testId == '5aae0cae3bacc109b0907d30'){
+                            if(testId == '5aae0cae3bacc109b0907d30' ){
                                 if(percentageScore >= 75){
                                 var coupon = "25";
                                     if(existingUser.basic.name){
@@ -691,6 +691,35 @@ router.post('/userevaluate', function(req, res) {
                                     };
                                 }
                             }
+                            if(testId == '5abd16ff6dba0f52154a7002'){
+                                if(percentageScore >= 75){
+                                var coupon = "25";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbs = {
+                                        coupon: coupon,
+                                        discountPercent: '25',
+                                    };
+                                }else if(percentageScore >= 60){
+                                    var coupon = "10";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbs = {
+                                        coupon: coupon,
+                                        discountPercent: '10',
+                                    };
+                                }
+                            }
+                                
+                                
                             existingAssessment.save(function(err, existingAssessment){
                                 if (err) return console.error(err);
                                 console.log('Assessment saved: ' + existingAssessment._id);
@@ -699,6 +728,11 @@ router.post('/userevaluate', function(req, res) {
                                     console.log('Sending PBC Email 1');
                                     sendPBCEmail(existingAssessment);
                                 }
+                                if(testId == '5abd16ff6dba0f52154a7002' && percentageScore >= 60){
+                                    console.log('Sending PBS Email 1');
+                                    sendPBSEmail(existingAssessment);
+                                }
+                                
                                 res.json(existingAssessment);
                             });    
 
@@ -1128,14 +1162,45 @@ router.post('/userevaluate', function(req, res) {
                                 
                                 
                             }  
-                              
+                            if(testId == '5abd16ff6dba0f52154a7002'){
+                                if(percentageScore >= 75){
+                                var coupon = "25";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbs = {
+                                        coupon: coupon,
+                                        discountPercent: '25',
+                                    };
+                                }else if(percentageScore >= 60){
+                                    var coupon = "10";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbs = {
+                                        coupon: coupon,
+                                        discountPercent: '10',
+                                    };
+                                }
+                            }  
                             existingAssessment.save(function(err, existingAssessment){
                                 if (err) return console.error(err);
                                 console.log('Assessment saved: ' + existingAssessment._id);
-                                if(testId == '5aae0cae3bacc109b0907d30' && percentageScore >= 60){
+                                if(testId == '5aae0cae3bacc109b0907d30'  && percentageScore >= 60){
                                     console.log('Sending PBC Email2');
                                     sendPBCEmail(existingAssessment);
-                                } res.json(existingAssessment);
+                                }
+                                if(testId == '5abd16ff6dba0f52154a7002' && percentageScore >= 60){
+                                    console.log('Sending PBS Email 1');
+                                    sendPBSEmail(existingAssessment);
+                                }
+                                res.json(existingAssessment);
                             });    
 
                             }else{
@@ -1162,6 +1227,196 @@ router.post('/userevaluate', function(req, res) {
     
     });
 });
+
+function sendPBSEmail(existingAssessment){
+    console.log('Sending PBS Email');
+    var templateName = 'Voucher Email - PBS';
+    var from = 'always@exambazaar.com';
+    var sender = 'Always Exambazaar';
+    var senderId = '59a7eb973d71f10170dbb468';
+    var userName = 'Student';
+    var userCode = 'N/A';
+    var userDetails = '';
+    var discountPercent = 'N/A';
+    if(existingAssessment.info && existingAssessment.info.name){
+        userName = existingAssessment.info.name;
+    }
+    if(existingAssessment.pbs && existingAssessment.pbs.coupon){
+        userCode = existingAssessment.pbs.coupon;
+    }
+    if(existingAssessment.pbs && existingAssessment.pbs.discountPercent){
+        discountPercent = existingAssessment.pbs.discountPercent + "% on Full Course Fees";
+    }
+    
+    var subject = '';
+    
+    if(!subject || subject == ''){
+        
+        if(existingAssessment.pbs && existingAssessment.pbs.discountPercent){
+            subject = userName + ", here's your Exambazaar " + existingAssessment.pbs.discountPercent + "% Discount Voucher for Bansal Classes, Srinagar";
+        }else{
+            subject = userName + ", here's your Exambazaar Discount Voucher for Bansal Classes Srinagar Admission Form";
+        }
+        
+        
+    }
+    
+    if(existingAssessment.info && existingAssessment.info.name){
+        userDetails += existingAssessment.info.name + " | ";
+    }
+    if(existingAssessment.info && existingAssessment.info.mobile){
+        userDetails += existingAssessment.info.mobile + " | ";
+    }
+    if(existingAssessment.info && existingAssessment.info.email){
+        userDetails += existingAssessment.info.email;
+    }
+    //sender = 'Always Exambazaar';
+    var fromEmail = {
+        email: from,
+        name: sender
+    };
+    var to = existingAssessment.info.email;
+    
+    var html = '';
+    if(!html){
+        html = ' ';
+    }
+    console.log("To: " + to + " Subject: " + subject + " from: " + from);
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            
+            
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    var to_email2 = new helper.Email('team@exambazaar.com');
+                    //var to_email3 = new helper.Email('gauravparashar294@gmail.com');
+                    //var subject = subject;
+                    var content = new helper.Content('text/html', html);
+                    
+                    
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    
+                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
+                    mail2.setTemplateId(templateId);
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request2 = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail2.toJSON(),
+                    });
+                    
+                    /*var mail3 = new helper.Mail(fromEmail, subject, to_email3, content);
+                    mail3.setTemplateId(templateId);
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request3 = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail3.toJSON(),
+                    });*/
+
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                                                        
+                            var this_email = new email({
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+                                
+                            });
+                            //console.log('This email is: ' + JSON.stringify(this_email));
+                            
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                console.log('Email sent with id: ' + this_email._id);
+                                
+                                sg.API(request2, function(error, response2) {
+                                    if(error){
+                                        res.json('Could not send email! ' + error);
+                                    }else{
+                                        
+                                        /*sg.API(request3, function(error, response3) {
+                                            if(error){
+                                                res.json('Could not send email! ' + error);
+                                            }else{
+                                                //res.json(response);
+                                            }
+                                        });*/
+                                        
+                                        
+                                    }
+                                });
+                            });
+                            
+                        }
+
+                    });
+                    
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            
+            
+            
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+};
 
 function sendPBCEmail(existingAssessment){
     console.log('Sending PBC Email');
