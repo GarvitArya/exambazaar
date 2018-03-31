@@ -198,140 +198,12 @@
 <div id="spacerXS" hide-gt-xs>
 </div>
 
-
-
-<!--<div layout="row" layout-align="start end"  hide-xs class="editFont text-primary font11 width100 min8vh paddingB5" id="breadcrumb">
-    <div hide-xs flex="5">
-    </div>
-    <div layout="row" layout-align="start start" flex class="paddingLR10">
-    <div layout="row" layout-align="start start" class="marginR5">
-        <a ui-sref="landing">{{category.displayname | uppercase}}</a>
-    </div>
-    <div layout="row" layout-align="start start" class="marginR5">
-    >
-    </div>
-    <div layout="row" layout-align="start start" class="marginR5">
-        <a ui-sref="category({ categoryName:{{'categoryName'}} })">{{subcategory.displayname | uppercase}}</a>
-    </div>
-    <div layout="row" layout-align="start start" class="marginR5">
-    >
-    </div>
-    <div layout="row" layout-align="start start" class="marginR5">
-        <a ui-sref="city({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}} })">{{city | uppercase}}</a>
-    </div>
-    </div>
-</div>-->
-<!--<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="examinfo2">
-    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground min50vh">
-    <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
-    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs  ng-if="subcategory.logo && subcategory.logo != ''">
-        <div class="min8vh"></div>
-        <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="subcategory.logo !=''"/>
-    </div>
-    <div layout="column" layout-align="start start" flex class="paddingLR20 min40vh">
-        <div class="min8vh"></div>
-        <div class="width100 font36 bold narrowLine marginB10">
-            {{subcategory.seoname}} Exam
-        </div>
-        <div layout="column" layout-align="start start" flex flex-xs="100">
-            <div layout="row" layout-align="start start" class="width100">
-                <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
-            </div>
-            <div layout="row" layout-align="start start" class="width100 paddingB20">
-                {{subcategory.briefDescription}}
-            </div>
-        </div>
-    </div>
-    <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingLR20 width100" ng-class="{ min40vh: !mobileDevice }">
-        <div class="min8vh"></div>
-        <div layout="column" layout-align="start start" class="width100 padding10 paddingL40 lightBorder text-white">
-            <div layout="row" layout-align="center start" class="width100">
-                <div flex>Frequency</div>
-                <div flex class="text-white">
-                    {{subcategory.frequency}}
-                </div>
-            </div>
-            <div layout="row" layout-align="center start" class="width100">
-                <div flex>Mode</div>
-                <div flex class="text-white">
-                    <div ng-if="activeExamCycle.examMode">
-                        Online Only
-                    </div>
-                    <div ng-if="!activeExamCycle.examMode">
-                        Online & Offline
-                    </div>
-                </div>
-            </div>
-            <div class="width100 marginT40 marginB20">
-                <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
-                    Read More
-                </md-button>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-</div>-->
-
-<!--<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14 marginB30" id="examinfo2">
-    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkerTranslucentBackground">
-    <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
-    <div layout="column" layout-align="start start" flex-gt-xs="10" flex-xs="100" class="min40vh paddingR10 " hide-xs ng-if="subcategory.logo && subcategory.logo != ''">
-        <div class="min8vh"></div>
-        <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
-    </div>
-    <div layout="column" layout-align="start start" flex class="paddingLR10 min40vh ">
-        <div class="min8vh"></div>
-        <div class="width100 font36 bold narrowLine marginB10">
-            {{subcategory.seoname}} Exam
-        </div>
-        <div layout="column" layout-align="start start" flex flex-xs="100">
-            <div layout="row" layout-align="start start" class="width100">
-                <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
-            </div>
-            <div layout="row" layout-align="start start" class="width100 description">
-                {{subcategory.briefDescription}}
-            </div>
-        </div>
-    </div>
-        
-    <div layout="column" layout-align="start start" flex-gt-xs="20" flex-xs="100" class="paddingL10 width100 " ng-class="{ min40vh: !mobileDevice }">
-        <div class="min8vh"></div>
-        <div layout="column" layout-align="start start" class="width100 paddingTB10 paddingLR20 lightBorder textGainsboro">
-            <div layout="row" layout-align="center start" class="width100">
-                <div flex>Frequency</div>
-                <div flex class="text-white">
-                    {{subcategory.frequency}}
-                </div>
-            </div>
-            <div layout="row" layout-align="center start" class="width100">
-                <div flex>Mode</div>
-                <div flex class="text-white">
-                    <div ng-if="activeExamCycle.examMode">
-                        Online Only
-                    </div>
-                    <div ng-if="!activeExamCycle.examMode">
-                        Online & Offline
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-        <div class="width100 marginTB20">
-            <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
-                Read More
-            </md-button>
-        </div>
-    </div>
-    </div>
-    </div>
-</div>-->
 <div class="whiteBackground" >
     
     <div layout="row" layout-align="start start" class="width100">
     
     <div layout="column" layout-align="start start" class="width100">
-        <div layout="row" layout-align="start end" class="width100 min15vh textBlack">
+        <div layout="row" layout-align="start end" class="width100 min10vh textBlack">
         <div hide-xs flex="5">
         </div>    
         
@@ -440,21 +312,21 @@
         
         
         
-        <div layout="row" layout-align="start start" class="width100 marginT10">
+        <div layout="row" layout-align="start start" class="width100">
             <div hide-xs flex="5">
             </div>
             <div flex class="paddingLR10">
-            <h1 class="width100 marginT10 marginB30 font26 narrowLine spacedLetter1">
+            <h1 class="width100 marginT10 marginB10 h1Font narrowLine spacedLetter1">
                 {{subcategory.coaching_page_name}} Coaching in {{city}}
             </h1>
             </div>
         </div>
-        <div layout="row" layout-align="start start"  class="width100 marginB20 animated fadeIn font14 narrowLine spacedLetter1 textDarkGrey">
+        <div layout="row" layout-align="start start"  class="width100 marginB10 baseFont narrowLine spacedLetter1 textDarkGrey">
             <div hide-xs flex="5">
             </div>
             <div flex>
                 <div flex class="paddingLR10" ng-if="allCoachings.items.length > 0">
-                    Great! We have found these coaching classes around you!
+                    We have found the following {{subcategory.displayname}} Coaching Classes in {{city}}!
                 </div>
                 <div flex class="paddingLR10" ng-if="allCoachings.items.length == 0 && allCoachings.finished">
                     Sorry! We found no coaching classes in {{city}} for {{subcategory.displayname}} Exam!
@@ -492,15 +364,11 @@
                             <div layout="row" layout-align="start center" class="width100 ">
                             <div layout="column" layout-align="start start" class="paddingR20">
                                 <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                                <h2 class=" text-primary thirdFont font18 bold">
-                                    
-                                        {{coachingGroup.groupName}}
-                                    
-                                </h2>
+                                <h2 class=" text-primary thirdFont font18 bold">{{coachingGroup.groupName}}</h2>
                                 </a>
                                 <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
-                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} coaching centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} {{subcategory.displayname}} Coaching Centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
                                     </h4>
                                     <span class="marginLR5">
                                         <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
@@ -567,7 +435,7 @@
                             <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
                                 
                             <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
-                                <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}">
+                                <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}" alt="{{result.name}}">
                                 <!--id="imageContainer2"<img ng-src="{{result.image}}" id="thumbnailImage2"/>-->
                                 <!--<div layout="row" layout-align="end center" class="text-white font10 paddingR5" id="thumbnailResultTextTop">
                                     {{result.name}}
