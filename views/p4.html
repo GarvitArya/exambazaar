@@ -326,10 +326,10 @@
             </div>
             <div flex>
                 <div flex class="paddingLR10" ng-if="allCoachings.items.length > 0">
-                    We have found the following {{subcategory.displayname}} Coaching Classes in {{city}}!
+                    We have found the following {{subcategory.coaching_page_name}} Coaching Classes in {{city}}!
                 </div>
                 <div flex class="paddingLR10" ng-if="allCoachings.items.length == 0 && allCoachings.finished">
-                    Sorry! We found no coaching classes in {{city}} for {{subcategory.displayname}} Exam!
+                    Sorry! We found no coaching classes in {{city}} for {{subcategory.coaching_page_name}} Exam!
                 </div>
             </div>
             
@@ -368,7 +368,7 @@
                                 </a>
                                 <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
-                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} {{subcategory.displayname}} Coaching Centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} {{subcategory.coaching_page_name}} Coaching Centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
                                     </h4>
                                     <span class="marginLR5">
                                         <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
@@ -429,7 +429,7 @@
                             </div>
 
                             <h3 class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
-                                 {{subcategory.displayname}}&nbsp;Results of {{coachingGroup.groupName}}
+                                 {{subcategory.coaching_page_name}}&nbsp;Results of {{coachingGroup.groupName}}
 
                             </h3>
                             <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
