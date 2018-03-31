@@ -3137,7 +3137,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                  
                  if(thisGroup.groupName == "Mahendra's"){
                       thisGroup.artificialRank = 100;
-                     console.log('I am here');
+                     //console.log('I am here');
                  }else{
                      thisGroup.artificialRank = 0;
                  }
