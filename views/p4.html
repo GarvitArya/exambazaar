@@ -491,11 +491,13 @@
                         <div flex layout="column" layout-align="center start" class="paddingL20 width100">
                             <div layout="row" layout-align="start center" class="width100 ">
                             <div layout="column" layout-align="start start" class="paddingR20">
+                                <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                 <h2 class=" text-primary thirdFont font18 bold">
-                                    <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                                    
                                         {{coachingGroup.groupName}}
-                                    </a>
+                                    
                                 </h2>
+                                </a>
                                 <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
                                     <h4 class="margin0 subBaseFont">{{coachingGroup.count}} coaching centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
