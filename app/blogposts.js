@@ -2116,7 +2116,7 @@ router.get('/recommenedBlogs/:blogpostSlug', function(req, res) {
                         res.json(recommenedBlogs);
                     }
                     
-                    console.log(blogposts.length);
+                    //console.log(blogposts.length);
                     if(!thisBlogpost.exams){
                         thisBlogpost.exams = [];
                     }
@@ -2135,7 +2135,7 @@ router.get('/recommenedBlogs/:blogpostSlug', function(req, res) {
                         }else if(rBlogpost.blogSeries == blogSeries){
                             recommenedBlogs.blogSeries.push(rBlogpost);
                         }else if(rBlogpost.exams && thisBlogpost.exams && thisBlogpost.exams.length > 0 && (examBlogsExcludedList.indexOf(rBlogpost.blogSeries) == -1)){
-                            console.log("--- " + rBlogpost.blogSeries + " --- " + examBlogsExcludedList.indexOf(rBlogpost.blogSeries) );
+                            //console.log("--- " + rBlogpost.blogSeries + " --- " + examBlogsExcludedList.indexOf(rBlogpost.blogSeries) );
                             var commonElements = [];
                            
                             rBlogpost.exams.forEach(function(thisExam, eindex){
@@ -2152,14 +2152,14 @@ router.get('/recommenedBlogs/:blogpostSlug', function(req, res) {
                         }else if(rBlogpost.coachingGroups && thisBlogpost.coachingGroups){
                             var commonElements = [];
                             rBlogpost.coachingGroups.forEach(function(thisCoaching, cindex){
-                                console.log(thisCoaching);
+                                //console.log(thisCoaching);
                                 if(thisBlogpost.coachingGroups.indexOf(thisCoaching) != -1){
                                     commonElements.push(thisCoaching);
                                 }
 
 
                             });
-                            console.log(commonElements);
+                            //console.log(commonElements);
                             if(commonElements.length > 0){
                                 recommenedBlogs.coachingBlogs.push(rBlogpost);
                             }

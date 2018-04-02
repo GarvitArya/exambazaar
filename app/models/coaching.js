@@ -218,6 +218,9 @@ var coachingSchema = mongoose.Schema({
     cirf: [Schema.Types.Mixed],
     googlePlace:Schema.Types.Mixed,
     googlePlaceSearchTry:Boolean,
+    examCirf: Schema.Types.Mixed,
+    gRank: Schema.Types.Mixed,
+    cRank: Schema.Types.Mixed,
 });
 
 coachingSchema.index({ loc: '2dsphere'});

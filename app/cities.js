@@ -117,8 +117,8 @@ router.post('/aroundme', function(req, res) {
     var limit = 5;
     if(checkValidLatLng(thisLat, thisLng)){
         var coordinates = [thisLng, thisLat];
-        console.log(coordinates);
-        console.log(kms);
+        //console.log(coordinates);
+        //console.log(kms);
         var query = {
             "loc" : {
                 $near: {

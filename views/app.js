@@ -1893,6 +1893,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.oneOff = function() {
             return $http.get('/api/coachings/oneOff');
         };
+        
+        this.generateGRanks = function() {
+            return $http.get('/api/coachings/generateGRanks');
+        };
+        this.generateCRanks = function() {
+            return $http.get('/api/coachings/generateCRanks');
+        };
+        this.generateExamCirf = function() {
+            return $http.get('/api/coachings/generateExamCirf');
+        };
         this.getProviders = function(city) {
             return $http.get('/api/coachings/city/'+city, {city: city});
         };
@@ -17395,9 +17405,39 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification){
             
+            $scope.generateGRanks = function(){
+                coachingService.generateGRanks().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            $scope.generateCRanks = function(){
+                coachingService.generateCRanks().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
             
+            $scope.generateExamCirf = function(){
+                coachingService.generateExamCirf().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
             $scope.sanitizeMobiles = function(){
                 coachingService.sanitizeMobiles().success(function (data, status, headers) {
                     console.log('Mobiles sanitized');
