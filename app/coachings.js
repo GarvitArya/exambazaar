@@ -3502,6 +3502,12 @@ router.post('/coachingGroup', function(req, res) {
     var groupName = groupCity.groupName;
     var cityName = groupCity.cityName;
     
+    var mNames = ["Mahendra", "Mahendra's", "Mahendra's Institute", "Mahendra Institute"];
+    console.log(groupName);
+    if(mNames.indexOf(groupName) != -1){
+        groupName = mNames;
+        console.log('I am here');
+    }
     //city: cityName,
     var thisGroup = coaching
         .find({'groupName': groupName, disabled:false, type: 'Coaching'})
