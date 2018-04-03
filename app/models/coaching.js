@@ -220,7 +220,9 @@ var coachingSchema = mongoose.Schema({
     googlePlaceSearchTry:Boolean,
     examCirf: Schema.Types.Mixed,
     gRank: Schema.Types.Mixed,
+    gRankInfo: Schema.Types.Mixed,
     cRank: Schema.Types.Mixed,
+    cRankInfo: Schema.Types.Mixed,
     tRank: Schema.Types.Mixed,
 });
 

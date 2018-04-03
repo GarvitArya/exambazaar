@@ -173,7 +173,7 @@ router.post('/groupResults', function(req, res) {
         if (!err){
             var examId = thisExam._id.toString();
             
-            var allGroupInstitutes = coaching.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
+            var allGroupInstitutes = coaching.find({ 'groupName': groupName, disabled: false, image: {$exists: true} },{_id:1},function (err, allGroupInstitutes) {
             if (!err){
                 allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
                 var basicResults = [];
@@ -185,7 +185,8 @@ router.post('/groupResults', function(req, res) {
 
                         var counter = 0;
                         var nLength = groupResults.length;
-                        console.log("No of results are: " + nLength);
+                        //console.log(groupResults);
+                        //console.log("No of results are: " + nLength);
                         groupResults.forEach(function(thisResult, index){
                             counter = counter + 1;
                             basicResults.push(thisResult);
