@@ -3236,7 +3236,7 @@ router.post('/CoachingStream', function(req, res) {
                 var nCoachings = allCoachings.length;
                 var counter = 0;
                 allCoachings.forEach(function(thisProvider, pIndex){
-                    //console.log(thisProvider.gRank);
+                    console.log(thisProvider._id.groupName + " | " + thisProvider.tRank);
                     var newProvider = {
                         groupName: thisProvider._id.groupName,
                         exams: [],
@@ -3292,9 +3292,9 @@ router.post('/CoachingStream', function(req, res) {
                         counter += 1;
                         if(counter == nCoachings){
                             
-                            allProviders.sort(function(a,b){
+                            /*allProviders.sort(function(a,b){
                               return (b.count - a.count);
-                            });
+                            });*/
                             
                             var allGroupNames = null;
 
