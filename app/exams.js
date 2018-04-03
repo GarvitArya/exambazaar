@@ -91,6 +91,10 @@ router.get('/basic', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){
+            
+            docs.sort(function(a,b){
+              return (b.rank - a.rank);
+            });
             res.json(docs);
         } else {throw err;}
     });

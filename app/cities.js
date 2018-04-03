@@ -239,9 +239,13 @@ router.get('/findstates', function(req, res) {
     
 });
 router.get('/all', function(req, res) {
-    city.find({}, function(err, docs) {
+    var allCities = city.find({}, {name: 1, count: 1}, function(err, allCities) {
     if (!err){
-        res.json(docs);
+        allCities.sort(function(a,b){
+          return (b.count - a.count);
+        });
+        var cityNames = allCities.map(function(a) {return a.name;});
+        res.json(cityNames);
     } else {throw err;}
     });
 });

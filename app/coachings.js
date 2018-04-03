@@ -2839,6 +2839,59 @@ router.get('/generateTRanks', function(req, res) {
         } else {throw err;}
     });
 });
+
+
+
+router.post('/p4OrderExplainer', function(req, res) {
+    //res.json(true);
+    var cityExamForm = req.body;
+    
+    var cityName = cityExamForm.cityName;
+    var examId = cityExamForm.examId.toString();
+    //console.log(cityName + " | "  + examId);
+    var thisExam = exam
+        .findOne({'_id': examId}, {_id: 1})
+        //.deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            if(thisExam){
+            var examId = thisExam._id;
+            var tRankString = "$tRank." + examId;
+            var allCoachings = coaching.aggregate(
+            [
+                {$match: {disabled: false, "city" : cityName,"exams" : thisExam._id} },
+                {"$group": { 
+                    "_id": { groupName: "$groupName"}, 
+                    count: {$sum:1}, 
+                    /*hRank: {$sum:"$hRank"}, */
+                    _ids: { $addToSet: "$_id" },
+                    gRank: { $first: "$gRank." + examId },
+                    gRankInfo: { $first: "$gRankInfo." + examId },
+                    cRank: { $first: "$cRank." + examId },
+                    cRankInfo: { $first: "$cRankInfo." + examId },
+                    tRank: { $first: "$tRank." + examId },
+                }},
+                
+                {$sort:{"tRank":-1}},
+
+            ],function(err, allCoachings) {
+            if (!err){
+                //console.log(allCoachings);
+                res.json(allCoachings);
+            } else {throw err;}
+            });
+                
+                
+                
+            }else{
+                res.json(null);
+            }
+            
+        } else {throw err;}
+    });
+    
+    
+});
 router.get('/generateCRanks', function(req, res) {
     res.json(true);
     var limit = 30000;
@@ -3300,7 +3353,7 @@ router.post('/CoachingStream', function(req, res) {
                 var nCoachings = allCoachings.length;
                 var counter = 0;
                 allCoachings.forEach(function(thisProvider, pIndex){
-                    console.log(thisProvider._id.groupName + " | " + thisProvider.tRank);
+                    console.log(thisProvider._id.groupName + " | " + thisProvider.tRank + " | " + thisProvider._ids.length);
                     var newProvider = {
                         groupName: thisProvider._id.groupName,
                         tRank: thisProvider.tRank,

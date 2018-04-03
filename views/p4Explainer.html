@@ -1,0 +1,142 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
+    <div layout="row" layout-align="center center" class="marginTB10 secondFont font20 textBlack bold width100">
+        P4 Order Explainer
+    </div>
+    <div layout="row" layout-align="start start" class="marginTB10 width100">
+        <div flex class="paddingLR10">
+           <md-select ng-model="p4Order.cityName" placeholder="Select Your City" class="margin0 font14">
+                <md-option ng-repeat="city in allCities" ng-value="city" class="font14">
+                {{city}}
+                </md-option>
+            </md-select> 
+        </div>
+        <div flex class="paddingLR10">
+           <md-select ng-model="p4Order.exam" placeholder="Select Your Exam" class="margin0 font14">
+                <md-option ng-repeat="exam in allExams | orderBy: ['-rank']" ng-value="exam" class="font14">
+                {{exam.exam_page_name}}
+                </md-option>
+            </md-select> 
+        </div>
+        <div class="paddingLR10">
+           <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="p4OrderExplainer()">
+                Go
+            </md-button>
+        </div>
+        <div class="paddingLR10">
+           <md-button class="md-danger md-medium font16 tolowercase margin0 width100" ng-click="openCoachingPage()">
+                Open Page
+            </md-button>
+        </div>
+        
+    </div>
+    <div layout="row" layout-align="start start" class="width100 font11 bold paddingLR10 marginT20" ng-if="p4Coachings">
+        <div flex="5">S. No.</div>
+        <div flex="15" class="paddingLR5">Name</div>
+        <div flex="5">Total</div>   
+        <div flex="5" class="danger">Group</div>   
+        <div flex="5" class="text-primary">City</div>   
+        <div flex="5" class="danger">Expert Review</div>   
+        <div flex="5" class="danger">Rating</div>   
+        <div flex="5" class="danger">Results</div>   
+        <div flex="5" class="danger">Photo</div>   
+        <div flex="5" class="danger">Video</div>   
+        <div flex="5" class="danger">Logo</div>   
+        <div flex="5" class="text-primary">Reviews</div>   
+        <div flex="5" class="text-primary">Centres</div>   
+        <div flex="5" class="text-primary">Faculty</div>   
+        <div flex="5" class="text-primary">Course</div>   
+    </div>
+    
+    <div layout="column" layout-align="start start" class=" width100 font10 padding10">
+        <div layout="row" layout-align="start start" class="width100" ng-repeat="coaching in p4Coachings">
+            <div flex="5">{{$index + 1}}</div>
+            <div flex="15"  class="paddingLR5">{{coaching._id.groupName}}</div>
+            <div flex="5"  class="bold">{{coaching.tRank | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRank | number : 0}}</div>   
+            <div flex="5" class="text-primary">{{coaching.cRank | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.expert_review | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.rating | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.results | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.photo | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.video | number : 0}}</div>   
+            <div flex="5" class="danger">{{coaching.gRankInfo.logo | number : 0}}</div>   
+            <div flex="5" class="text-primary">{{coaching.cRankInfo.review | number : 0}}</div>   
+            <div flex="5" class="text-primary">{{coaching.cRankInfo.centre | number : 0}}</div>   
+            <div flex="5" class="text-primary">{{coaching.cRankInfo.faculty | number : 0}}</div>   
+            <div flex="5" class="text-primary">{{coaching.cRankInfo.course | number : 0}}</div>   
+        </div>
+    </div>
+</div>
+</div>

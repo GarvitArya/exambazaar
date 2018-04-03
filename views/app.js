@@ -1893,7 +1893,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.oneOff = function() {
             return $http.get('/api/coachings/oneOff');
         };
-        
+        this.p4OrderExplainer = function(cityExamForm) {
+            return $http.post('/api/coachings/p4OrderExplainer', cityExamForm);
+        };
         this.generateGRanks = function() {
             return $http.get('/api/coachings/generateGRanks');
         };
@@ -25411,6 +25413,52 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
     }]); 
+        
+    exambazaar.controller("p4OrderExplainerController", 
+        [ '$scope', '$http', '$rootScope', 'coachingService','$state', '$mdDialog', 'allCities', 'examList', 'Notification', function($scope, $http, $rootScope, coachingService, $state, $mdDialog, allCities, examList, Notification){
+            $scope.allCities = allCities.data;
+            $scope.allExams = examList.data;
+            
+            
+            $scope.p4OrderExplainer = function(){
+                var p4Order = {
+                    cityName: $scope.p4Order.cityName,
+                    examId: $scope.p4Order.exam._id,
+                }
+                 coachingService.p4OrderExplainer(p4Order).success(function (data, status, headers) {
+                    Notification.primary({message: "Information loaded!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $scope.p4Coachings = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+            };
+            $scope.p4Order = {
+                cityName: $scope.allCities[0],
+                exam:$scope.allExams[0]
+            };
+            $scope.p4OrderExplainer();
+            $rootScope.pageTitle = 'P4 Order Explainer';
+            
+            
+            $scope.openCoachingPage = function(){
+                var cityslug = slugify($scope.p4Order.cityName);
+                var examslug = slugify($scope.p4Order.exam.coaching_page_slug);
+                var url = $state.href('findCoaching2', {examslug: examslug, cityslug: cityslug});
+                window.open(url,'_blank');
+                
+            };
+            $scope.openCoachingP5 = function(coachingGroup){
+                var url = $state.href('findCoaching2', {examslug: examslug, cityslug: cityslug});
+                window.open(url,'_blank');
+                
+            };
+            
+            
+            
+            
+    }]); 
     
     exambazaar.controller("allOffersController", 
         [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'coachingService', function($scope, $http, $state, $rootScope, offerService, allOffers, coachingService){
@@ -37991,6 +38039,34 @@ function getLatLng(thisData) {
                     return bookAppointmentService.getBookAppointments();
                 }],
                 
+            }
+        })
+    
+        .state('p4Explainer', {
+            url: '/ebinternal/p4Explainer',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'p4Explainer.html',
+                    controller: 'p4OrderExplainerController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allCities: ['cityService',
+                    function(cityService) {   
+                    return cityService.getAllCities();
+                }],
+                
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExamsBasic();
+                }],
             }
         })
         .state('allreviews', {

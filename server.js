@@ -279,6 +279,7 @@ var allStates = [
 '/ebinternal/manageAppointment/:appointmentId',
 '/ebinternal/appointments',
 '/ebinternal/allreviews',
+'/ebinternal/p4Explainer',
 '/ebinternal/allblogtags',
 '/ebinternal/allTests',
 '/ebinternal/calendar',
