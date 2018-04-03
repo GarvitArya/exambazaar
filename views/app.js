@@ -1900,6 +1900,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.generateCRanks = function() {
             return $http.get('/api/coachings/generateCRanks');
         };
+        this.generateTRanks = function() {
+            return $http.get('/api/coachings/generateTRanks');
+        };
         this.generateExamCirf = function() {
             return $http.get('/api/coachings/generateExamCirf');
         };
@@ -17427,7 +17430,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log();
                 });    
             };
-            
+            $scope.generateTRanks = function(){
+                coachingService.generateTRanks().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
             $scope.generateExamCirf = function(){
                 coachingService.generateExamCirf().success(function (data, status, headers) {
                     Notification.success("Great, all done!");

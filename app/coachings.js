@@ -11,6 +11,7 @@ var disableProvider = require('../app/models/disableProvider');
 var oldcoaching = require('../app/models/oldcoaching');
 var exam = require('../app/models/exam');
 var view = require('../app/models/view');
+var review = require('../app/models/review');
 var result = require('../app/models/result');
 var group = require('../app/models/group');
 var logourl = require('../app/models/logourl');
@@ -2791,17 +2792,61 @@ router.get('/providersWithAreas', function(req, res) {
     }); //.limit(500)
 });
 
-
+router.get('/generateTRanks', function(req, res) {
+    res.json(true);
+    
+    var allCoachings = coaching.find({disabled: false, type: 'Coaching'}, {gRank: 1, cRank: 1, tRank: 1},function(err, allCoachings) {
+        if (!err){
+            allCoachings.forEach(function(thisCoaching, index){
+                var thisTRank = {};
+                var thisGRank = thisCoaching.gRank;
+                var thisCRank = thisCoaching.cRank;
+                var allExamIds = [];
+                if(thisGRank){
+                    for (var property in thisGRank) {
+                        if(allExamIds.indexOf(property) == -1){
+                            allExamIds.push(property);
+                        }
+                    }
+                }
+                if(thisCRank){
+                    for (var property in thisCRank) {
+                        if(allExamIds.indexOf(property) == -1){
+                            allExamIds.push(property);
+                        }
+                    }
+                }
+                var nExams = allExamIds.length;
+                var counter = 0;
+                allExamIds.forEach(function(thisExamId, eindex){
+                    thisTRank[thisExamId] = 0;
+                    if(thisGRank && thisGRank[thisExamId]){
+                        thisTRank[thisExamId] += thisGRank[thisExamId];
+                    }
+                    if(thisCRank && thisCRank[thisExamId]){
+                        thisTRank[thisExamId] += thisCRank[thisExamId];
+                    }
+                    counter += 1;
+                });
+                if(counter == nExams){
+                    thisCoaching.tRank = thisTRank;
+                    thisCoaching.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(thisCoaching._id + " saved!");
+                    })
+                }
+            });
+        } else {throw err;}
+    });
+});
 router.get('/generateCRanks', function(req, res) {
     res.json(true);
-    var limit = 100;
+    var limit = 30000;
     var weight = {
-        expert_review: 100,
-        rating: 20,
-        results: 2,
-        photo: 2,
-        video: 2,
-        logo: 5,
+        centres: 2,
+        reviews: 20,
+        course: 10,
+        faculty: 5,
     }; 
     
     var allCoachings = coaching.aggregate(
@@ -2813,82 +2858,57 @@ router.get('/generateCRanks', function(req, res) {
             "_id": { groupName: "$groupName", city: "$city"}, 
             count: {$sum:1},
             ids: { $addToSet: "$_id" },
+            faculty: { $addToSet: "$faculty" },
+            course: { $addToSet: "$course" },
             exams: { $addToSet: "$exams" },
-            photo: { $addToSet: "$photo" },
-            video: { $addToSet: "$video" },
-            results: { $addToSet: "$results" },
-            rating: { $addToSet: "$rating" },
-            logo: { $first: "$logo" },
-            examCirf: { $first: "$examCirf" },
         }},
         {$sort:{"count":-1}},
         {$limit: limit},
     ],function(err, allCoachings) {
     if (!err){
         console.log(allCoachings);
-        /*allCoachings.forEach(function(thisCoaching, index){
-            var thisGRank = {};
+        allCoachings.forEach(function(thisCoaching, index){
+            var thisCRank = {};
             var thisExams = thisCoaching.exams;
             var thisCoachingName = thisCoaching._id.groupName;
+            var thisCoachingCity = thisCoaching._id.city;
             var eCounter = 0;
             var nExams = thisExams.length;
+            var groupIds = thisCoaching.ids;
             thisExams.forEach(function(thisExam, index){
-                var thisExamGRank = 0;
+                var thisExamCRank = 0;
                 thisExam = thisExam;
                 
-                var expertReview = blogpost
-                .findOne({blogSeries: 'Expert Reviews', coachingGroups: thisCoachingName, active: true, exams: thisExam}, {_id: 1})
-                .exec(function(err, expertReview) {
+                var cReviews = review
+                .find({institute: groupIds, active: true, exams: thisExam}, {_id: 1})
+                .exec(function(err, cReviews) {
                 if (!err){
-                    if(expertReview){
-                        thisExamGRank += weight.expert_review;
-                    }else{
-
+                    if(groupIds && groupIds.length > 0){
+                        thisExamCRank += weight.centres *  groupIds.length;
                     }
-                    //console.log(thisCoaching.rating);
-                    if(thisCoaching.photo){
-                        thisExamGRank += weight.photo * thisCoaching.photo.length;
+                    //console.log("1. " + thisExamCRank);
+                    if(cReviews && cReviews.length > 0){
+                        thisExamCRank += weight.reviews *  cReviews.length;
                     }
-                    if(thisCoaching.video){
-                        thisExamGRank += weight.video * thisCoaching.video.length;
+                    //console.log("2. " + thisExamCRank);
+                    if(thisCoaching.faculty){
+                        thisExamCRank += weight.faculty * thisCoaching.faculty.length;
                     }
+                    //console.log("3. " + thisExamCRank);
+                    if(thisCoaching.course){
+                        thisExamCRank += weight.course * thisCoaching.course.length;
+                    }
+                    //console.log("4. " + thisExamCRank);
                     
-                    
-                    if(thisCoaching.results && thisCoaching.results.length > 0){
-                        var thisCoachingResults = [];
-                        
-                        thisCoaching.results.forEach(function(thisCR, crindex){
-                            thisCoachingResults = thisCoachingResults.concat(thisCR);
-                            
-                        });
-                        
-                        if(thisCoachingResults.length > 0){
-                            var thisResultExams = thisCoachingResults.map(function(a) {return a.exam;});
-                    
-                            for(var i=0;i<thisResultExams.length;i++){
-
-                                if(thisResultExams[i] && thisResultExams[i].toString() == thisExam.toString()){
-                                    thisExamGRank += weight.results;
-                                }
-                            }
-                        }
-                        
-                    }
-                    if(thisCoaching.logo && thisCoaching.logo.length > 0){
-                        thisExamGRank += weight.logo;
-                    }
-                    if(thisCoaching.examCirf && thisCoaching.examCirf[thisExam.toString()]){
-                        //console.log("I am here!!");
-                        thisExamGRank += thisCoaching.examCirf[thisExam.toString()];
-                    }
-                    thisGRank[thisExam] = thisExamGRank;
+                    thisCRank[thisExam] = thisExamCRank;
                     eCounter += 1;
                     if(eCounter == nExams){
                         
-                        var allGroupInstitutes = coaching.find({groupName: thisCoaching._id.groupName},{_id:1, gRank: 1},function (err, allGroupInstitutes) {
+                        var allGroupInstitutes = coaching.find({groupName: thisCoachingName, city: thisCoachingCity, disabled: false},{_id:1, cRank: 1},function (err, allGroupInstitutes) {
                             if (!err && allGroupInstitutes){
                                 allGroupInstitutes.forEach(function(thisprovider, index){
-                                    thisprovider.gRank = thisGRank;
+                                    thisprovider.cRank = null;
+                                    thisprovider.cRank = thisCRank;
                                     thisprovider.save(function(err, thisprovider) {
                                     if (err) return console.error(err);
                                     console.log(thisprovider._id + " saved!");
@@ -2899,8 +2919,6 @@ router.get('/generateCRanks', function(req, res) {
                                 
                             }
                         });
-                        
-                        //console.log(thisGRank);
                     }
                 }
                 });
@@ -2914,7 +2932,7 @@ router.get('/generateCRanks', function(req, res) {
 
             
 
-        });*/
+        });
 
 
 
@@ -3188,7 +3206,7 @@ router.post('/CoachingStream', function(req, res) {
                 });*/
             var examId = thisExam._id;
             //console.log(examId);
-            var sortString = "$gRank." + examId;
+            var sortString = "$tRank." + examId;
             var allCoachings = coaching.aggregate(
             [
                 {$match: {disabled: false, "city" : city,"exams" : thisExam._id} },
@@ -3201,13 +3219,13 @@ router.post('/CoachingStream', function(req, res) {
                     exams: { $addToSet: "$exams" },
                     logo: { $addToSet: "$logo" },
                     latlng: { $addToSet: "$latlng" },
-                    gRank: { $first: sortString },
+                    tRank: { $first: sortString },
                 }},
                 /*{$sort:{"expertReview":1, "count":-1, "_id.groupName": 1 }},*/
                 /*{ "$project": { "_id": 1, count: 1, _ids: 1, exams: 1, logo: 1, latlng: 1, "gRank" }},*/
                 
                 
-                {$sort:{"gRank":-1}},
+                {$sort:{"tRank":-1}},
                 {$limit: skip + limit},
                 {$skip: skip},
 
