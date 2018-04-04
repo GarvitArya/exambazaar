@@ -1008,7 +1008,180 @@ var fromEmail = {
     
 });
 
+router.post('/coachingDiscountToSchool', function(req, res) {
 
+var templateName = 'Coaching Discount';
+console.log('Starting Coaching Discount Email');
+var from = 'ayush@exambazaar.com';
+var sender = 'Ayush Jain';
+var senderId = '5a1831f0bd2adb260055e352';
+var eCounter = 0;
+var fromEmail = {
+    email: from,
+    name: sender
+};
+    var limit = 1;
+    var skip = 0;
+    var allSchools = school
+    .find({ "data.email": {$exists: true}, "data.email": {$ne: ""}, "data.district": "JAIPUR"}, { data: 1 })
+    //.limit(1)
+    .limit(limit).skip(skip)
+    .exec(function (err, allSchools) {
+
+    if (!err){
+    if(allSchools){
+        res.json(true);
+        
+        var nSchools = allSchools.length;
+        var scounter = 0;
+        var eCounter = 0;
+        var asCounter = 0;
+        console.log('There are: ' + allSchools.length + ' schools!');
+        
+        
+        allSchools.forEach(function(thisSchool, sindex){
+        var thisEmail = thisSchool.data.email;
+        //thisEmail = "gaurav@exambazaar.com";
+        var schoolName = thisSchool.data["name-of-institution"];
+        var schoolId = thisSchool._id;
+        if(!schoolName){
+            schoolName = "School";
+        }
+        schoolName = schoolName.replace(".", ". ");
+        schoolName = titleCase(schoolName);
+        var principalName = thisSchool.data["name-of-principal-head-of-institution"];
+        var attnName = "";
+        if(principalName && principalName.length > 1){
+            principalName = principalName.replace(".", ". ");
+            principalName = titleCase(principalName);
+            
+            attnName = principalName;
+        }else{
+            attnName =  "Principal";
+        }
+        //console.log("Attn: " + attnName + " | Email: " + thisEmail);
+            
+        var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+            if (err) return handleError(err);
+            if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+            if(thisEmailTemplate.name == templateName){
+                templateFound = true;
+                templateId = thisEmailTemplate.templateKey;
+                
+                var from_email = new helper.Email(fromEmail);
+                var to = thisEmail;
+                //to = "gaurav@exambazaar.com";
+                var to_email = new helper.Email(to);
+                //var subject = subject;
+                var html = ' ';
+                var subject = ' ';
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                mail.setTemplateId(templateId);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-schoolName-', schoolName));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-attnName-', attnName));
+            
+                
+                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-04-04T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
+                    if (err) return handleError(err);
+                    if(existingEmail){
+                        console.log("Email to " + to + " already sent at: " + existingEmail._date);
+                        scounter += 1;
+                        asCounter += 1;
+                        if(scounter == nSchools){
+                            console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
+                        }
+                        
+                    }else{
+                        var request = sg.emptyRequest({
+                            method: 'POST',
+                            path: '/v3/mail/send',
+                            body: mail.toJSON(),
+                        });
+                        sg.API(request, function(error, response) {
+                        if(error){
+                            console.log(' ---- Could not send email! ' + error + " " + response.statusCode);
+                            console.log(sindex + "." + " Email to " + attnName + " | " + thisEmail + " NOT SENT | Id: " + thisSchool._id + " ---- ");
+                            scounter += 1;
+
+                            if(scounter == nSchools){
+                                console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
+                            }
+                        }else{
+
+
+                            var this_email = new email({
+                                school: schoolId,
+                                templateId: templateId,
+                                fromEmail: fromEmail,
+                                to: thisEmail,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+                            });
+
+                            this_email.save(function(err, this_email) {
+                                console.log(sindex + "." +" Email to " + attnName + " | " + thisEmail  + " sent | Id: " + thisSchool._id);
+                                scounter += 1;
+                                eCounter += 1;
+
+                                if(scounter == nSchools){
+                                    console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
+                                }
+
+
+                            });
+
+
+                        }
+
+                    });
+                    }
+                });
+                
+                
+
+            }
+            if(counter == nLength){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+
+
+
+            }else{
+                res.json('No Active SendGrid API Key');
+            }
+        });
+
+
+        });
+    }
+    } else {throw err;}
+});
+    
+    
+    
+    
+    
+});
 
 router.post('/introductionofEB', function(req, res) {
     console.log('Starting introduction Email');

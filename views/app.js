@@ -560,7 +560,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.officialPapersInvitetoSchool = function() {
             return $http.post('/api/emails/officialPapersInvitetoSchool');
         };
-        
+        this.coachingDiscountToSchool = function() {
+            return $http.post('/api/emails/coachingDiscountToSchool');
+        };
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
         };
@@ -1905,6 +1907,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.generateTRanks = function() {
             return $http.get('/api/coachings/generateTRanks');
         };
+        this.generateSponsoredRanks = function() {
+            return $http.get('/api/coachings/generateSponsoredRanks');
+        };
         this.generateExamCirf = function() {
             return $http.get('/api/coachings/generateExamCirf');
         };
@@ -3150,12 +3155,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var p4StreamExamsIds = $scope.currentStream.exams.map(function(a) {return a._id;});
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){
                  
-                 if(thisGroup.groupName == "Mahendra's"){
+                 /*if(thisGroup.groupName == "Mahendra's"){
                       thisGroup.artificialRank = 100;
                      //console.log('I am here');
                  }else{
                      thisGroup.artificialRank = 0;
-                 }
+                 }*/
+                 
+                 console.log(thisGroup);
                  if(thisGroup.examCirf && thisGroup.examCirf.cirf){
                      thisGroup.examCirfScore = Number(thisGroup.examCirf.cirf) * 5/ 100;
                     
@@ -17442,6 +17449,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log();
                 });    
             };
+            $scope.generateSponsoredRanks = function(){
+                coachingService.generateSponsoredRanks().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            
+            
             $scope.generateExamCirf = function(){
                 coachingService.generateExamCirf().success(function (data, status, headers) {
                     Notification.success("Great, all done!");
@@ -34028,6 +34047,26 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                          EmailService.officialPapersInvitetoSchool().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            $scope.coachingDiscountToSchool = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.coachingDiscountToSchool().success(function (thisData, status, headers) {
                             
                             Notification.success("All done!");
                         })

@@ -101,13 +101,18 @@
         </div>
         
     </div>
-    <div layout="row" layout-align="start start" class="width100 font11 bold paddingLR10 marginT20 greyBottomBorder greyTopBorder paddingTB5" ng-if="p4Coachings">
+    
+    
+    <div layout="column" layout-align="start start" class=" width100 font10" ng-repeat="coaching in p4Coachings">
+        <div layout="row" layout-align="start start" class="width100 font11 bold marginT20 greyBottomBorder greyTopBorder" ng-if="$index % 25 == 0">
         <div flex="5">S. No.</div>
         <div flex="20" class="paddingLR5">Name</div>
         <div flex="5">Total</div>   
+        
         <div flex="5" class="danger">Group</div>   
-        <div flex="5" class="text-primary">City</div>   
-        <div flex="10" class="danger">Expert Review</div>   
+        <div flex="5" class="text-primary">City</div>
+        <div flex="10" class="textBlack paddingLR5">Sponsored</div>   
+        <div flex="10" class="danger paddingLR5">Expert Review</div>   
         <div flex="5" class="danger">Rating</div>   
         <div flex="5" class="danger">Results</div>   
         <div flex="5" class="danger">Photo</div>   
@@ -118,15 +123,15 @@
         <div flex="5" class="text-primary">Faculty</div>   
         <div flex="5" class="text-primary">Course</div>   
     </div>
-    
-    <div layout="column" layout-align="start start" class=" width100 font10 padding10">
-        <div layout="row" layout-align="start start" class="width100" ng-repeat="coaching in p4Coachings">
+        
+        <div layout="row" layout-align="start start" class="width100" >
             <div flex="5">{{$index + 1}}</div>
             <div flex="20"  class="paddingLR5">{{coaching._id.groupName}}</div>
             <div flex="5"  class="bold">{{coaching.tRank | number : 0}}</div>   
             <div flex="5" class="danger">{{coaching.gRank | number : 0}}</div>   
             <div flex="5" class="text-primary">{{coaching.cRank | number : 0}}</div>   
-            <div flex="10" class="danger">{{coaching.gRankInfo.expert_review | number : 0}}</div>   
+            <div flex="10" class="textBlack paddingLR5">{{coaching.sponsoredRank | number : 0}}</div>   
+            <div flex="10" class="danger paddingLR5">{{coaching.gRankInfo.expert_review | number : 0}}</div>   
             <div flex="5" class="danger">{{coaching.gRankInfo.rating | number : 0}}</div>   
             <div flex="5" class="danger">{{coaching.gRankInfo.results | number : 0}}</div>   
             <div flex="5" class="danger">{{coaching.gRankInfo.photo | number : 0}}</div>   

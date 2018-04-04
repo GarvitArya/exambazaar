@@ -224,6 +224,7 @@ var coachingSchema = mongoose.Schema({
     cRank: Schema.Types.Mixed,
     cRankInfo: Schema.Types.Mixed,
     tRank: Schema.Types.Mixed,
+    sponsoredRank: Schema.Types.Mixed,
 });
 
 coachingSchema.index({ loc: '2dsphere'});

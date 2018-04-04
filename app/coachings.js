@@ -2795,12 +2795,13 @@ router.get('/providersWithAreas', function(req, res) {
 router.get('/generateTRanks', function(req, res) {
     res.json(true);
     
-    var allCoachings = coaching.find({disabled: false, type: 'Coaching'}, {gRank: 1, cRank: 1, tRank: 1},function(err, allCoachings) {
+    var allCoachings = coaching.find({disabled: false, type: 'Coaching'}, {gRank: 1, cRank: 1, tRank: 1, sponsoredRank: 1},function(err, allCoachings) {
         if (!err){
             allCoachings.forEach(function(thisCoaching, index){
                 var thisTRank = {};
                 var thisGRank = thisCoaching.gRank;
                 var thisCRank = thisCoaching.cRank;
+                var thisSponsoredRank = thisCoaching.sponsoredRank;
                 var allExamIds = [];
                 if(thisGRank){
                     for (var property in thisGRank) {
@@ -2816,6 +2817,13 @@ router.get('/generateTRanks', function(req, res) {
                         }
                     }
                 }
+                if(thisSponsoredRank){
+                    for (var property in thisSponsoredRank) {
+                        if(allExamIds.indexOf(property) == -1){
+                            allExamIds.push(property);
+                        }
+                    }
+                }
                 var nExams = allExamIds.length;
                 var counter = 0;
                 allExamIds.forEach(function(thisExamId, eindex){
@@ -2825,6 +2833,9 @@ router.get('/generateTRanks', function(req, res) {
                     }
                     if(thisCRank && thisCRank[thisExamId]){
                         thisTRank[thisExamId] += thisCRank[thisExamId];
+                    }
+                    if(thisSponsoredRank && thisSponsoredRank[thisExamId]){
+                        thisTRank[thisExamId] += thisSponsoredRank[thisExamId];
                     }
                     counter += 1;
                 });
@@ -2841,7 +2852,33 @@ router.get('/generateTRanks', function(req, res) {
 });
 
 
-
+router.get('/generateSponsoredRanks', function(req, res) {
+    res.json(true);
+    console.log('Starting Sponsored Ranks');
+    var coachingId = '5a97bde62aeebc5a97e8c70a';
+    var allExamIds = ['58cedb079eef5e0011c17e91', '58ac27030be6311eccbbc3a6'];
+    var allCoachings = coaching.find({disabled: false, type: 'Coaching', _id: coachingId}, {sponsoredRank: 1},function(err, allCoachings) {
+        if (!err){
+            allCoachings.forEach(function(thisCoaching, index){
+                var thisSponsoredRank = {};
+                
+                var nExams = allExamIds.length;
+                var counter = 0;
+                allExamIds.forEach(function(thisExamId, eindex){
+                    thisSponsoredRank[thisExamId] = 10000;
+                    counter += 1;
+                });
+                if(counter == nExams){
+                    thisCoaching.sponsoredRank = thisSponsoredRank;
+                    thisCoaching.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(thisCoaching._id + " saved!");
+                    })
+                }
+            });
+        } else {throw err;}
+    });
+});
 router.post('/p4OrderExplainer', function(req, res) {
     //res.json(true);
     var cityExamForm = req.body;
@@ -2856,7 +2893,7 @@ router.post('/p4OrderExplainer', function(req, res) {
         if (!err){
             if(thisExam){
             var examId = thisExam._id;
-            var tRankString = "$tRank." + examId;
+            
             var allCoachings = coaching.aggregate(
             [
                 {$match: {disabled: false, "city" : cityName,"exams" : thisExam._id} },
@@ -2866,6 +2903,7 @@ router.post('/p4OrderExplainer', function(req, res) {
                     /*hRank: {$sum:"$hRank"}, */
                     _ids: { $addToSet: "$_id" },
                     gRank: { $first: "$gRank." + examId },
+                    sponsoredRank: { $first: "$sponsoredRank." + examId },
                     gRankInfo: { $first: "$gRankInfo." + examId },
                     cRank: { $first: "$cRank." + examId },
                     cRankInfo: { $first: "$cRankInfo." + examId },
@@ -3337,6 +3375,7 @@ router.post('/CoachingStream', function(req, res) {
                     logo: { $addToSet: "$logo" },
                     latlng: { $addToSet: "$latlng" },
                     tRank: { $first: sortString },
+                    sponsoredRank: { $first: "$sponsoredRank." + examId },
                 }},
                 /*{$sort:{"expertReview":1, "count":-1, "_id.groupName": 1 }},*/
                 /*{ "$project": { "_id": 1, count: 1, _ids: 1, exams: 1, logo: 1, latlng: 1, "gRank" }},*/
@@ -3353,14 +3392,20 @@ router.post('/CoachingStream', function(req, res) {
                 var nCoachings = allCoachings.length;
                 var counter = 0;
                 allCoachings.forEach(function(thisProvider, pIndex){
-                    console.log(thisProvider._id.groupName + " | " + thisProvider.tRank + " | " + thisProvider._ids.length);
+                    /*console.log(thisProvider._id.groupName + " | " + thisProvider.tRank + " | " + thisProvider._ids.length);*/
                     var newProvider = {
                         groupName: thisProvider._id.groupName,
                         tRank: thisProvider.tRank,
+                        
                         exams: [],
                         latlngs: [],
                         count: thisProvider.count,
                     };
+                    
+                    if(thisProvider.sponsoredRank){
+                        newProvider.sponsoredRank = thisProvider.sponsoredRank;
+                    }
+                    
                     var thisExams = [];
                     thisProvider.exams.forEach(function(thisExamString, eIndex){
                         var setofExams = thisExamString.toString().split(',');
@@ -3455,8 +3500,8 @@ router.post('/CoachingStream', function(req, res) {
                                     allProviders.sort(function(a,b){
                                       return (b.tRank - a.tRank);
                                     });
-                                    console.log(allProviders.map(function(a) {return a.groupName;}));
-                                    console.log(allProviders.map(function(a) {return a.tRank;}));
+                                    //console.log(allProviders.map(function(a) {return a.groupName;}));
+                                    //console.log(allProviders.map(function(a) {return a.tRank;}));
                                     res.json(allProviders);
                                 }
                                 
