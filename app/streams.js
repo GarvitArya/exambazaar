@@ -45,7 +45,7 @@ router.post('/save', function(req, res) {
 
 router.get('/', function(req, res) {
     //console.log('Here');
-    stream.find({active: {$ne: false}}, function(err, docs) {
+    stream.find({}, function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
