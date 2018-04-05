@@ -274,16 +274,38 @@ router.post('/save', function(req, res) {
 
 
 router.post('/syncResults', function(req, res) {
+    var rCounter = 0;
+    var includedProperties = [
+        "exam",
+        "year",
+        "name",
+        "category",
+        "rank",
+        "subgroup",
+        "percentile",
+        "percentage",
+        "marks",
+        "passFail",
+        "active",
+        "course",
+        "image",
+        "_added",
+
+    ];
     
+    console.log('Starting Synching of Results');
     var allCoachings = coaching.find({results: {$exists: true}, $where:'this.results.length>0'}, {groupName:1, results:1},function(err, allCoachings) {
         if (!err && allCoachings){
             res.json(true);
-            //console.log(allCoachings);
+            console.log("There are: " + allCoachings.length + " coachings!");
+            var nCoachings = allCoachings.length;
             allCoachings.forEach(function(thisCoaching, cindex){
+                
                 var thisResults = thisCoaching.results;
                 if(!thisResults){
                     thisResults = [];
                 }
+                //console.log(thisCoaching.groupName + " | " + thisResults.length + " results!");
                 thisResults.forEach(function(thisResult, rindex){
                     //console.log(thisResult);
                     var resultName = null;
@@ -311,7 +333,25 @@ router.post('/syncResults', function(req, res) {
                         if(existingResult){
                             //console.log('Result Already Exists');
                         }else{
-                            console.log('Need to add result: ' + resultName + " | "  + resultExam + " | "  + resultYear+ " | "  + resultRank + " | "  + resultImage);
+                            rCounter += 1;
+                            //console.log(rCounter + '. Adding result: ' + resultName + " | "  + resultExam + " | "  + resultYear+ " | "  + resultRank + " | "  + resultImage);
+                            //console.log(thisResult);
+                            var newresult = new result({
+                                provider: thisCoaching._id,
+
+                            });
+                            includedProperties.forEach(function(thisProperty, pindex){
+                                if(thisResult[thisProperty]){
+                                    newresult[thisProperty] = thisResult[thisProperty];
+                                }
+
+                            });
+
+                            newresult.save(function(err, newresult) {
+                                if (err) return console.error(err);
+                                console.log(newresult._id + " Result saved!");
+                            });
+                            
                         }
                         
                         
@@ -329,7 +369,7 @@ router.post('/syncResults', function(req, res) {
         }else{
             res.json(false);
         }
-    }).limit(100);
+    }).limit(40000);
     
     
     

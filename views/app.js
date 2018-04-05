@@ -20165,7 +20165,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
             
             if (screenSize.is('xs, sm')){
-                $scope.disabled = true;
+                $scope.disabled = false;
+                
+                var domainName = '';
+                if($stateParams.domainName){
+                    domainName = $stateParams.domainName.toLowerCase();
+                }
+                if(domainName == 'aptitude'){
+                    $state.go('mobileassessment', {testId: '5a17f5f617cb4c07c5dd7f5b'});
+                }else if(domainName == 'coding'){
+                    $state.go('mobileassessment', {testId: '5a2e5d007a7d9659d7c4537d'});
+                }else if(domainName == 'quant'){
+                    $state.go('mobileassessment', {testId: '5a2e5924ea139b56bbff0694'});
+                }else{
+                    $scope.errorText = "Something's not right in the url! Please write to us at team@exambazaar.com for any queries!";
+                }
             }else{
                 $scope.disabled = false;
                 var domainName = '';
