@@ -258,9 +258,11 @@ router.get('/sendEmails', function(req, res) {
 
 //to get all tofillcis
 router.get('/', function(req, res) {
-    var pastInternId = '599c2bab54161317886da9f6';
+    var limit = 100;
+    
     var tofillcis = tofillci
-        .find({user: { $ne: "599c2bab54161317886da9f6" }})
+        .find({})
+        .limit(limit)
         .exec(function (err, tofillcis) {
         if (!err){
             //console.log(tofillcis.length);
@@ -278,7 +280,7 @@ router.get('/', function(req, res) {
                         
                     var thisUser = user
                         .findOne({ '_id': userId },{basic:1})
-                        .deepPopulate('partner partner.location')
+                        //.deepPopulate('partner partner.location')
                         .exec(function (err, thisUser) {
                         if (!err){
                             var newTask = {
@@ -294,6 +296,7 @@ router.get('/', function(req, res) {
                         counter = counter + 1;
                         basicFillTasks.push(newTask);
                         if(counter == nLength){
+                            //console.log(basicFillTasks);
                             res.json(basicFillTasks);
                         }    
                             
@@ -321,43 +324,66 @@ router.get('/user/:userId', function(req, res) {
             if(thisUser.userType == "Master" || fullAccessUsers.indexOf(thisUser._id.toString()) != -1){
                 var tofillcis = tofillci
                 .find({})
-                //.limit(limit)
+                .limit(limit)
                 .sort( { _created: -1 } )
-                .deepPopulate('institute user')
+                //.deepPopulate('institute user')
                 .exec(function (err, tofillcis) {
                 if (!err){
                     var basicFillTasks = [];
                     var counter = 0;
                     var nLength = tofillcis.length;
                     tofillcis.forEach(function(thisFillTask, index){
-                        var newTask = {
-                            user: {
-                                _id: thisFillTask.user._id,
-                                name: thisFillTask.user.basic.name,
-                            },
-                            institute: {
-                                _id: thisFillTask.institute._id,
-                                name: thisFillTask.institute.name,
-                                address: thisFillTask.institute.address,
-                                city: thisFillTask.institute.city,
-                                pincode: thisFillTask.institute.pincode
-                            },
-                            _created: thisFillTask._created,
-                            _deadline: thisFillTask._deadline,
-                            _finished: thisFillTask._finished,
-                            active: thisFillTask.active,
+                    var thisUserId = thisFillTask.user;
+                    var thisCoaching = thisFillTask.institute;
 
-                        };
-                        counter = counter + 1;
-                        basicFillTasks.push(newTask);
-                        if(counter == nLength){
-                            res.json(basicFillTasks);
+                    var thisInstitute = coaching
+                    .findOne({_id: thisCoaching},{name:1, address: 1, city: 1, pincode: 1 })
+                    .exec(function (err, thisInstitute) {
+                    if (!err && thisInstitute){
+
+                        var thisUser = user
+                        .findOne({_id: thisUserId},{basic: 1})
+                        .exec(function (err, thisUser) {
+                            if (!err && thisUser){
+                                var newTask = {
+                                    user: {
+                                        _id: thisUser._id,
+                                        name: thisUser.basic.name,
+                                    },
+                                    institute:{
+                                        _id: thisInstitute._id,
+                                        name: thisInstitute.name,
+                                        address: thisInstitute.address,
+                                        city: thisInstitute.city,
+                                        pincode: thisInstitute.pincode
+                                    },
+                                    _created: thisFillTask._created,
+                                    _deadline: thisFillTask._deadline,
+                                    _finished: thisFillTask._finished,
+                                    active: thisFillTask.active,
+
+                                };
+                                counter = counter + 1;
+                                basicFillTasks.push(newTask);
+                                if(counter == nLength){
+                                    res.json(basicFillTasks);
+                                }
+                            }
+                        });
+
+                        if(nLength == 0){
+                            res.json([]);
                         }
+
+
+                    }
                     });
 
-                    if(nLength == 0){
-                        res.json([]);
-                    }
+                        
+                    });
+                        
+                        
+                    
                 } else {throw err;}
             });
             }else{

@@ -1041,7 +1041,7 @@ var fromEmail = {
         
         allSchools.forEach(function(thisSchool, sindex){
         var thisEmail = thisSchool.data.email;
-        //thisEmail = "gaurav@exambazaar.com";
+        thisEmail = "gaurav@exambazaar.com";
         var schoolName = thisSchool.data["name-of-institution"];
         var schoolId = thisSchool._id;
         if(!schoolName){
@@ -1090,7 +1090,7 @@ var fromEmail = {
                 mail.personalizations[0].addSubstitution(new helper.Substitution('-attnName-', attnName));
             
                 
-                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-04-04T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
+                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-04-05T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
                     if (err) return handleError(err);
                     if(existingEmail){
                         console.log("Email to " + to + " already sent at: " + existingEmail._date);

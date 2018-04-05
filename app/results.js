@@ -272,4 +272,69 @@ router.post('/save', function(req, res) {
     
 });
 
+
+router.post('/syncResults', function(req, res) {
+    
+    var allCoachings = coaching.find({results: {$exists: true}, $where:'this.results.length>0'}, {groupName:1, results:1},function(err, allCoachings) {
+        if (!err && allCoachings){
+            res.json(true);
+            //console.log(allCoachings);
+            allCoachings.forEach(function(thisCoaching, cindex){
+                var thisResults = thisCoaching.results;
+                if(!thisResults){
+                    thisResults = [];
+                }
+                thisResults.forEach(function(thisResult, rindex){
+                    //console.log(thisResult);
+                    var resultName = null;
+                    if(thisResult.name){
+                        resultName = thisResult.name;
+                    }
+                    var resultRank = null;
+                    if(thisResult.rank){
+                        resultRank = thisResult.rank;
+                    }
+                    var resultYear = null;
+                    if(thisResult.year){
+                        resultYear = thisResult.year;
+                    }
+                    var resultExam = null;
+                    if(thisResult.exam){
+                        resultExam = thisResult.exam;
+                    }
+                    var resultImage = null;
+                    if(thisResult.image){
+                        resultImage = thisResult.image;
+                    }
+                    var existingResult = result.findOne({name: resultName, exam: resultExam, image: resultImage, rank: resultRank, year: resultYear}, {name:1, rank:1, year: 1, exam: 1, image: 1},function(err, existingResult) {
+                    if (!err){
+                        if(existingResult){
+                            //console.log('Result Already Exists');
+                        }else{
+                            console.log('Need to add result: ' + resultName + " | "  + resultExam + " | "  + resultYear+ " | "  + resultRank + " | "  + resultImage);
+                        }
+                        
+                        
+                    }else{
+                        console.log('Something went very wrong');
+                    }
+                    });
+                    
+                    
+                    
+                });
+                
+            });
+            
+        }else{
+            res.json(false);
+        }
+    }).limit(100);
+    
+    
+    
+    
+});
+
+
 module.exports = router;

@@ -1216,6 +1216,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveresult = function(resultForm) {
             return $http.post('/api/results/save', resultForm);
         };
+        this.syncResults = function() {
+            return $http.post('/api/results/syncResults');
+        };
+        
         this.existingResult = function(userInstituteForm) {
             return $http.post('/api/results/existingResult', userInstituteForm);
         };
@@ -17417,12 +17421,26 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification){
+        [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', 'resultService', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification, resultService){
             
             $scope.generateGRanks = function(){
                 coachingService.generateGRanks().success(function (data, status, headers) {
                     Notification.success("Great, all done!");
                     console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            $scope.syncResults = function(){
+                resultService.syncResults().success(function (data, status, headers) {
+                    if(data){
+                        Notification.success("Great, all done!");
+                    }else{
+                        Notification.warning("Something went wrong!");
+                    }
+                    
                     
                 })
                 .error(function (data, status, header, config) {
@@ -25941,7 +25959,7 @@ function getLatLng(thisData) {
     }]);    
         
     exambazaar.controller("fciController", 
-        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'tofillciService', 'coachingService', 'Notification', 'ebteam', 'tofillciList', function($scope, $http, $state, $rootScope, $cookies, UserService, tofillciService, coachingService, Notification, ebteam, tofillciList){
+        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'tofillciService', 'coachingService', 'Notification', 'ebteam', function($scope, $http, $state, $rootScope, $cookies, UserService, tofillciService, coachingService, Notification, ebteam){
             $scope.ebteam = ebteam.data;
             $scope.fullScope = false;
             var fullScopeUsers = ["5a1831f0bd2adb260055e352"];
@@ -25956,6 +25974,7 @@ function getLatLng(thisData) {
                     
                     tofillciService.getusertofillcis($scope.user._id).success(function (adata, status, headers) {
                         $scope.assigned = adata;
+                        //console.log($scope.assigned);
                         $scope.assignedCount = 0;
                         $scope.dueDeadlineCount = 0;
                         Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -25990,7 +26009,8 @@ function getLatLng(thisData) {
             $cookies.remove("sessionuser");
         }
             
-        $scope.tofillciList = tofillciList.data;
+        //$scope.tofillciList = tofillciList.data;
+        //console.log($scope.tofillciList);
         $scope.newAssign = {
             coachingId: '',
             intern: null,
@@ -25998,7 +26018,7 @@ function getLatLng(thisData) {
             
         };
             
-        var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
+        //var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
         
         $scope.assignToFill = function(){
             var assignable = true;
@@ -39506,10 +39526,10 @@ function getLatLng(thisData) {
                     function(UserService){
                     return UserService.getEBTeam();
                 }],
-                tofillciList: ['tofillciService',
+                /*tofillciList: ['tofillciService',
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
-                }],
+                }],*/
             }
         })
         .state('rci', {
