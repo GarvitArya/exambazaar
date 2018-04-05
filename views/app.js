@@ -3166,7 +3166,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                      thisGroup.artificialRank = 0;
                  }*/
                  
-                 console.log(thisGroup);
+                 //console.log(thisGroup);
                  if(thisGroup.examCirf && thisGroup.examCirf.cirf){
                      thisGroup.examCirfScore = Number(thisGroup.examCirf.cirf) * 5/ 100;
                     
