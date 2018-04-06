@@ -400,7 +400,7 @@ router.post('/cirf', function(req, res) {
                                 });
                             }
                         }
-                        console.log(providerVariable);
+                        
                         if(providerVariable.value){
                             providerVariable.value = parseInt(providerVariable.value.match(/\d+/),10);
                         }
@@ -413,8 +413,12 @@ router.post('/cirf', function(req, res) {
                             var option = providerVariable.option;
                             if(!option){
                                 option = '';
+                            }else{
+                                option = option.replace(" ", ""); 
+                                option = option.replace("%", "");
                             }
-                            //console.log(providerVariable);
+                            
+                            
                             if(option.indexOf('-') != -1){
                                 var splits = option.split("-");
                                 var sum = 0;
@@ -428,16 +432,20 @@ router.post('/cirf', function(req, res) {
                             if(option.indexOf('>') != -1){
                                 var opt1 = option.replace(">", "");
                                 
+                                
                                 providerVariable.value = parseFloat(opt1) + 1;
+                                
                                 
                             }
                             if(option.indexOf('<') != -1){
-                                var opt1 = option.replace(">", "");
+                                var opt1 = option.replace("<", "");
+                                
                                 providerVariable.value = parseFloat(opt1) - 1;
+                                
                                 
                             }
                         }
-                        //console.log(ratingVariable + " " + providerVariable);
+                        //console.log("***** " + providerVariable);
 
                         if(buckets && buckets.length > 0){
                             buckets.forEach(function(thisBucket, bindex){

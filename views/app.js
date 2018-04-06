@@ -11645,7 +11645,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     
                     
                 });
-                console.log($scope.examRatingParamValues);
+                //console.log($scope.examRatingParamValues);
                 
             }
             
