@@ -25755,7 +25755,7 @@ function getLatLng(thisData) {
         [ '$scope', 'thisuser' , 'thisuserAssignedToRate',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToRate, $http, $state, $rootScope){
         $scope.user = thisuser.data;
         $scope.assigned = thisuserAssignedToRate.data;
-        console.log($scope.assigned);
+        //console.log($scope.assigned);
         $scope.assignedCount = 0;
         if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
             $scope.authorized = true;

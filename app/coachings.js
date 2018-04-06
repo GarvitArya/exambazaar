@@ -596,7 +596,7 @@ router.post('/cirf', function(req, res) {
 router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
     console.log('CIRF Bulk Started');
     res.json(true);
-    var examId = ObjectId('58ac27997d227b1fa8208ff1');
+    var examId = ObjectId('58ac2b8c7f7f514550cd3aea');
     var groupNames = coaching.aggregate(
     [
         {$match: {exams: examId, disabled: false} },
@@ -687,7 +687,7 @@ router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
                                         });
                                     }
                                 }
-                                if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
+                                if(providerVariable && providerVariable.value && providerVariable.value.indexOf('%') != -1){
                                     providerVariable.value = parseFloat(providerVariable.value);
                                 }
                                 if(providerVariable && providerVariable.value == ''){
@@ -720,7 +720,7 @@ router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
                                 }
                                 //console.log(ratingVariable + " " + providerVariable);
 
-                                if(buckets && buckets.length > 0){
+                                if(providerVariable && buckets && buckets.length > 0){
                                     buckets.forEach(function(thisBucket, bindex){
                                         if(!defaultBucket){
                                             defaultBucket = thisBucket;
@@ -729,7 +729,7 @@ router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
                                             defaultBucket = thisBucket;
                                         }
                                     });
-                                    if(!providerVariable.value){
+                                    if(providerVariable && !providerVariable.value){
                                         //console.log('Alert: ' + providerVariable);
                                     }
                                     buckets.forEach(function(thisBucket, bindex){

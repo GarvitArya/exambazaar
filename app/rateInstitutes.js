@@ -306,7 +306,7 @@ router.get('/user/:userId', function(req, res) {
                 .find({user: userId})
                 .limit(limit)
                 .sort( { _created: -1 } )
-                //.deepPopulate('institute user')
+                .deepPopulate('institute user')
                 .exec(function (err, rateInstitutes) {
                 if (!err){
                     var basicRateInstituteTasks = [];
