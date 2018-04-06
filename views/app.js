@@ -1197,6 +1197,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.gettofillci = function(tofillciId) {
             return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
         };
+        this.checkAssigned = function(instituteId) {
+            return $http.get('/api/tofillcis/checkAssigned/'+instituteId, {instituteId: instituteId});
+        };
+        
         this.prevFilled = function(groupName) {
             return $http.get('/api/tofillcis/prevFilled/'+groupName, {groupName: groupName});
         };
@@ -1219,7 +1223,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.syncResults = function() {
             return $http.post('/api/results/syncResults');
         };
-        
+        this.sanitizeResults = function() {
+            return $http.post('/api/results/sanitizeResults');
+        };
         this.existingResult = function(userInstituteForm) {
             return $http.post('/api/results/existingResult', userInstituteForm);
         };
@@ -26023,7 +26029,8 @@ function getLatLng(thisData) {
             $cookies.remove("sessionuser");
         }
             
-        //$scope.tofillciList = tofillciList.data;
+        //var tofillciList = tofillciList.data;
+        //var tofillGroupNames = tofillciList.map(function(a) {return a.institute.groupName;});
         //console.log($scope.tofillciList);
         $scope.newAssign = {
             coachingId: '',
@@ -26032,7 +26039,7 @@ function getLatLng(thisData) {
             
         };
             
-        //var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
+        
         
         $scope.assignToFill = function(){
             var assignable = true;
@@ -26113,7 +26120,38 @@ function getLatLng(thisData) {
                     $scope.fetching = true;
                     $scope.assignError = false;
                     
-                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
+                    
+                    
+                    tofillciService.checkAssigned(newValue).success(function (data, status, headers) {
+                        
+                        if(data.error){
+                            $scope.assignError = true;
+                            console.log("Error ");
+                        }else{
+                            $scope.assignGroup = data.groupName;
+                            if(data.exists){
+                                $scope.prevFilledLength = 1;
+                            }else{
+                                $scope.prevFilledLength = 0;
+                            }
+                        }
+                        $scope.fetching = false;
+                        /*if(data){
+                            $scope.assignGroup = data;
+                            if(tofillGroupNames.indexOf(data) == -1){
+                                $scope.prevFilledLength = 0;
+                            }else{
+                                $scope.prevFilledLength = 1;
+                            }
+                        }else{
+                            $scope.assignError = true;
+                        }
+                        
+                        $scope.fetching = false;*/
+                    }).error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    /*coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         
                         if(data){
                             $scope.assignGroup = data;
@@ -26129,7 +26167,7 @@ function getLatLng(thisData) {
                         $scope.fetching = false;
                     }).error(function (data, status, header, config) {
                         console.log("Error ");
-                    });
+                    });*/
                     
                     //tofillGroupNames 
                     /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {

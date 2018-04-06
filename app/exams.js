@@ -118,7 +118,7 @@ router.get('/generateurlslugs', function(req, res) {
     
     
     var allExams = exam
-        .find({active: true}, {name:1, exam_page_name: 1})
+        .find({}, {name:1, exam_page_name: 1})
         //.deepPopulate('stream')
         .exec(function (err, allExams) {
         if (!err){

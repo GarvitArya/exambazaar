@@ -8,7 +8,7 @@ var resultSchema = mongoose.Schema({
     year: {type: String},
     name: {type: String, required: true },
     category: {type: String},
-    rank: {type: String},
+    rank: {type: Number},
     subgroup: {type: String},
     percentile: {type: String},
     percentage: {type: String},

@@ -173,13 +173,14 @@ router.post('/groupResults', function(req, res) {
         if (!err){
             var examId = thisExam._id.toString();
             
-            var allGroupInstitutes = coaching.find({ 'groupName': groupName, disabled: false, image: {$exists: true} },{_id:1},function (err, allGroupInstitutes) {
+            var allGroupInstitutes = coaching.find({ 'groupName': groupName, disabled: false },{_id:1},function (err, allGroupInstitutes) {
             if (!err){
                 allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
                 var basicResults = [];
 
                 var groupResults = result
-                    .find({provider: { $in : allGroupInstitutes }, active: true, exam: examId})
+                    .find({provider: { $in : allGroupInstitutes }, active: true, exam: examId, image: {$exists: true}})
+                    .sort({rank: 1})
                     .exec(function(err, groupResults) {
                     if (!err){
 
@@ -370,6 +371,37 @@ router.post('/syncResults', function(req, res) {
             res.json(false);
         }
     }).limit(40000);
+    
+    
+    
+    
+});
+
+
+router.post('/sanitizeResults', function(req, res) {
+    var rCounter = 0;
+    
+    var allResults = result.find({}, {rank: 1},function(err, allResults) {
+        if (!err){
+            if(allResults){
+                allResults.forEach(function(thisResult, rindex){
+                    thisResult.rank = Number(thisResult.rank);
+                    thisResult.save(function(err, thisResult) {
+                        if (err) return console.error(err);
+                        console.log(thisResult._id + " Result saved!");
+                    });
+                    
+                });
+            }else{
+                
+
+            }
+
+
+        }else{
+            console.log('Something went very wrong');
+        }
+        });
     
     
     
