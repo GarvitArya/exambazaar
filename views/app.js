@@ -1507,6 +1507,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getrateInstitute = function(rateInstituteId) {
             return $http.get('/api/rateInstitutes/edit/'+rateInstituteId, {rateInstituteId: rateInstituteId});
         };
+        this.checkAssigned = function(instituteId) {
+            return $http.get('/api/rateInstitutes/checkAssigned/'+instituteId, {instituteId: instituteId});
+        };
         this.prevRated = function(groupName) {
             return $http.get('/api/rateInstitutes/prevRated/'+groupName, {groupName: groupName});
         };
@@ -17453,6 +17456,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log();
                 });    
             };
+            $scope.sanitizeResults = function(){
+                resultService.sanitizeResults().success(function (data, status, headers) {
+                    if(data){
+                        Notification.success("Great, all done!");
+                    }else{
+                        Notification.warning("Something went wrong!");
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            
             $scope.generateCRanks = function(){
                 coachingService.generateCRanks().success(function (data, status, headers) {
                     Notification.success("Great, all done!");
@@ -25753,7 +25771,7 @@ function getLatLng(thisData) {
     }]);    
         
     exambazaar.controller("rciController", 
-        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'rateInstituteService', 'coachingService', 'Notification', 'ebteam', 'tofillciList', 'torateciList', function($scope, $http, $state, $rootScope, $cookies, UserService, rateInstituteService, coachingService, Notification, ebteam, tofillciList, torateciList){
+        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'rateInstituteService', 'coachingService', 'Notification', 'ebteam', function($scope, $http, $state, $rootScope, $cookies, UserService, rateInstituteService, coachingService, Notification, ebteam){
             $scope.ebteam = ebteam.data;
             $scope.fullScope = false;
             var fullScopeUsers = ["5a1831f0bd2adb260055e352"];
@@ -25802,8 +25820,8 @@ function getLatLng(thisData) {
             $cookies.remove("sessionuser");
         }
             
-        $scope.tofillciList = tofillciList.data;
-        $scope.torateciList = torateciList.data;
+        //$scope.tofillciList = tofillciList.data;
+        //$scope.torateciList = torateciList.data;
             
         $scope.newAssign = {
             coachingId: '',
@@ -25812,8 +25830,8 @@ function getLatLng(thisData) {
             
         };
             
-        var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
-        var toRateGroupNames = $scope.torateciList.map(function(a) {return a.institute.groupName;});
+        //var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
+        //var toRateGroupNames = $scope.torateciList.map(function(a) {return a.institute.groupName;});
         
             
         $scope.assignToRate = function(){
@@ -25936,7 +25954,24 @@ function getLatLng(thisData) {
                     $scope.fetching = true;
                     $scope.assignError = false;
                     
-                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
+                    rateInstituteService.checkAssigned(newValue).success(function (data, status, headers) {
+                        console.log(data);
+                        if(data.error){
+                            $scope.assignError = true;
+                            console.log("Error ");
+                        }else{
+                            $scope.assignGroup = data.groupName;
+                            if(data.exists){
+                                $scope.prevFilledLength = 1;
+                            }else{
+                                $scope.prevFilledLength = 0;
+                            }
+                        }
+                        $scope.fetching = false;
+                    }).error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    /*coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         
                         if(data){
                             $scope.assignGroup = data;
@@ -25952,7 +25987,7 @@ function getLatLng(thisData) {
                         $scope.fetching = false;
                     }).error(function (data, status, header, config) {
                         console.log("Error ");
-                    });
+                    });*/
                     
                     //tofillGroupNames 
                     /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
@@ -26136,51 +26171,9 @@ function getLatLng(thisData) {
                             }
                         }
                         $scope.fetching = false;
-                        /*if(data){
-                            $scope.assignGroup = data;
-                            if(tofillGroupNames.indexOf(data) == -1){
-                                $scope.prevFilledLength = 0;
-                            }else{
-                                $scope.prevFilledLength = 1;
-                            }
-                        }else{
-                            $scope.assignError = true;
-                        }
-                        
-                        $scope.fetching = false;*/
                     }).error(function (data, status, header, config) {
                         console.log("Error ");
                     });
-                    /*coachingService.getGroupName(newValue).success(function (data, status, headers) {
-                        
-                        if(data){
-                            $scope.assignGroup = data;
-                            if(tofillGroupNames.indexOf(data) == -1){
-                                $scope.prevFilledLength = 0;
-                            }else{
-                                $scope.prevFilledLength = 1;
-                            }
-                        }else{
-                            $scope.assignError = true;
-                        }
-                        
-                        $scope.fetching = false;
-                    }).error(function (data, status, header, config) {
-                        console.log("Error ");
-                    });*/
-                    
-                    //tofillGroupNames 
-                    /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
-                        $scope.prevFilledLength = prevfilleddata;
-                        
-                        $scope.fetching = false;
-                    })
-                    .error(function (data, status, header, config) {
-                        console.log(status + " " + data);
-                    });*/
-                    
-                    
-                    
                     
                 }
 
@@ -39604,14 +39597,14 @@ function getLatLng(thisData) {
                     function(UserService){
                     return UserService.getEBTeam();
                 }],
-                tofillciList: ['tofillciService',
+                /*tofillciList: ['tofillciService',
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
                 }],
                 torateciList: ['rateInstituteService',
                     function(rateInstituteService) {
                     return rateInstituteService.getrateInstitutes();
-                }],
+                }],*/
             }
         })
         .state('assignedToVerify', {

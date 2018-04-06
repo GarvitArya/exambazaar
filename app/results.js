@@ -329,7 +329,7 @@ router.post('/syncResults', function(req, res) {
                     if(thisResult.image){
                         resultImage = thisResult.image;
                     }
-                    var existingResult = result.findOne({name: resultName, exam: resultExam, image: resultImage, rank: resultRank, year: resultYear}, {name:1, rank:1, year: 1, exam: 1, image: 1},function(err, existingResult) {
+                    var existingResult = result.findOne({name: resultName, exam: resultExam, year: resultYear, provider: thisCoaching._id}, {name:1, rank:1, year: 1, exam: 1, image: 1, provider: 1},function(err, existingResult) {
                     if (!err){
                         if(existingResult){
                             //console.log('Result Already Exists');
@@ -380,16 +380,19 @@ router.post('/syncResults', function(req, res) {
 
 router.post('/sanitizeResults', function(req, res) {
     var rCounter = 0;
-    
+    console.log('Starting sanitizing of Results');
     var allResults = result.find({}, {rank: 1},function(err, allResults) {
         if (!err){
             if(allResults){
                 allResults.forEach(function(thisResult, rindex){
-                    thisResult.rank = Number(thisResult.rank);
-                    thisResult.save(function(err, thisResult) {
-                        if (err) return console.error(err);
-                        console.log(thisResult._id + " Result saved!");
-                    });
+                    if(thisResult.rank){
+                        thisResult.rank = Number(thisResult.rank);
+                        thisResult.save(function(err, thisResult) {
+                            if (err) return console.error(err);
+                            console.log(thisResult._id + " Result saved!");
+                        });
+                    }
+                    
                     
                 });
             }else{

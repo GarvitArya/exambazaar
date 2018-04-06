@@ -253,7 +253,7 @@ router.get('/', function(req, res) {
 });
 //to get all rateInstitutes for a user
 router.get('/user/:userId', function(req, res) {
-    var limit = 100;
+    var limit = 50;
     var userId = req.params.userId;
     var fullAccessUsers = ["5a1831f0bd2adb260055e352"];
     var thisUser = user.findOne({_id: userId}, {basic: 1, userType: 1}, function(err, thisUser) {
@@ -262,7 +262,7 @@ router.get('/user/:userId', function(req, res) {
             if(thisUser.userType == "Master" || fullAccessUsers.indexOf(thisUser._id.toString()) != -1){
                 var rateInstitutes = rateInstitute
                 .find({})
-                //.limit(limit)
+                .limit(limit)
                 .sort( { _created: -1 } )
                 .deepPopulate('institute user')
                 .exec(function (err, rateInstitutes) {
@@ -306,7 +306,7 @@ router.get('/user/:userId', function(req, res) {
                 .find({user: userId})
                 .limit(limit)
                 .sort( { _created: -1 } )
-                .deepPopulate('institute user')
+                //.deepPopulate('institute user')
                 .exec(function (err, rateInstitutes) {
                 if (!err){
                     var basicRateInstituteTasks = [];
@@ -391,6 +391,67 @@ router.post('/save', function(req, res) {
     });
     
     
+});
+
+router.get('/checkAssigned/:instituteId', function(req, res) {
+    var instituteId = req.params.instituteId;
+    
+    var thisProvider = coaching
+    .findOne({'_id': instituteId}, {groupName:1})
+    .exec(function (err, thisProvider) {
+        if (!err && thisProvider){
+            var thisGroupName = thisProvider.groupName;
+            console.log(thisGroupName);
+            var allCoachings = coaching
+            .find({'groupName': thisGroupName}, {_id:1})
+            .exec(function (err, allCoachings) {
+                if (!err && allCoachings){
+                    
+                    var allCoachingIds = allCoachings.map(function(a) {return a._id.toString();});
+                    console.log(allCoachingIds);
+                    var existingRCI = rateInstitute
+                    .findOne({institute: allCoachingIds}, {_id: 1})
+                    //.limit(limit)
+                    .exec(function (err, existingRCI) {
+                    if (!err){
+                        //console.log(existingFillCI);
+                        if(existingRCI){
+                            //res.json('Already Exists');
+                            var returnObject = {
+                                error: false,
+                                exists: true,
+                                groupName: thisGroupName
+                            };
+                            res.json(returnObject);
+                        }else{
+                            var returnObject = {
+                                error: false,
+                                exists: false,
+                                groupName: thisGroupName
+                            };
+                            res.json(returnObject);
+                        }
+                        
+                    }
+                    });
+                    
+                    
+                    
+                }else{
+                    var returnObject = {
+                        error: true,
+                    };
+                    res.json(returnObject);
+                }
+            });
+
+        }else{
+            var returnObject = {
+                error: true,
+            };
+            res.json(returnObject);
+        }
+    });
 });
 
 module.exports = router;

@@ -400,10 +400,16 @@ router.post('/cirf', function(req, res) {
                                 });
                             }
                         }
-                        if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
-                            providerVariable.value = parseFloat(providerVariable.value);
+                        console.log(providerVariable);
+                        if(providerVariable.value){
+                            providerVariable.value = parseInt(providerVariable.value.match(/\d+/),10);
                         }
-                        if(providerVariable && providerVariable.value == ''){
+                        
+                        /*if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
+                            providerVariable.value = parseFloat(providerVariable.value);
+                        }*/
+                        //console.log(providerVariable.value);
+                        if(true){
                             var option = providerVariable.option;
                             if(!option){
                                 option = '';
@@ -551,7 +557,7 @@ router.post('/cirf', function(req, res) {
             }else{
                 thisProvider.cirf.push(providerExamCIRFScore);
             }
-            console.log(thisProvider.cirf);
+            //console.log(thisProvider.cirf);
             thisProvider.save(function(err, thisProvider) {
                 if (err) return console.error(err);
                 console.log("CIRF saved for: "+ thisProvider._id);

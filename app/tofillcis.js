@@ -468,7 +468,7 @@ router.get('/checkAssigned/:instituteId', function(req, res) {
                     //.limit(limit)
                     .exec(function (err, existingFillCI) {
                     if (!err){
-                        console.log(existingFillCI);
+                        //console.log(existingFillCI);
                         if(existingFillCI){
                             //res.json('Already Exists');
                             var returnObject = {
@@ -506,59 +506,6 @@ router.get('/checkAssigned/:instituteId', function(req, res) {
             res.json(returnObject);
         }
     });
-    
-    /*var tofillcis = tofillci
-        .find({}, {groupName: 1})
-        //.limit(limit)
-        .exec(function (err, tofillcis) {
-        if (!err){
-            //console.log(tofillcis.length);
-            var basicFillTasks = [];
-            var counter = 0;
-            var nLength = tofillcis.length;
-            
-            tofillcis.forEach(function(thisFillTask, index){
-                var instituteId = thisFillTask.institute;
-                var userId = thisFillTask.user;
-                var thisProvider = coaching
-                    .findOne({'_id': instituteId}, {name:1, city:1, email:1, groupName:1})
-                    .exec(function (err, thisProvider) {
-                    if (!err){
-                        
-                    var thisUser = user
-                        .findOne({ '_id': userId },{basic:1})
-                        //.deepPopulate('partner partner.location')
-                        .exec(function (err, thisUser) {
-                        if (!err){
-                            var newTask = {
-                            _id: thisFillTask._id,
-                            user: thisUser,
-                            institute: thisProvider,
-                            _created: thisFillTask._created,
-                            _deadline: thisFillTask._deadline,
-                            _finished: thisFillTask._finished,
-                            active: thisFillTask.active,
-
-                        };
-                        counter = counter + 1;
-                        basicFillTasks.push(newTask);
-                        if(counter == nLength){
-                            //console.log(basicFillTasks);
-                            res.json(basicFillTasks);
-                        }    
-                            
-                        } else {throw err;}
-                    });
-                        
-                    } else {throw err;}
-                });
- 
-            });
-            if(nLength == 0){
-                res.json([]);
-            }
-        } else {throw err;}
-    });*/
 });
 
 router.post('/save', function(req, res) {
