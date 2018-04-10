@@ -440,7 +440,7 @@ var now = new Date();
 
 var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 05, 0, 0) - now;
 if (millisTill10 < 0) {
-     millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
+     millisTill10 += 86400000;
 }
 setTimeout(function(){
     procmons.helper();
@@ -448,12 +448,43 @@ setTimeout(function(){
     console.log("It's time to send procmon email:");
 }, millisTill10);
 
+var milltillGroupRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 01, 0, 0) - now;
+if (milltillGroupRanking < 0) {
+     milltillGroupRanking += 86400000;
+}
+setTimeout(function(){
+    procmons.groupRanking();
+}, milltillGroupRanking);
+
+var milltillCityRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 31, 0, 0) - now;
+if (milltillCityRanking < 0) {
+     milltillCityRanking += 86400000;
+}
+setTimeout(function(){
+    procmons.cityRanking();
+}, milltillCityRanking);
+
+var milltillSponsoredRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 02, 01, 0, 0) - now;
+if (milltillSponsoredRanking < 0) {
+     milltillSponsoredRanking += 86400000;
+}
+setTimeout(function(){
+    procmons.sponsoredRanking();
+}, milltillSponsoredRanking);
+
+var milltillTotalRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 02, 31, 0, 0) - now;
+if (milltillTotalRanking < 0) {
+     milltillTotalRanking += 86400000;
+}
+setTimeout(function(){
+    procmons.totalRanking();
+}, milltillTotalRanking);
 
 function doSomething()
 {
     procmons.assessmentshelper();
 }
-setInterval(doSomething, 30*60*1000);
+setInterval(doSomething, 60*60*1000);
 
 
 var server = app.listen(port);

@@ -3074,6 +3074,7 @@ router.get('/generateCRanks', function(req, res) {
 });
 
 router.get('/generateGRanks', function(req, res) {
+    console.log('Starting Group Rank');
     res.json(true);
     var skip = 0;
     var limit = 30000;
@@ -3102,6 +3103,7 @@ router.get('/generateGRanks', function(req, res) {
             rating: { $addToSet: "$rating" },
             logo: { $first: "$logo" },
             examCirf: { $first: "$examCirf" },
+            cirf: { $addToSet: "$cirf" },
         }},
         {$sort:{"count":-1}},
         {$limit: skip + limit},
@@ -3195,11 +3197,37 @@ router.get('/generateGRanks', function(req, res) {
                         thisExamGRank += weight.logo;
                         thisExamGRankInfo.logo = weight.logo;
                     }
-                    if(thisCoaching.examCirf && thisCoaching.examCirf[thisExam.toString()]){
+                    /*if(thisCoaching.examCirf && thisCoaching.examCirf[thisExam.toString()]){
                         //console.log("I am here!!");
                         var ratingWeight = thisCoaching.examCirf[thisExam.toString()] / 100 * 5 * weight.rating;
+                        console.log(thisCoaching.examCirf[thisExam.toString()]);
+                        console.log(ratingWeight);
                         thisExamGRank += ratingWeight;
                         thisExamGRankInfo.rating = ratingWeight;
+                    }*/
+                    //console.log(thisCoaching.cirf);
+                    if(thisCoaching.cirf && thisCoaching.cirf.length > 0){
+                        
+                        var thisCoachingCirfs = [];
+                        var found = false;
+                        thisCoaching.cirf.forEach(function(thisCIRF, cirfindex){
+                            thisCoachingCirfs = thisCoachingCirfs.concat(thisCIRF);
+                            
+                        }); thisCoachingCirfs.forEach(function(thisexamcirf, ecindex){
+                            var cexamId = thisexamcirf.exam;
+                            if(cexamId == thisExam.toString() && !found){
+                                found = true;
+                                var ratingWeight = thisexamcirf.cirf / 100 * 5 * weight.rating;
+                                //console.log(thisexamcirf);
+                                //console.log(thisexamcirf.cirf);
+                                //console.log(ratingWeight);
+                                thisExamGRank += ratingWeight;
+                                thisExamGRankInfo.rating = ratingWeight;
+                            }
+                            
+                        });
+                        //var ratingWeight = thisCoaching.examCirf[thisExam.toString()] / 100 * 5 * weight.rating;
+                        
                     }
                     thisGRank[thisExam] = thisExamGRank;
                     thisGRankInfo[thisExam] = thisExamGRankInfo;
@@ -5498,6 +5526,43 @@ router.post('/suggestedcoachings', function(req, res) {
     
 });
 
+
+router.get('/generateurlslugs', function(req, res) {
+    res.json(true);
+    
+    
+    var allCoachings = coaching
+        .find({location: {$exists: true}, disabled: false}, {name:1, location: 1, city: 1})
+        .deepPopulate('location')
+        .exec(function (err, allCoachings) {
+        if (!err){
+            
+            allCoachings.forEach(function(thisCoaching, index){
+                var coachingName = thisCoaching.name;
+                var coachingArea = thisCoaching.location.area;
+                var coachingCity = thisCoaching.city;
+                
+                thisCoaching.urlslug1 = slugify(coachingName);
+                thisCoaching.urlslug2 = slugify(coachingArea + " " + coachingCity);
+                
+                console.log(thisCoaching.urlslug1);
+                console.log(thisCoaching.urlslug2);
+                
+                
+                
+                
+                /*thisExam.save(function(err, thisExam) {
+                if (err) return console.error(err);
+                    console.log("Exam saved " + thisExam._id);
+                    //res.json('Done');
+                });*/
+                
+            });
+            
+        } else {throw err;}
+    });
+    
+});
 
 
 module.exports = router;

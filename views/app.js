@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'jlareau.bowser', 'angularMoment']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'jlareau.bowser', 'angularMoment','seo']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -157,6 +157,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
           ]
         });
+        
+        
+        
+        
+        
+        
     })
     .controller('p1Controller', p1Controller);
     function p1Controller(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
@@ -175,6 +181,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $rootScope.pageKeywords = "Exambazaar, Best Coaching India, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         
     };
+        
+        
+       
+        
     exambazaar.constant('cities',['Jaipur','Hyderabad','Noida','Ajmer','Alwar','Kota','Bikaner','Ganganagar','Sikar','Bhilwara','Juhnjhunu','New Delhi','Delhi','Lucknow','Indore','Bhopal','Roorkee','Thrissur','Mohali','Patiala','Ahmedabad','Vadodara','Surat','Rajkot','Ghaziabad','Agra','Dehradun','Meerut','Allahabad','Amritsar','Bangalore','Guwahati','Kolkata','Gwalior','Pune','Trivandrum','Mumbai','Rohtak','Nasik','Kurukshetra','Shimla','Kanpur','Ludhiana','Coimbatore','Ambala','Mathura','Patna','Mysore','Chandigarh','Chennai','Vishakhapatnam','Vellore']);
     
     exambazaar.constant('categories',[
@@ -1922,6 +1932,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.generateSponsoredRanks = function() {
             return $http.get('/api/coachings/generateSponsoredRanks');
+        };
+        this.generateurlslugs = function() {
+            return $http.get('/api/coachings/generateurlslugs');
         };
         this.generateExamCirf = function() {
             return $http.get('/api/coachings/generateExamCirf');
@@ -17431,9 +17444,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', 'resultService', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification, resultService){
-            
+            $scope.generateurlslugs = function () {
+                coachingService.generateurlslugs().success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             $scope.generateGRanks = function(){
-                coachingService.generateGRanks().success(function (data, status, headers) {
+               Notification.success("Great, all done!"); coachingService.generateGRanks().success(function (data, status, headers) {
                     Notification.success("Great, all done!");
                     console.log(data);
                     
@@ -19671,7 +19691,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                      $scope.BestCoachingBlogs.items.forEach(function(thisBlog, index){
                         var bIndex = blogUpvotesId.indexOf(thisBlog._id);
                         //console.log(bIndex);
-
+                         //$rootScope.htmlReady();
+                         console.log('I am here');
                         if(!thisBlog.upvotes){
                             if(bIndex == -1){
                                 thisBlog.upvotes = 0;
@@ -36694,6 +36715,9 @@ function getLatLng(thisData) {
             }
           };
         });
+        
+        
+        
     });
         
 
@@ -37294,6 +37318,63 @@ function getLatLng(thisData) {
                 
             }
         })
+        /*.state('showGroupCity', {
+            url: '/group/:categoryName/:subCategoryName/:cityName/:groupName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'n5.html',
+                    controller: 'n5Controller',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                    };
+                    return coachingService.getGroupCity(groupCity);
+                }],
+                thisGroupResults: ['resultService','$stateParams',
+                    function(resultService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                        examName: $stateParams.subCategoryName
+                    };
+                    return resultService.groupResults(groupCity);
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],
+                
+                
+                
+            }
+        })*/
         .state('showGroupReviews', {
             url: '/groupreviews/:categoryName/:subCategoryName/:cityName/:groupName',
             views: {
