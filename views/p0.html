@@ -328,8 +328,8 @@
         <div layout="row" layout-xs="column" layout-align="center start" class="width100 textDarkGrey min50vh paddingTB5h" layout-wrap hide-xs>
             <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s0/coaching.png" class="p0s3Logo">
-                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">28,000+ Coaching Classes</div>
-                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 200 Coaching Classes a Day!</div>
+                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">30,000+ Coaching Classes</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 150 Coaching Classes a Day!</div>
             </div>
             <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s0/city.png" class="p0s3Logo">
@@ -346,8 +346,8 @@
         <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min60vh" layout-wrap hide-gt-xs>
             <div layout="column" layout-align="center center" class="p0NumberXS">
                 <img ng-src="icons/p0/s0/coaching.png" class="p0s3LogoXS">
-                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">28,000+ Coaching Classes</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 200 Coaching Classes a Day!</div>
+                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">30,000+ Coaching Classes</div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 150 Coaching Classes a Day!</div>
             </div>
             <div layout="column" layout-align="center center" class="p0NumberXS">
                 <img ng-src="icons/p0/s0/city.png" class="p0s3LogoXS">
@@ -776,8 +776,8 @@
                         {{streamExam.stream | uppercase}}
                     </div>
                     <div layout="row" layout-align="center center" class="width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                        <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
-                            {{exam.seoname}}
+                        <a rel="nofollow" ui-sref="exam({ examName:{{'exam.urlslug'}} })" id="footerLink">
+                            {{exam.exam_page_name}}
                         </a>
 
                     </div>
