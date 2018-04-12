@@ -762,7 +762,7 @@
                         {{streamExam.stream | uppercase}}
                     </div>
                     <div layout="row" layout-align="center center" class="text-center width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                        <a rel="nofollow" ui-sref="exam({ examName:{{'exam.urlslug'}} })" id="footerLink">
+                        <a  ui-sref="exam({ examName:{{'exam.urlslug'}} })" id="footerLink">
                             {{exam.exam_page_name}}
                         </a>
 
@@ -776,7 +776,7 @@
                         {{streamExam.stream | uppercase}}
                     </div>
                     <div layout="row" layout-align="center center" class="text-center width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                        <a rel="nofollow" ui-sref="exam({ examName:{{'exam.urlslug'}} })" id="footerLink">
+                        <a  ui-sref="exam({ examName:{{'exam.urlslug'}} })" id="footerLink">
                             {{exam.exam_page_name}}
                         </a>
 

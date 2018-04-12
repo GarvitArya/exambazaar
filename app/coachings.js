@@ -4317,14 +4317,49 @@ router.post('/coachingGroup', function(req, res) {
     });
 });
 
+router.post('/cityGroupCentres', function(req, res) {
+    var namearea = req.body;
+    var nameslug = namearea.nameslug;
+    var areaslug = namearea.areaslug;
+    var thisGroup = coaching
+        .findOne({'nameslug': nameslug, 'areaslug': areaslug, disabled:false, type: 'Coaching'}, {groupName: 1, city: 1})
+        .exec(function (err, thisGroup) {
+        if (!err){
+        if(thisGroup){
+            var thisCentreGroupName = thisGroup.groupName;
+            var thisCentreCity = thisGroup.city;
+            var thisCentreId = thisGroup._id.toString();
+            
+            var otherCityCoachings = coaching
+            .find({'groupName': thisCentreGroupName, 'city': thisCentreCity, disabled:false, type: 'Coaching', _id: {$ne: thisCentreId}}, {groupName: 1, city: 1, address: 1, location: 1, pincode: 1})
+            .deepPopulate('location')
+            .exec(function (err, otherCityCoachings) {
+            if (!err){
+                if(otherCityCoachings){
+                    //console.log(otherCityCoachings);
+                    res.json(otherCityCoachings);
+                    
+                }else{
+                    res.json([]);
+                }
+            }
+            });
+        }else{
+            res.json(null);
+        }
+            
+        } else {throw err;}
+    });
+});
+
 router.post('/coachingGroup2', function(req, res) {
     var namearea = req.body;
     var nameslug = namearea.nameslug;
     var areaslug = namearea.areaslug;
     var thisGroup = coaching
-        .findOne({'nameslug': nameslug, 'areaslug': areaslug, disabled:false, type: 'Coaching'}, {nameslug: 1, areaslug: 1, name:1, groupName: 1, address: 1, city: 1, pincode: 1, logo: 1, mobile: 1, phone: 1, exams: 1, cityPosition: 1})
+        .findOne({'nameslug': nameslug, 'areaslug': areaslug, disabled:false, type: 'Coaching'}, {nameslug: 1, areaslug: 1, name:1, groupName: 1, address: 1, city: 1, pincode: 1, logo: 1, mobile: 1, phone: 1, email:1, exams: 1, cityPosition: 1, location: 1, mapAddress: 1})
         //course: 1, photo: 1, video: 1, faculty: 1, 
-        //.deepPopulate('exams exams.stream location results.exam')
+        .deepPopulate('location')
         .exec(function (err, thisGroup) {
         if (!err){
         if(thisGroup){
@@ -4501,8 +4536,12 @@ router.post('/coachingGroup2', function(req, res) {
                     "nameslug",
                     "phone",
                     "mobile",
+                    "email",
                     "cityPosition",
+                    "location",
+                    "mapAddress",
                 ];
+                //console.log(thisGroup.location);
                 var newGroup = {};
                 for (var property in thisGroup) {
                     if(allowedProperties.indexOf(property) != -1){

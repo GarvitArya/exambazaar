@@ -2132,6 +2132,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getGroupCity2 = function(groupCity) {
             return $http.post('/api/coachings/coachingGroup2/',groupCity);
         };
+        this.cityGroupCentres = function(groupCity) {
+            return $http.post('/api/coachings/cityGroupCentres/',groupCity);
+        };
+        
+        
         
         this.getGroupCityCentres = function(groupCity) {
             return $http.post('/api/coachings/coachingGroupCityCentres/',groupCity);
@@ -7720,12 +7725,46 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
      
     exambazaar.controller("n5Controller", 
-    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres){
         $scope.coachingGroup = thisGroup.data;
-        $scope.results = thisGroupResults.data;
+        var resultStreamExams = thisGroupResults.data;
+        $scope.cityGroupCentres = cityGroupCentres.data;
         $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
-        
+        if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
+            var streamIds = $scope.coachingGroup.streamExams.map(function(a) {return a._id.toString();});
+            resultStreamExams.forEach(function(thisResultStream, rindex){
+                var thisRStreamId = thisResultStream._id.toString();
+                var thisRStreamIndex = streamIds.indexOf(thisRStreamId);
+                
+                if(thisRStreamIndex != -1){
+                thisResultStream.exams.forEach(function(thisResultExam, eindex){
+                    var thisRExamId = thisResultExam._id;
+                    var examIds = $scope.coachingGroup.streamExams[thisRStreamIndex].exams.map(function(a) {return a._id.toString();});
+                    var thisRExamIndex = examIds.indexOf(thisRExamId);
+                    
+                    if(thisRExamIndex != -1){
+                        $scope.coachingGroup.streamExams[thisRStreamIndex].exams[thisRExamIndex].results = thisResultExam.results;
+                        
+                        
+                    }else{
+                        console.log('Exam: Something went very wrong!!');
+                    }
+
+                });
+                //$scope.coachingGroup.streamExams[thisRStreamIndex].exams;
+                    
+                    
+                    
+                }else{
+                    console.log('Stream: Something went very wrong!!');
+                }
+                
+            });
+            
+            
+        }
         console.log($scope.coachingGroup);
+        //console.log(resultStreamExams);
         if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             $scope.activeStream = $scope.coachingGroup.streamExams[0];
             if($scope.coachingGroup.streamExams[0].exams && $scope.coachingGroup.streamExams[0].exams.length > 0){
@@ -9332,6 +9371,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 callback: function(results, status) {
                     
                     if (status == 'OK') {
+                        console.log(results);
                         //console.log(results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng());
                         $scope.provider.latlng = {
                             lat: results[0].geometry.location.lat(),
@@ -13004,7 +13044,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
-            
             
             
             $rootScope.loginState = $rootScope.stateName;
@@ -19752,7 +19791,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         var bIndex = blogUpvotesId.indexOf(thisBlog._id);
                         //console.log(bIndex);
                          //$rootScope.htmlReady();
-                         console.log('I am here');
+                         //console.log('I am here');
                         if(!thisBlog.upvotes){
                             if(bIndex == -1){
                                 thisBlog.upvotes = 0;
@@ -36524,7 +36563,7 @@ function getLatLng(thisData) {
                 }
             };
             
-            $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
+            $rootScope.pageTitle = $scope.blogpost.title;
             $rootScope.pageImage = $scope.thisBlogCover;
             
             $rootScope.pageDescription =  $scope.blogpost.seoDescription;
@@ -37441,10 +37480,19 @@ function getLatLng(thisData) {
                     };
                     return coachingService.getGroupCity2(namearea);
                 }],
+                cityGroupCentres: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    var namearea = {
+                        nameslug: $stateParams.nameslug,
+                        areaslug: $stateParams.areaslug,
+                    };
+                    return coachingService.cityGroupCentres(namearea);
+                }],
                 thisGroupResults: ['resultService','$stateParams',
                     function(resultService,$stateParams) {
                     var groupCity = {
                         nameslug: $stateParams.nameslug,
+                        areaslug: $stateParams.areaslug,
                     };
                     return resultService.groupResults2(groupCity);
                 }],
@@ -40969,6 +41017,12 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         
         if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup' && stateTo != 'bookAppointment' && stateTo != 'availDiscount'){
             $mdDialog.hide();
+        }
+        
+        if(stateTo == 'blog' || stateTo == 'showblog'){
+            $rootScope.compactMode = true;
+        }else{
+            $rootScope.compactMode = false;
         }
         
         if($cookies.getObject('sessionuser')){

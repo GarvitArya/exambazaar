@@ -1902,10 +1902,23 @@
             background-repeat: no-repeat;
             border: 0px;
         }
+        .resultImage{
+            max-height:100%;
+        }
         #thumbnailImage {
             width:100%;
             position: relative;
             padding-top:100%;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            border: 0px;
+        }
+        #thumbnailImage16x9 {
+            width:100%;
+            position: relative;
+            padding-top:56.25%;
             border-radius: 4px;
             background-size: cover;
             background-position: center center;
@@ -1926,7 +1939,14 @@
             height:100%;
             background: rgba(0,0,0,0.5);
         }
-        
+        #thumbnailText16x9{ 
+           position: absolute; 
+           top: 0%; 
+           left: 0; 
+            width: 100%;
+            height:56.25%;
+            background: rgba(0,0,0,0.5);
+        }
         #AddButton{ 
            position: absolute; 
            top: 0%; 

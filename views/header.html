@@ -93,13 +93,13 @@
                     </div>
                     </a>
                 </li>
-              <li >
+              <li>
                 <a  ui-sref="blog">
                 <div flex layout="row" layout-align="start center" class="paddingT20">
-                    Recommended Reading
+                    Latest Blogs
                 </div>
                 </a>
-                </li> 
+             </li> 
               <li ng-repeat="blog in headerBlogs"  ng-if="headerBlogs && headerBlogs.length > 0">
                     <a  ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })">
                     <div flex layout="row" layout-align="start center">
@@ -128,7 +128,8 @@
                 
               </ul>
             </li>
-           
+        </ul>
+        <ul hide-sm hide-xs class="nav navbar-nav" ng-if="!compactMode">   
             <li class="dropdown">
                   <a  href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">

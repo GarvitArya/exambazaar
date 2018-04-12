@@ -217,31 +217,129 @@ router.post('/groupResults2', function(req, res) {
     
     var groupCity = req.body;
     var nameslug = groupCity.nameslug;
+    var areaslug = groupCity.areaslug;
     
-    var allGroupInstitutes = coaching.find({ 'nameslug': nameslug, disabled: false },{_id:1},function (err, allGroupInstitutes) {
+    var thisGroup = coaching.findOne({ 'nameslug': nameslug, areaslug: areaslug, disabled: false },{_id:1, groupName: 1, exams: 1},function (err, thisGroup) {
         if (!err){
             
-        if(allGroupInstitutes && allGroupInstitutes.length > 0){
-            allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
+        if(thisGroup){
+        var thisGroupName = thisGroup.groupName;
+        var thisGroupExams = thisGroup.exams;
+        
+        var allExams = exam
+        .find({_id: thisGroupExams, active: true}, {stream:1, exam_page_name:1, logo: 1, resultFormat: 1, rank: 1})
+        .deepPopulate('stream')
+        .exec(function (err, allExams) {
+            if (!err){
+            var allExamIds = allExams.map(function(a) {return a._id.toString();});
+                
+            var allCentres = coaching.find({ 'groupName': thisGroupName, disabled: false },{_id:1},function (err, allCentres) {
+            if (!err){
+                if(allCentres && allCentres.length > 0){
 
-            var groupResults = result
-                .find({provider: { $in : allGroupInstitutes }, active: true, image: {$exists: true}})
+                var allGroupInstitutes = allCentres.map(function(a) {return a._id;});
+                var groupResults = result
+                .find({provider: { $in : allGroupInstitutes }, exam: {$in: allExamIds}, active: true, image: {$exists: true}})
                 .sort({rank: 1})
                 .exec(function(err, groupResults) {
                 if (!err){
-                    if(groupResults){
-                        res.json(groupResults);
-                    }else{
-                        res.json([]);
+                if(groupResults){
+                
+                groupResults.forEach(function(thisResult, rindex){
+                var thisRExam = thisResult.exam.toString();
+                var thisRExamIndex = allExamIds.indexOf(thisRExam); 
+                    
+                if(thisRExamIndex != -1){
+                    thisResult.exam = allExams[thisRExamIndex];
+                }else{
+                    console.log('Something went very wrong!!');
+                }
+
+
+                });
+                    
+                var streamexams = [];
+                var streamexamIds = [];
+                groupResults.forEach(function(thisResult, rindex){
+                    var thisRExamId = thisResult.exam._id;
+                    var thisRExamStream = thisResult.exam.stream._id;
+                    if(streamexams && streamexams.length > 0){
+                        streamexamIds = streamexams.map(function(a) {return a._id;});
                     }
+                    var thisStreamIndex = streamexamIds.indexOf(thisRExamStream);
+                    
+                    if(thisStreamIndex == -1){
+                        var newStream = {
+                            _id: thisResult.exam.stream._id,
+                            rank: thisResult.exam.stream.rank,
+                            logo: thisResult.exam.stream.logo,
+                            displayname: thisResult.exam.stream.displayname,
+                            exams: [],
+                        };
+                        thisStreamIndex = streamexams.length;
+                        streamexams.push(newStream);
+                    }
+                    
+                    var thisStreamExams = streamexams[thisStreamIndex].exams;
+                    var thisStreamExamIds = [];
+                    if(thisStreamExams && thisStreamExams.length > 0){
+                        thisStreamExamIds = thisStreamExams.map(function(a) {return a._id;});
+                    }
+                    var thisStreamExamIndex = thisStreamExamIds.indexOf(thisRExamId);
+                    if(thisStreamExamIndex == -1){
+                        var newExam = {
+                            _id: thisResult.exam._id,
+                            rank: thisResult.exam.rank,
+                            logo: thisResult.exam.logo,
+                            exam_page_name: thisResult.exam.exam_page_name,
+                            resultFormat: thisResult.exam.resultFormat,
+                            results: [],
+                        };
+                        thisStreamExamIndex = streamexams[thisStreamIndex].exams.length;
+                        streamexams[thisStreamIndex].exams.push(newExam);
+                    }
+                    
+                    if(thisStreamExamIndex != -1){
+                        var newResult = {
+                            name: thisResult.name,
+                            rank: thisResult.rank,
+                            category: thisResult.category,
+                            year: thisResult.year,
+                            image: thisResult.image,
+                            provider: thisResult.provider,
+                            active: thisResult.active,
+                        };
+                        streamexams[thisStreamIndex].exams[thisStreamExamIndex].results.push(newResult);
+                    }
+                });
+                //console.log(streamexams);
+                res.json(streamexams);
+                }else{
+                    res.json([]);
+                }
                 } else {throw err;}
-            });
+                });
+
+                }else{
+                    res.json([]);
+                }
+
+            }else {throw err;}
+
+        });
             
+                
+            }else {throw err;}
+        });
+            
+        
             
             
         }else{
             res.json([]);
-        }
+        } 
+            
+        
             
 
 
