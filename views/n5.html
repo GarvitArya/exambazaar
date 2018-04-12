@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>-->
-<div layout="row" layout-align="start end" class="width100 whiteSmokeBottomBorder">
+<div layout="row" layout-align="start end" class="width100">
     <div hide-xs flex="5">
     </div>
     <h1 flex class="bold pageTitleFont textBlack margin0 ">
@@ -49,12 +49,9 @@
     <div hide-xs flex="5">
     </div>
     <div layout="column" layout-align="start start" flex class="width100">
-        <div layout="row" layout-align="start start" class="width100 marginTB10 greyBorder" layout-wrap>
-            <div ng-repeat="exam in coachingGroup.exams">
-                {{exam}}
-            </div>
-            
-        </div>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+            Overview
+        </h2>
         <div layout="column" layout-align="start start" class="width100">
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
                 <div ng-repeat="stream in coachingGroup.streamExams | orderBy: ['-rank', 'diplayname']" class="padding10 bold h3Font" ng-click="setActiveStream(stream)" flex>

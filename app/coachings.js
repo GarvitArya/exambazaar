@@ -3183,6 +3183,7 @@ router.get('/generateCRanks', function(req, res) {
         {$limit: limit},
     ],function(err, allCoachings) {
     if (!err){
+        console.log('There are: ' + allCoachings.length + " coachings!");
         allCoachings.forEach(function(thisCoaching, index){
             var thisCRank = {};
             var thisCRankInfo = {};
@@ -4465,7 +4466,7 @@ router.post('/coachingGroup2', function(req, res) {
                 });
 
                 }
-                console.log("Photos " + thisCoaching.photo.length);
+                //console.log("Photos " + thisCoaching.photo.length);
                 if(thisCoaching.photo && thisCoaching.photo.length > 0){
                     allPhotos = allPhotos.concat(thisCoaching.photo);
                 }

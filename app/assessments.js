@@ -299,6 +299,7 @@ router.post('/userevaluate', function(req, res) {
         user: '5a2666310b6fdd5a5db743b6',
         test: '5a17f5f617cb4c07c5dd7f5b',
     };*/
+    //console.log(thisAssessment);
     for(var property in thisAssessment){
         if(property != 'info' || property != 'evaluation'){
             thisAssessment[property] = thisAssessment[property].toString();

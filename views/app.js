@@ -25403,6 +25403,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: thisAssessment.user,
                     test: thisAssessment.test,
                 };
+                if(thisAssessment.test && thisAssessment.test._id){
+                    assessmentForm.test = thisAssessment.test._id;
+                }
+                //console.log(assessmentForm);
                 assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
                     console.log(edata);
                     $state.reload();
