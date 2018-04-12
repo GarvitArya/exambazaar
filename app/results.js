@@ -211,6 +211,44 @@ router.post('/groupResults', function(req, res) {
     
 });
 
+
+router.post('/groupResults2', function(req, res) {
+    console.log("Group results starting");
+    
+    var groupCity = req.body;
+    var nameslug = groupCity.nameslug;
+    
+    var allGroupInstitutes = coaching.find({ 'nameslug': nameslug, disabled: false },{_id:1},function (err, allGroupInstitutes) {
+        if (!err){
+            
+        if(allGroupInstitutes && allGroupInstitutes.length > 0){
+            allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
+
+            var groupResults = result
+                .find({provider: { $in : allGroupInstitutes }, active: true, image: {$exists: true}})
+                .sort({rank: 1})
+                .exec(function(err, groupResults) {
+                if (!err){
+                    if(groupResults){
+                        res.json(groupResults);
+                    }else{
+                        res.json([]);
+                    }
+                } else {throw err;}
+            });
+            
+            
+            
+        }else{
+            res.json([]);
+        }
+            
+
+
+        }else {throw err;}
+        });
+    
+});
 router.post('/existingResult', function(req, res) {
     var userInstituteForm = req.body;
     

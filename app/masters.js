@@ -1,7 +1,9 @@
 var express = require('express');
+//var FuzzySet = require('FuzzySet');
 var router = express.Router();
 
 var config = require('../config/mydatabase.js');
+var FuzzySet = require('../app/models/fuzzyset.js');
 var master = require('../app/models/master');
 var intern = require('../app/models/intern');
 var address = require('../app/models/address');
@@ -857,34 +859,41 @@ router.get('/googlePlaces', function(req, res) {
     });*/
     var ObjectId = require('mongodb').ObjectID;
     //, exams: ObjectId("58ac27030be6311eccbbc3a6")
-    var allProviders = coaching.find( { latlng: {$exists: true}, latlngna:false,  disabled: false, googlePlaceSearchTry: {$ne: true}}, {latlng:1, name: 1},function(err, allProviders) {
+    //58726b2c89517d2a6c260cfc
+    var allProviders = coaching.find( {latlng: {$exists: true}, latlngna:false,  disabled: false,  googlePlace: {$exists: false}}, {latlng:1, name: 1, address: 1, city: 1},function(err, allProviders) {
+        //googlePlaceSearchTry: false,
     if (!err){
         var nLength = allProviders.length;
+        var nSaves = 0;
         var counter = 0;
-        console.log(nLength);
+        console.log('There are: ' + nLength + " coachings!");
         allProviders.forEach(function(thisprovider, index){
             var thisLatLng = thisprovider.latlng;
             var thisLng = Number(thisLatLng.lng);
             var thisLat = Number(thisLatLng.lat);
             var coordinates = [thisLat, thisLng];
             var thisName = thisprovider.name;
-            
+            var thisAddress = thisprovider.address;
+            var thisCity = thisprovider.city;
+            var parts = thisAddress.split(',');
+            var lastArea = parts[parts.length - 1];
+            var searchString = thisName + " " + lastArea + " " + thisCity;
             //console.log(thisName + " " + JSON.stringify(coordinates));
             thisprovider.googlePlaceSearchTry = true;
                                 
             thisprovider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                console.log("Google place search try saved for: " + thisprovider._id);
+                //console.log("Google place search try saved for: " + thisprovider._id);
                 //res.send('Done');
             });
-            
+            //name: thisName, location:coordinates, radius:1000
             if(thisName && coordinates){
                 places.search({name: thisName, location:coordinates, radius:1000}, function(err, response) {
                     //, rankby:'distance'
                     
                     if(response && response.results.length > 0){
                         var results = response.results;
-                        console.log("search: " + thisName + " " + thisprovider._id);
+                        //console.log("search: " + thisName + " " + thisprovider._id);
                         results.forEach(function(thisResult, rindex){
                             var googlePlaceName = thisResult.name;
                             var googlePlaceId = thisResult.place_id;
@@ -893,20 +902,26 @@ router.get('/googlePlaces', function(req, res) {
                             var distance = levenshteinDistance(thisName, googlePlaceName, function(err, distance){
                                 console.log(distance);
                             });*/
-                            if(googlePlaceName.indexOf(thisName) != -1 || thisName.indexOf(googlePlaceName)!= -1){
-                                console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
-                                    console.log(thisResult);
+                            
+                            var f = FuzzySet([googlePlaceName]);
+                            var fResults = f.get(thisName, minScore=.33);
+                            //console.log(fResults);
+                            //googlePlaceName.indexOf(thisName) != -1 || thisName.indexOf(googlePlaceName)!= -1
+                            if(fResults.length > 0){
+                                //console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                                //console.log(thisResult);
                                 
                                 
                                 thisprovider.googlePlace = thisResult;
                                 
                                 thisprovider.save(function(err, thisprovider) {
                                     if (err) return console.error(err);
-                                    console.log("Provider google place saved: " + thisprovider._id);
+                                    nSaves += 1;
+                                    console.log(nSaves + " out of " + nLength + " ^ Provider google place saved: " + thisprovider._id);
                                     //res.send('Done');
                                 });
                             }else{
-                                console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                                //console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
                             }
                             /*var matching = matchingName(thisName, googlePlaceName,function(err, matching){
                                 console.log('Matching: ' + matching);
@@ -941,7 +956,7 @@ router.get('/googlePlaces', function(req, res) {
                             // search details:  http://www.vermonster.com/
                           });*/
                     }else{
-                        console.log("search: " + thisprovider._id + " found nothing");
+                        //console.log("search: " + thisprovider._id + " found nothing");
                     }
                   
                 });
@@ -953,7 +968,7 @@ router.get('/googlePlaces', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(1000);
+    }).limit(250);
     //
     /*places.search({name: 'Shekhawati Institute Of Competitions', location:[26.876856,75.79724999999996], rankby:'distance'}, function(err, response) {
       console.log("search: ", response.results);

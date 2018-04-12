@@ -4,7 +4,14 @@
     </div>
     <h1>{{urls.length}}</h1>
     <div class="min20vh width100"></div>
-        
+    <div class="paddingLR40 lightGreyBackground">
+        <md-button class="md-black md-small padding0 font10 tolowercase " ng-click="downloadBlogSitemap()">
+            Download Sitemap
+        </md-button>
+        <md-button class="md-black md-small padding0 font10 tolowercase " ng-click="downloadBlogRSS()">
+            Download RSS
+        </md-button>
+    </div>
     <div class="paddingLR40 lightGreyBackground">
     <div>{{xmlStart}}</div>
     <div>{{urlsetStart}}</div>

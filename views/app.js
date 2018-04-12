@@ -1242,6 +1242,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.groupResults = function(groupResultForm) {
             return $http.post('/api/results/groupResults', groupResultForm);
         };
+        this.groupResults2 = function(groupResultForm) {
+            return $http.post('/api/results/groupResults2', groupResultForm);
+        };
         
         this.resultsCount = function() {
             return $http.get('/api/results/resultsCount');
@@ -1930,6 +1933,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.generateTRanks = function() {
             return $http.get('/api/coachings/generateTRanks');
         };
+        this.generateTWithoutSponsorRanks = function() {
+            return $http.get('/api/coachings/generateTWithoutSponsorRanks');
+        };
+        this.generateCityPosition = function() {
+            return $http.get('/api/coachings/generateCityPosition');
+        };
         this.generateSponsoredRanks = function() {
             return $http.get('/api/coachings/generateSponsoredRanks');
         };
@@ -2120,6 +2129,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getGroupCity = function(groupCity) {
             return $http.post('/api/coachings/coachingGroup/',groupCity);
         };
+        this.getGroupCity2 = function(groupCity) {
+            return $http.post('/api/coachings/coachingGroup2/',groupCity);
+        };
+        
         this.getGroupCityCentres = function(groupCity) {
             return $http.post('/api/coachings/coachingGroupCityCentres/',groupCity);
         };
@@ -7705,7 +7718,32 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     }]);
+     
+    exambazaar.controller("n5Controller", 
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults){
+        $scope.coachingGroup = thisGroup.data;
+        $scope.results = thisGroupResults.data;
+        $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
         
+        console.log($scope.coachingGroup);
+        if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
+            $scope.activeStream = $scope.coachingGroup.streamExams[0];
+            if($scope.coachingGroup.streamExams[0].exams && $scope.coachingGroup.streamExams[0].exams.length > 0){
+                $scope.activeExam = $scope.coachingGroup.streamExams[0].exams[0];
+            }
+        }
+        $scope.setActiveStream = function(stream){
+            $scope.activeStream = stream;
+            if($scope.activeStream.exams && $scope.activeStream.exams.length > 0){
+                $scope.setActiveExam($scope.activeStream.exams[0]);
+            }
+        };
+        $scope.setActiveExam = function(exam){
+            $scope.activeExam = exam;
+        };
+        
+        
+    }]);
    
     exambazaar.controller("p5Controller", 
     [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
@@ -17445,6 +17483,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', 'resultService', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification, resultService){
             $scope.generateurlslugs = function () {
+                //alert('Here');
                 coachingService.generateurlslugs().success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
@@ -17511,6 +17550,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log();
                 });    
             };
+            $scope.generateTWithoutSponsorRanks = function(){
+                coachingService.generateTWithoutSponsorRanks().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            $scope.generateCityPosition = function(){
+                coachingService.generateCityPosition().success(function (data, status, headers) {
+                    Notification.success("Great, all done!");
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            
             $scope.generateSponsoredRanks = function(){
                 coachingService.generateSponsoredRanks().success(function (data, status, headers) {
                     Notification.success("Great, all done!");
@@ -34660,7 +34720,7 @@ function getLatLng(thisData) {
     exambazaar.controller("blogsitemapController", 
         [ '$scope', '$rootScope','$http','$state', 'blogurls', 'FileSaver', 'Blob', function($scope, $rootScope, $http, $state, blogurls, FileSaver, Blob){
             var blogurls = blogurls.data;
-            console.log(blogurls);
+            //console.log(blogurls);
             //var exams = exams.data;
             var urls = [];
             var blogurlsCurated = [];
@@ -34706,15 +34766,17 @@ function getLatLng(thisData) {
             var pubDateEnd = "</pubDate>";
             var guidEnd = "</guid>";
             
-            blogurls.forEach(function(thisBlog, uIndex){
-                var thisItemString = itemStart + titleStart + thisBlog.title.EncodeXMLEscapeChars() + titleEnd + linkStart + thisBlog.urlslug + linkEnd + descriptionStart + thisBlog.seoDescription.EncodeXMLEscapeChars() + descriptionEnd + pubDateStart + moment(thisBlog._published).format('ddd, DD MMM YYYY HH:mm:ss ZZ') + pubDateEnd + guidStart + thisBlog.urlslug + guidEnd + itemEnd;
-                itemsInfo += thisItemString;
-            });
-            var rssText = "";
-            rssText = rssStart + channelStart + channelInfo + itemsInfo + channelEnd + rssEnd;
-            var data = new Blob([rssText], { type: "application/xhtml+xml;ISO-8859-1" });
-            FileSaver.saveAs(data, 'blogrss.xml');
             
+            $scope.downloadBlogRSS = function(){
+                blogurls.forEach(function(thisBlog, uIndex){
+                    var thisItemString = itemStart + titleStart + thisBlog.title.EncodeXMLEscapeChars() + titleEnd + linkStart + thisBlog.urlslug + linkEnd + descriptionStart + thisBlog.seoDescription.EncodeXMLEscapeChars() + descriptionEnd + pubDateStart + moment(thisBlog._published).format('ddd, DD MMM YYYY HH:mm:ss ZZ') + pubDateEnd + guidStart + thisBlog.urlslug + guidEnd + itemEnd;
+                    itemsInfo += thisItemString;
+                });
+                var rssText = "";
+                rssText = rssStart + channelStart + channelInfo + itemsInfo + channelEnd + rssEnd;
+                var data = new Blob([rssText], { type: "application/xhtml+xml;ISO-8859-1" });
+                FileSaver.saveAs(data, 'blogrss.xml');
+            };
             
             
             $scope.urlStart = "<url>";
@@ -34730,6 +34792,8 @@ function getLatLng(thisData) {
             var urlEnd = "</url>";
             var locStart = "<loc>";
             var locEnd = "</loc>";
+            var lastmodStart = "<lastmod>";
+            var lastmodEnd = "</lastmod>";
             var changefreqStart = "<changefreq>";
             var changefreqEnd = "</changefreq>";
             var priorityStart = "<priority>";
@@ -34737,52 +34801,83 @@ function getLatLng(thisData) {
             var urlsetEnd = "</urlset>";
             
             
-            blogurls.forEach(function(thisURL, uIndex){
-                newCurated = {
-                    url: thisURL,
+            $scope.downloadBlogSitemap = function(){
+                var blogLastMod = null;
+                blogurls.forEach(function(thisURL, uIndex){
+                    console.log(thisURL);
+                    var thisLastMod = null;
+                    if(thisURL._published){
+                        thisLastMod = moment(thisURL._published).format("YYYY-MM-DD");
+                        
+                        if(blogLastMod){
+                            if(moment(thisURL._published).isAfter(blogLastMod)){
+                                blogLastMod = moment(thisURL._published);
+                            }
+                        }else{
+                            blogLastMod = moment(thisURL._published);
+                        }
+                    }
+                    newCurated = {
+                        url: thisURL.urlslug,
+                        count: "10000",
+                        changefreq: 'weekly',
+                        priority: 0.8,
+                    };
+                    if(thisLastMod){
+                        newCurated.lastmod = thisLastMod;
+                    }
+                    blogurlsCurated.push(newCurated);
+                });
+                
+                var newCurated = {
+                    url: "https://www.exambazaar.com/blog",
                     count: "10000",
-                    changefreq: 'weekly',
-                    priority: 0.8,
+                    changefreq: 'daily',
+                    //lastmod: 'daily',
+                    priority: 1,
                 };
-                blogurlsCurated.push(newCurated);
-            });
-            var newCurated = {
-                url: "https://www.exambazaar.com/blog",
-                count: "10000",
-                changefreq: 'daily',
-                priority: 1,
+                if(blogLastMod){
+                    blogLastMod = blogLastMod.format("YYYY-MM-DD");
+                    newCurated.lastmod = blogLastMod;
+                }
+                //console.log(blogLastMod);
+                urls.push(newCurated);
+                urls = urls.concat(blogurlsCurated);
+
+
+                var sitemapText = "";
+                var thisURLText = "";
+                sitemapText += xmlStart;
+                sitemapText += urlsetStart;
+                urls.forEach(function(thisURL, uIndex){
+                    thisURLText = "";
+                    thisURLText += urlStart;
+                    thisURLText += locStart;
+                    thisURLText += thisURL.url;
+                    thisURLText += locEnd;
+                    if(thisURL.changefreq){
+                       thisURLText += changefreqStart;
+                       thisURLText += thisURL.changefreq;
+                       thisURLText += changefreqEnd;
+                    }
+                    if(thisURL.priority){
+                       thisURLText += priorityStart;
+                       thisURLText += thisURL.priority;
+                       thisURLText += priorityEnd;
+                    }
+                    if(thisURL.lastmod){
+                       thisURLText += lastmodStart;
+                       thisURLText += thisURL.lastmod;
+                       thisURLText += lastmodEnd;
+                    }
+                    thisURLText += urlEnd;
+                    sitemapText += thisURLText;
+                });
+                sitemapText += urlsetEnd;
+                var data = new Blob([sitemapText], { type: "application/xhtml+xml;charset=utf-8" });
+                FileSaver.saveAs(data, 'blogsitemap.xml');
             };
-            urls.push(newCurated);
-            urls = urls.concat(blogurlsCurated);
             
-            /*
-            var sitemapText = "";
-            var thisURLText = "";
-            sitemapText += xmlStart;
-            sitemapText += urlsetStart;
-            urls.forEach(function(thisURL, uIndex){
-                thisURLText = "";
-                thisURLText += urlStart;
-                thisURLText += locStart;
-                thisURLText += thisURL.url;
-                thisURLText += locEnd;
-                if(thisURL.changefreq){
-                   thisURLText += changefreqStart;
-                   thisURLText += thisURL.changefreq;
-                   thisURLText += changefreqEnd;
-                }
-                if(thisURL.priority){
-                   thisURLText += priorityStart;
-                   thisURLText += thisURL.priority;
-                   thisURLText += priorityEnd;
-                }
-                thisURLText += urlEnd;
-                sitemapText += thisURLText;
-            });
-            sitemapText += urlsetEnd;
-            var data = new Blob([sitemapText], { type: "application/xhtml+xml;charset=utf-8" });
-            FileSaver.saveAs(data, 'blogsitemap.xml');
-            */
             
             
             $scope.urls = urls;
@@ -37318,8 +37413,8 @@ function getLatLng(thisData) {
                 
             }
         })
-        /*.state('showGroupCity', {
-            url: '/group/:categoryName/:subCategoryName/:cityName/:groupName',
+        .state('showGroupCity', {
+            url: '/ebinternal/c/:nameslug/:areaslug',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -37334,47 +37429,29 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisStream: ['StreamService','$stateParams',
-                    function(StreamService,$stateParams){
-                    return StreamService.getStreamByName($stateParams.categoryName);
-                }],
-                thisExam: ['ExamService','$stateParams',
-                    function(ExamService,$stateParams){
-                    return ExamService.getExamByName($stateParams.subCategoryName);
-                }],
-                examList: ['ExamService',
-                    function(ExamService){
-                    return ExamService.getExams();
-                }],
-                streamList: ['StreamService',
-                    function(StreamService){
-                    return StreamService.getStreams();
-                }],
                 thisGroup: ['coachingService','$stateParams',
                     function(coachingService,$stateParams) {
-                    var groupCity = {
-                        groupName: $stateParams.groupName,
-                        cityName: $stateParams.cityName,
+                    var namearea = {
+                        nameslug: $stateParams.nameslug,
+                        areaslug: $stateParams.areaslug,
                     };
-                    return coachingService.getGroupCity(groupCity);
+                    return coachingService.getGroupCity2(namearea);
                 }],
                 thisGroupResults: ['resultService','$stateParams',
                     function(resultService,$stateParams) {
                     var groupCity = {
-                        groupName: $stateParams.groupName,
-                        cityName: $stateParams.cityName,
-                        examName: $stateParams.subCategoryName
+                        nameslug: $stateParams.nameslug,
                     };
-                    return resultService.groupResults(groupCity);
+                    return resultService.groupResults2(groupCity);
                 }],
-                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                /*bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
-                }],
+                }],*/
                 
                 
                 
             }
-        })*/
+        })
         .state('showGroupReviews', {
             url: '/groupreviews/:categoryName/:subCategoryName/:cityName/:groupName',
             views: {

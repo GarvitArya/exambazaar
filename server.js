@@ -261,6 +261,7 @@ var allStates = [
 '/claim/:coachingId',
 '/about',
 '/contact',
+'/ebinternal/c/:nameslug/:areaslug',
 '/ebinternal/analytics',
 '/ebinternal/activeUsers/:userId',
 '/ebinternal/addAwsCredential',
@@ -456,7 +457,7 @@ setTimeout(function(){
     procmons.groupRanking();
 }, milltillGroupRanking);
 
-var milltillCityRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 31, 0, 0) - now;
+var milltillCityRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 11, 0, 0) - now;
 if (milltillCityRanking < 0) {
      milltillCityRanking += 86400000;
 }
@@ -464,7 +465,7 @@ setTimeout(function(){
     procmons.cityRanking();
 }, milltillCityRanking);
 
-var milltillSponsoredRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 02, 01, 0, 0) - now;
+var milltillSponsoredRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 21, 0, 0) - now;
 if (milltillSponsoredRanking < 0) {
      milltillSponsoredRanking += 86400000;
 }
@@ -472,13 +473,30 @@ setTimeout(function(){
     procmons.sponsoredRanking();
 }, milltillSponsoredRanking);
 
-var milltillTotalRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 02, 31, 0, 0) - now;
+var milltillTotalWithoutSponsorRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 31, 0, 0) - now;
+if (milltillTotalWithoutSponsorRanking < 0) {
+     milltillTotalWithoutSponsorRanking += 86400000;
+}
+setTimeout(function(){
+    procmons.totalWithoutSponsorRanking();
+}, milltillTotalWithoutSponsorRanking);
+
+var milltillTotalRanking = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 41, 0, 0) - now;
 if (milltillTotalRanking < 0) {
      milltillTotalRanking += 86400000;
 }
 setTimeout(function(){
     procmons.totalRanking();
 }, milltillTotalRanking);
+
+
+var milltillCityPosition = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 01, 51, 0, 0) - now;
+if (milltillCityPosition < 0) {
+     milltillCityPosition += 86400000;
+}
+setTimeout(function(){
+    procmons.cityPosition();
+}, milltillCityPosition);
 
 function doSomething()
 {

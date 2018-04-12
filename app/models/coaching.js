@@ -224,7 +224,11 @@ var coachingSchema = mongoose.Schema({
     cRank: Schema.Types.Mixed,
     cRankInfo: Schema.Types.Mixed,
     tRank: Schema.Types.Mixed,
+    tWithoutSponsorRank: Schema.Types.Mixed,
+    cityPosition: Schema.Types.Mixed,
     sponsoredRank: Schema.Types.Mixed,
+    nameslug: {type: String},
+    areaslug: {type: String},
 });
 
 coachingSchema.index({ loc: '2dsphere'});

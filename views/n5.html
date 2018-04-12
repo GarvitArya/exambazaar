@@ -1,0 +1,106 @@
+<style>
+    #heroHeader{
+        margin-top: 0px;
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .pageLogo{
+        max-height: 80px;
+        max-width: 80px;
+    }
+    #pageLogoHolder{
+        border-radius: 4px;*/
+        background: white;
+        height: 90px;
+        width: 90px;
+    }
+    .sectionHeader{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div id="spacer3" class="hide-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hide-gt-xs whiteBackground">
+</div>
+<!--<div layout="row" layout-align="start end" id="heroHeader">
+    <div hide-xs flex="5">
+    </div>
+    <div layout="column" layout-align="end end" class="paddingB10">
+        <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
+            <img  ng-if="coachingGroup.logo" ng-src="{{coachingGroup.logo}}" class="pageLogo" alt="{{coachingGroup.name}} Logo" />
+            <img  ng-if="!coachingGroup.logo || coachingGroup.logo==''" ng-src="{{defaultCoachingLogo}}" class="pageLogo" alt="{{coachingGroup.name}} Logo" />
+
+
+        </div>
+    </div>
+</div>-->
+<div layout="row" layout-align="start end" class="width100 whiteSmokeBottomBorder">
+    <div hide-xs flex="5">
+    </div>
+    <h1 flex class="bold pageTitleFont textBlack margin0 ">
+        {{coachingGroup.name}}
+    </h1>
+</div>
+<div layout="row" layout-align="start start" class="width100">
+    <div hide-xs flex="5">
+    </div>
+    <div layout="column" layout-align="start start" flex class="width100">
+        <div layout="row" layout-align="start start" class="width100 marginTB10 greyBorder" layout-wrap>
+            <div ng-repeat="exam in coachingGroup.exams">
+                {{exam}}
+            </div>
+            
+        </div>
+        <div layout="column" layout-align="start start" class="width100">
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div ng-repeat="stream in coachingGroup.streamExams | orderBy: ['-rank', 'diplayname']" class="padding10 bold h3Font" ng-click="setActiveStream(stream)" flex>
+                    {{stream.displayname}}
+                </div>
+            </div>
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div layout="column" layout-align="start start" flex ng-repeat="exam in activeStream.exams | orderBy: ['-rank', 'exam_page_name']" class="padding10 h3Font">
+                    <div class="width100" ng-click="setActiveExam(exam)">{{exam.exam_page_name}}</div>
+                    <div class="width100 smallFont">
+                        <div ng-if="coachingGroup.cityPosition[exam._id]">
+                        #{{coachingGroup.cityPosition[exam._id]}} in {{coachingGroup.city}}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div layout="column" layout-align="start start" class="width100">
+                <div class="boxShadow padding10 marginB20" ng-repeat="course in activeExam.course">
+                    {{course}}
+                </div>
+            </div>
+            <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader" layout-wrap>
+                Photos
+            </h2>
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div flex="20" ng-repeat="photo in coachingGroup.photo" class="padding5">
+                    <div ng-if="$index <9" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                    </div>
+                    <div ng-if="$index == 9" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                        <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
+                            +{{coachingGroup.photo.length - 12}}
+                        </div>
+                    </div>
+                
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    <div hide-xs flex="5">
+    </div>
+    <div flex="25" class="" hide-xs>
+        Nearby Coachings
+    </div>
+
+</div>
