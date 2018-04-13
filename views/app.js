@@ -7730,6 +7730,61 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         var resultStreamExams = thisGroupResults.data;
         $scope.cityGroupCentres = cityGroupCentres.data;
         $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
+        $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
+        $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Tech Powered", "Exhaustive Content", "Effective Test Series"];
+        
+        $scope.addRemoveReviewTag = function(reviewTag){
+            if(!$scope.userReview.tags){
+                $scope.userReview.tags = [];
+            }
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex == -1){
+                $scope.userReview.tags.push(reviewTag);
+            }else{
+                $scope.userReview.tags.splice(rIndex, 1);
+            }
+        };
+        $scope.setReviewTagColor = function(reviewTag){
+            var className = "unfilledTag";
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex -= -1){
+                className = "filledTag";
+            }
+            return className;
+        };
+        
+        $scope.loaded = {
+            photo: 10,    
+            results: 8,    
+            video: 4,    
+            faculty: 8,    
+        };
+        
+        $scope.loadMorePhotos = function(){
+            var loadMore = 5;
+            if($scope.coachingGroup.photo.length > $scope.loaded.photo){
+                $scope.loaded.photo += loadMore;
+            }
+        };
+        $scope.loadMoreResults = function(){
+            var loadMore = 4;
+            if($scope.activeExam.results.length > $scope.loaded.results){
+                $scope.loaded.results += loadMore;
+            }
+        };
+        $scope.loadMoreVideos = function(){
+            var loadMore = 2;
+            if($scope.coachingGroup.video.length > $scope.loaded.video){
+                $scope.loaded.video += loadMore;
+            }
+        };
+        $scope.loadMoreFaculty = function(){
+            var loadMore = 4;
+            if($scope.coachingGroup.faculty.length > $scope.loaded.faculty){
+                $scope.loaded.faculty += loadMore;
+            }
+        };
+        
         if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             var streamIds = $scope.coachingGroup.streamExams.map(function(a) {return a._id.toString();});
             resultStreamExams.forEach(function(thisResultStream, rindex){
@@ -7779,6 +7834,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         $scope.setActiveExam = function(exam){
             $scope.activeExam = exam;
+            $scope.loaded.results = 8;
         };
         
         
@@ -7942,6 +7998,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             'PwD'   
         ];
         $scope.resultYears = [
+            '2018',    
             '2017',    
             '2016',    
             '2015',    

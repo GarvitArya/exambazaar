@@ -258,7 +258,7 @@ router.procmon = function(stats){
                                 if(error){
                                     console.log('Could not send email! ' + error);
                                 }else{
-                                    //res.json('Done');
+                                    
                                     console.log(response);
                                 }
                             });
@@ -540,11 +540,11 @@ router.assessmentshelper = function(){
                             existingAssessment.save(function(err, existingAssessment){
                                 if (err) return console.error(err);
                                 //console.log('Assessment saved: ' + existingAssessment._id);
-                                //res.json(existingAssessment);
+                               
                             });    
 
                             }else{
-                                res.json(null);
+                                console.log('Something went very wrong');
                             }
                             });
 
@@ -555,11 +555,11 @@ router.assessmentshelper = function(){
                         });
 
                         }else{
-                            res.json(null);
+                            console.log('Something went very wrong');
                         }
                     });
                 }else{
-                    res.json(null);
+                    console.log('Something went very wrong');
                 }
             } else {throw err;}
         });
@@ -577,7 +577,7 @@ router.assessmentshelper = function(){
 
 router.groupRanking = function(){
     console.log('Starting Group Rank');
-    //res.json(true);
+    
     var skip = 0;
     var limit = 30000;
     var weight = {
