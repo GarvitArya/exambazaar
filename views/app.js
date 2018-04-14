@@ -2671,8 +2671,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var tcURL = "https://www.exambazaar.com/reviews/" + $scope.exam.top_coaching_urlslug;
             $scope.canonicalFlip = true;
-            $scope.canonicalUrl = tcURL;
-            console.log("Canonical URL is: " + $scope.canonicalUrl);
+            $rootScope.canonicalUrl = tcURL;
+            console.log("Canonical URL is: " + $rootScope.canonicalUrl);
             //console.log($scope.exam);
             //$scope.stream = thisStream.data;
             
@@ -2951,8 +2951,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         var cURL = "https://www.exambazaar.com/" + examslug + "/" + cityslug;
         $scope.canonicalFlip = true;
-        $scope.canonicalUrl = cURL;
-        console.log("Canonical URL is: " + $scope.canonicalUrl);
+        $rootScope.canonicalUrl = cURL;
+        console.log("Canonical URL is: " + $rootScope.canonicalUrl);
         
         $scope.categoryName = slugInfo.streamName;
         $scope.subCategoryName = slugInfo.examName;
@@ -3274,8 +3274,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         if(thisurlslug){
             var cURL = "https://www.exambazaar.com/" + thisurlslug.examslug + "/" + thisurlslug.cityslug;
             $scope.canonicalFlip = true;
-            $scope.canonicalUrl = cURL;
-            console.log("Canonical URL is: " + $scope.canonicalUrl);
+            $rootScope.canonicalUrl = cURL;
+            console.log("Canonical URL is: " + $rootScope.canonicalUrl);
         }
         
         $scope.examBadgeClass = function(thisExam){
@@ -30754,8 +30754,8 @@ function getLatLng(thisData) {
             
             var qpURL = "https://www.exambazaar.com/previous-year-question-papers-for-competitive-exams";
             $scope.canonicalFlip = true;
-            $scope.canonicalUrl = qpURL;
-            console.log("Canonical URL is: " + $scope.canonicalUrl);
+            $rootScope.canonicalUrl = qpURL;
+            console.log("Canonical URL is: " + $rootScope.canonicalUrl);
             
             $scope.mainOptions = {
                 sectionsColor: ['#FFFFFF', '#FFFFFF', ,'#FFFFFF', '#FFFFFF'],
@@ -30874,8 +30874,8 @@ function getLatLng(thisData) {
             if(qpURL){
                 qpURL = "https://www.exambazaar.com/qp/" + qpURL;
                 $scope.canonicalFlip = true;
-                $scope.canonicalUrl = qpURL;
-                console.log("Canonical URL is: " + $scope.canonicalUrl);
+                $rootScope.canonicalUrl = qpURL;
+                console.log("Canonical URL is: " + $rootScope.canonicalUrl);
             }
             
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
@@ -31348,8 +31348,8 @@ function getLatLng(thisData) {
             if(eURL){
                 eURL = "https://www.exambazaar.com/exam/" + eURL;
                 $scope.canonicalFlip = true;
-                $scope.canonicalUrl = eURL;
-                console.log("Canonical URL is: " + $scope.canonicalUrl);
+                $rootScope.canonicalUrl = eURL;
+                console.log("Canonical URL is: " + $rootScope.canonicalUrl);
             }
             
             //console.log($scope.suggestedblogs);
@@ -40980,7 +40980,7 @@ function getLatLng(thisData) {
 
 exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll, $state, $cookies, $mdDialog, bowser) {
     console.log(bowser.name + " " + bowser.version);
-    
+    $rootScope.canonicalUrl = '';
     
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
