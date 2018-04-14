@@ -311,6 +311,8 @@ router.post('/userevaluate', function(req, res) {
     }
     
     var existingUser = user.findOne({_id: thisAssessment.user}, {basic: 1, mobile: 1, email: 1},function (err, existingUser) {
+        
+        
         if(assessmentId){
             var existingAssessment = assessment
             .findOne({_id: assessmentId})
@@ -762,7 +764,7 @@ router.post('/userevaluate', function(req, res) {
             .findOne({user: thisAssessment.user, test: thisAssessment.test})
             .deepPopulate('test')
             .exec(function (err, existingAssessment) {
-
+                
             if (!err){
                 if(existingAssessment){
                     var testId = existingAssessment.test._id.toString();
@@ -773,6 +775,7 @@ router.post('/userevaluate', function(req, res) {
                         .find({test: testId}, {questions: 1})
                         .deepPopulate('questions')
                         .exec(function (err, testQuestions) {
+                            
                         if(testQuestions){
                         var nQuestions = 0;   
                         var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
@@ -788,6 +791,7 @@ router.post('/userevaluate', function(req, res) {
                             var subQuestionId = subQuestion._id;
                             var correctOptionId = null;
                             var correctNumericalAnswers = null;
+                            
 
                             if(subQuestion.type == 'mcq'){
                                 if(subQuestion.mcqma){
@@ -799,22 +803,28 @@ router.post('/userevaluate', function(req, res) {
                                     mcqma: subQuestion.mcqma,
                                     options: [],
                                 };
+                                var thisCounter = 0;
                                 subQuestion.options.forEach(function(thisOption, oIndex){
 
                                 if(thisOption._correct){
                                     correctOptionId = thisOption._id.toString();
                                     thisKey.options.push(correctOptionId);
+                                    if(thisCounter == 0){
+                                        thisCounter = 1;
+                                    }
 
-                                    counter += 1;
+                                    
 
                                 }
+                                
                                 if(oIndex == subQuestion.options.length - 1){
                                     solutionKey.push(thisKey);
                                 }    
                                 });    
-
+                                counter += thisCounter;
 
                                 }else{
+                                var thisCounter = 0;
                                 subQuestion.options.forEach(function(thisOption, oIndex){
                                 if(thisOption._correct){
                                     correctOptionId = thisOption._id;
@@ -827,18 +837,19 @@ router.post('/userevaluate', function(req, res) {
                                         option: correctOptionId.toString(),
                                     };
                                     solutionKey.push(thisKey);
-                                    counter += 1;
+                                    if(thisCounter == 0){
+                                        thisCounter = 1;
+                                    }
+                                    
                                 }
 
 
                                 });
-
+                                counter += thisCounter;
 
                                 }
 
-                            }
-
-                            if(subQuestion.type == 'numerical'){
+                            }else if(subQuestion.type == 'numerical'){
 
                                 if(subQuestion.numericalAnswerType == 'Exact'){
                                     correctNumericalAnswers = subQuestion.numericalAnswers;
@@ -866,8 +877,10 @@ router.post('/userevaluate', function(req, res) {
                                     counter += 1;
                                 }
 
+                            }else{
+                                console.log('Something went very very wrong!');
                             }
-
+                            //console.log(counter + " | " + nQuestions);
                             if(counter == nQuestions){
 
 
@@ -1190,6 +1203,7 @@ router.post('/userevaluate', function(req, res) {
                                     };
                                 }
                             }  
+                            
                             existingAssessment.save(function(err, existingAssessment){
                                 if (err) return console.error(err);
                                 console.log('Assessment saved: ' + existingAssessment._id);

@@ -22530,6 +22530,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user._id,
                     test: $stateParams.testId,
                 };
+                console.log(assessmentForm);
                 assessmentService.userevaluate(assessmentForm).success(function (adata, status, headers) {
                     
                     $scope.userAssessment = adata;
