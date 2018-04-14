@@ -30960,9 +30960,9 @@ function getLatLng(thisData) {
             if($scope.years.min && $scope.years.max && $scope.years.min != $scope.years.max){
                 yearString = $scope.years.min + ' - ' + $scope.years.max;
             }
+            console.log($scope.years);
             
-            
-            $rootScope.pageDescription = "Attempt Official " + $scope.exam.exam_page_name + " Question Papers for <years> for Free in a Real, Exam-like Interface | " + $scope.exam.top_coaching_name + " Preparation";
+            $rootScope.pageDescription = "Attempt Official " + $scope.exam.exam_page_name + " Question Papers for " +  yearString + " for Free in a Real, Exam-like Interface | " + $scope.exam.top_coaching_name + " Preparation";
             
             var keywordString = '';
             //var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
