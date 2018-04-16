@@ -41,6 +41,136 @@
         color: #333333;
         font-size: 11px;   
     }
+    .demo-gallery > ul {
+        margin-bottom: 0;
+        padding-left: 15px;
+    }
+
+    .demo-gallery > ul > li {
+    margin-bottom: 15px;
+    width: 180px;
+    display: inline-block;
+    margin-right: 15px;
+    list-style: outside none none;
+    }
+
+    .demo-gallery > ul > li a {
+    border: 3px solid #FFF;
+    border-radius: 3px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    }
+
+    .demo-gallery > ul > li a > img {
+    -webkit-transition: -webkit-transform 0.15s ease 0s;
+    -moz-transition: -moz-transform 0.15s ease 0s;
+    -o-transition: -o-transform 0.15s ease 0s;
+    transition: transform 0.15s ease 0s;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    height: 100%;
+    width: 100%;
+    }
+
+    .demo-gallery > ul > li a:hover > img {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    .demo-gallery > ul > li a:hover .demo-gallery-poster > img {
+    opacity: 1;
+    }
+
+    .demo-gallery > ul > li a .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition: background-color 0.15s ease 0s;
+    -o-transition: background-color 0.15s ease 0s;
+    transition: background-color 0.15s ease 0s;
+    }
+
+    .demo-gallery > ul > li a .demo-gallery-poster > img {
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: opacity 0.3s ease 0s;
+    -o-transition: opacity 0.3s ease 0s;
+    transition: opacity 0.3s ease 0s;
+    }
+
+    .demo-gallery > ul > li a:hover .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .demo-gallery .justified-gallery > a > img {
+    -webkit-transition: -webkit-transform 0.15s ease 0s;
+    -moz-transition: -moz-transform 0.15s ease 0s;
+    -o-transition: -o-transform 0.15s ease 0s;
+    transition: transform 0.15s ease 0s;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    height: 100%;
+    width: 100%;
+    }
+
+    .demo-gallery .justified-gallery > a:hover > img {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    .demo-gallery .justified-gallery > a:hover .demo-gallery-poster > img {
+    opacity: 1;
+    }
+
+    .demo-gallery .justified-gallery > a .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition: background-color 0.15s ease 0s;
+    -o-transition: background-color 0.15s ease 0s;
+    transition: background-color 0.15s ease 0s;
+    }
+
+    .demo-gallery .justified-gallery > a .demo-gallery-poster > img {
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: opacity 0.3s ease 0s;
+    -o-transition: opacity 0.3s ease 0s;
+    transition: opacity 0.3s ease 0s;
+    }
+
+    .demo-gallery .justified-gallery > a:hover .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .demo-gallery .video .demo-gallery-poster img {
+    height: 48px;
+    margin-left: -24px;
+    margin-top: -24px;
+    opacity: 0.8;
+    width: 48px;
+    }
+
+    .demo-gallery.dark > ul > li a {
+    border: 3px solid #04070a;
+    }
+    
 </style>
 
 <div id="spacer3" class="hide-xs whiteBackground">
@@ -207,18 +337,30 @@
         </h2>
         <div layout="column" layout-align="start start" class="width100">
             
-            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+            <!--<div layout="row" layout-align="start start" class="width100" layout-wrap>
                 <div flex="20" ng-repeat="photo in coachingGroup.photo" class="padding10" ng-if="$index<loaded.photo">
                     <div ng-hide="$index >=loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
                     </div>
                     <div ng-show="$index == loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
-                        <div layout="row" layout-align="center center" class="width100 text-white" id="thumbnailText">
+                        <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
                             +{{coachingGroup.photo.length - loaded.photo + 1}} more photos
                         </div>
                     </div>
                 </div>
-                
-                
+            </div>-->
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div flex="20" class="padding10" ng-repeat="photo in coachingGroup.photo" ng-if="$index<loaded.photo">
+                    <a  ng-href="{{photo.image}}" class="strip" data-strip-caption="Caption below the image" data-strip-group="groupPhotos">
+                    <div ng-hide="$index >=loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                    </div>
+
+                    </a>
+                    <div ng-show="$index == loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="loadMorePhotos()">
+                        <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
+                            +{{coachingGroup.photo.length - loaded.photo + 1}} more photos
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="width100 padding10">
                 <div layout="row" layout-align="center center" id="showmore" ng-click="loadMorePhotos()" class="width100 spacedLetter1" ng-show="coachingGroup.photo.length > loaded.photo">
@@ -227,7 +369,7 @@
             </div>
         </div>
         
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <!--<h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
             Videos
         </h2>
         <div layout="column" layout-align="start start" class="width100">
@@ -240,12 +382,6 @@
                         </div>
                         
                     </div>
-                    <!--<div ng-if="$index == 7" id="thumbnailImage16x9" ng-style="{'background-image':'url(images/background/video.jpg')'}">
-                        <div layout="row" layout-align="center center" class="width100 text-white" id="thumbnailText">
-                            +{{coachingGroup.video.length - 7}} more videos
-                        </div>
-                    </div>-->
-                
                 </div>
                 
                 
@@ -256,7 +392,7 @@
                     SHOW MORE
                 </div>
             </div>
-        </div>
+        </div>-->
         
         <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
             Faculty at {{coachingGroup.name}}

@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var review = require('../app/models/review');
+var exam = require('../app/models/exam');
 var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
@@ -238,6 +239,145 @@ router.post('/groupReviews', function(req, res) {
             }
         } else {throw err;}
     });
+});
+
+router.post('/groupReviews2', function(req, res) {
+    console.log("Group Reviews Starting");
+    //res.json(true);
+    
+    var groupCity = req.body;
+    var nameslug = groupCity.nameslug;
+    var areaslug = groupCity.areaslug;
+    
+    
+    var thisGroup = coaching.findOne({ 'nameslug': nameslug, areaslug: areaslug, disabled: false },{_id:1, groupName: 1, exams: 1},function (err, thisGroup) {
+    if (!err){
+
+    if(thisGroup){
+    var thisGroupName = thisGroup.groupName;
+    var thisGroupExams = thisGroup.exams;
+
+    var allExams = exam
+    .find({_id: thisGroupExams, active: true}, {stream:1, exam_page_name:1, logo: 1, resultFormat: 1, rank: 1})
+    .deepPopulate('stream')
+    .exec(function (err, allExams) {
+        if (!err){
+        var allExamIds = allExams.map(function(a) {return a._id.toString();});
+
+        var allCentres = coaching.find({ 'groupName': thisGroupName, disabled: false },{_id:1},function (err, allCentres) {
+        if (!err){
+            if(allCentres && allCentres.length > 0){
+
+            var allGroupInstitutes = allCentres.map(function(a) {return a._id;});
+                
+            var groupReviews = review
+            .find({provider: { $in : allGroupInstitutes }, exam: {$in: allExamIds}, active: true})
+            .exec(function(err, groupReviews) {
+            if (!err){
+            if(groupReviews){
+            console.log(groupReviews);
+            groupReviews.forEach(function(thisReview, rindex){
+            var thisRExam = thisReview.exam.toString();
+            var thisRExamIndex = allExamIds.indexOf(thisRExam); 
+
+            if(thisRExamIndex != -1){
+                thisReview.exam = allExams[thisRExamIndex];
+            }else{
+                console.log('Something went very wrong!!');
+            }
+
+
+            });
+
+            var streamexams = [];
+            var streamexamIds = [];
+            groupReviews.forEach(function(thisReview, rindex){
+                var thisRExamId = thisReview.exam._id;
+                var thisRExamStream = thisReview.exam.stream._id;
+                if(streamexams && streamexams.length > 0){
+                    streamexamIds = streamexams.map(function(a) {return a._id;});
+                }
+                var thisStreamIndex = streamexamIds.indexOf(thisRExamStream);
+
+                if(thisStreamIndex == -1){
+                    var newStream = {
+                        _id: thisReview.exam.stream._id,
+                        rank: thisReview.exam.stream.rank,
+                        logo: thisReview.exam.stream.logo,
+                        displayname: thisReview.exam.stream.displayname,
+                        exams: [],
+                    };
+                    thisStreamIndex = streamexams.length;
+                    streamexams.push(newStream);
+                }
+
+                var thisStreamExams = streamexams[thisStreamIndex].exams;
+                var thisStreamExamIds = [];
+                if(thisStreamExams && thisStreamExams.length > 0){
+                    thisStreamExamIds = thisStreamExams.map(function(a) {return a._id;});
+                }
+                var thisStreamExamIndex = thisStreamExamIds.indexOf(thisRExamId);
+                if(thisStreamExamIndex == -1){
+                    var newExam = {
+                        _id: thisReview.exam._id,
+                        rank: thisReview.exam.rank,
+                        logo: thisReview.exam.logo,
+                        exam_page_name: thisReview.exam.exam_page_name,
+                        resultFormat: thisReview.exam.resultFormat,
+                        reviews: [],
+                    };
+                    thisStreamExamIndex = streamexams[thisStreamIndex].exams.length;
+                    streamexams[thisStreamIndex].exams.push(newExam);
+                }
+
+                if(thisStreamExamIndex != -1){
+                    var newReview = {
+                        name: thisReview.name,
+                        rank: thisReview.rank,
+                        category: thisReview.category,
+                        year: thisReview.year,
+                        image: thisReview.image,
+                        provider: thisReview.provider,
+                        active: thisReview.active,
+                    };
+                    streamexams[thisStreamIndex].exams[thisStreamExamIndex].reviews.push(newReview);
+                }
+            });
+            //console.log(streamexams);
+            res.json(streamexams);
+            }else{
+                res.json([]);
+            }
+            } else {throw err;}
+            });
+
+            }else{
+                res.json([]);
+            }
+
+        }else {throw err;}
+
+    });
+
+
+        }else {throw err;}
+    });
+
+
+
+
+    }else{
+        res.json([]);
+    } 
+
+
+
+
+
+    }else {throw err;}
+    });
+    
+    
 });
 
 router.post('/existingReview', function(req, res) {

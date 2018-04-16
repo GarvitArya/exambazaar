@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'jlareau.bowser', 'angularMoment','seo']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'jlareau.bowser', 'angularMoment']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -153,7 +153,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     'ng-infinite-scroll.min.js',
 
               ]
-            },  
+            },
+            {
+              name: 'lightgallery',
+              files: [
+                    'lightgallery.css',
+                    'lightgallery.min.js',
+              ]
+            },
             
           ]
         });
@@ -1453,6 +1460,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.groupReviews = function(groupReviews) {
             return $http.post('/api/reviews/groupReviews', groupReviews);
+        };
+        this.groupReviews2 = function(groupReviews) {
+            return $http.post('/api/reviews/groupReviews2', groupReviews);
         };
         this.dailySummary = function() {
             return $http.get('/api/reviews/dailySummary');
@@ -7725,10 +7735,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
      
     exambazaar.controller("n5Controller", 
-    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews){
+        
         $scope.coachingGroup = thisGroup.data;
         var resultStreamExams = thisGroupResults.data;
         $scope.cityGroupCentres = cityGroupCentres.data;
+        $scope.groupReviews = thisGroupReviews.data;
+        
+        console.log($scope.groupReviews);
         $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
         $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
         $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Tech Powered", "Exhaustive Content", "Effective Test Series"];
@@ -7744,14 +7758,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.userReview.tags.splice(rIndex, 1);
             }
         };
-        $scope.setReviewTagColor = function(reviewTag){
+        /*$scope.setReviewTagColor = function(reviewTag){
             var className = "unfilledTag";
             var rIndex = $scope.userReview.tags.indexOf(reviewTag);
             if(rIndex -= -1){
                 className = "filledTag";
             }
             return className;
-        };
+        };*/
         
         $scope.loaded = {
             photo: 10,    
@@ -37553,8 +37567,16 @@ function getLatLng(thisData) {
                     };
                     return resultService.groupResults2(groupCity);
                 }],
-                /*bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                thisGroupReviews: ['reviewService','$stateParams',
+                    function(reviewService,$stateParams) {
+                    var groupCity = {
+                        nameslug: $stateParams.nameslug,
+                        areaslug: $stateParams.areaslug,
+                    };
+                    return reviewService.groupReviews2(groupCity);
+                }],
+                /*lightgallery: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['lightgallery'], {serie: true});
                 }],*/
                 
                 
