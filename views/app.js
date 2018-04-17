@@ -2270,8 +2270,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.googlePlaces = function() {
             return $http.get('/api/masters/googlePlaces/');
         };
+        this.googlePlacesById = function() {
+            return $http.get('/api/masters/googlePlacesById/');
+        };
         this.bulkSaveLatLng = function() {
             return $http.get('/api/masters/bulkSaveLatLng/');
+        };
+        this.syncGooglePlaceId = function() {
+            return $http.get('/api/masters/syncGooglePlaceId/');
         };
         this.latLngSummary = function() {
             return $http.get('/api/masters/latLngSummary/');
@@ -7744,6 +7750,60 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             console && console.log('You just scrolled to the top!');
           });
         };
+        $scope.facilities = [
+            {
+                field: 'printed_notes',
+                present: 'images/icons/n5/facilities/black/study-material.png',
+                absent: 'images/icons/n5/facilities/grey/study-material.png',
+            },
+            {
+                field: 'test_series',
+                present: 'images/icons/n5/facilities/black/test-series.png',
+                absent: 'images/icons/n5/facilities/grey/test-series.png',
+            },
+            {
+                field: 'dlp',
+                present: 'images/icons/n5/facilities/black/dlp.png',
+                absent: 'images/icons/n5/facilities/grey/dlp.png',
+            },
+            {
+                field: 'hostel',
+                present: 'images/icons/n5/facilities/black/hostel.png',
+                absent: 'images/icons/n5/facilities/grey/hostel.png',
+            },
+            {
+                field: 'doubt_sessions',
+                present: 'images/icons/n5/facilities/black/doubt.png',
+                absent: 'images/icons/n5/facilities/grey/doubt.png',
+            },
+            {
+                field: 'periodic_performance_tests',
+                present: 'images/icons/n5/facilities/black/practice.png',
+                absent: 'images/icons/n5/facilities/grey/practice.png',
+            },
+            {
+                field: 'online_lectures',
+                present: 'images/icons/n5/facilities/black/online-lectures.png',
+                absent: 'images/icons/n5/facilities/grey/online-lectures.png',
+                
+            },
+            {
+                field: 'n_classrooms',
+                present: 'images/icons/n5/facilities/black/class.png',
+                absent: 'images/icons/n5/facilities/grey/class.png',
+            },
+            {
+                field: 'counselling',
+                present: 'images/icons/n5/facilities/black/counselling.png',
+                absent: 'images/icons/n5/facilities/grey/counselling.png',
+            },
+            {
+                field: 'entrance_test',
+                present: 'images/icons/n5/facilities/black/entrance-exam.png',
+                absent: 'images/icons/n5/facilities/grey/entrance-exam.png',
+            },
+        ];
+        
         
         $scope.reviewParams = [
             {name: "faculty", displayname:"Faculty and Teaching Experience"},
@@ -19107,9 +19167,25 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });   
             };
+            $scope.googlePlacesById = function(){
+                MasterService.googlePlacesById().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
             
             $scope.bulkSaveLatLng = function(){
                 MasterService.bulkSaveLatLng().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
+            $scope.syncGooglePlaceId = function(){
+                MasterService.syncGooglePlaceId().success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
@@ -41167,12 +41243,12 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup' && stateTo != 'bookAppointment' && stateTo != 'availDiscount'){
             $mdDialog.hide();
         }
-        
-        if(stateTo == 'blog' || stateTo == 'showblog'){
+        $rootScope.compactMode = true;
+        /*if(stateTo == 'blog' || stateTo == 'showblog'){
             $rootScope.compactMode = true;
         }else{
             $rootScope.compactMode = false;
-        }
+        }*/
         
         if($cookies.getObject('sessionuser')){
             var user = $cookies.getObject('sessionuser');

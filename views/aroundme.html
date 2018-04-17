@@ -166,6 +166,16 @@
             </div>
         </div>
     </md-button>
+    <md-button class="md-black md-small tolowercase" ng-click="googlePlacesById()" ng-if="masterUser"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-map-marker font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Google Places by ID
+            </div>
+        </div>
+    </md-button>
     <md-button class="md-danger md-small tolowercase" ng-click="bulkSaveLatLng()" ng-if="masterUser"> <!--aroundme-->
         <div layout="row" layout-align="start center">
             <div layout="row" layout-align="start center" class="marginR10">
@@ -173,6 +183,16 @@
             </div>
             <div layout="row" layout-align="start center">
                 Bulk Lat Lng
+            </div>
+        </div>
+    </md-button>
+    <md-button class="md-danger md-small tolowercase" ng-click="syncGooglePlaceId()" ng-if="masterUser"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-map-marker font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Sync Google Place Id
             </div>
         </div>
     </md-button>

@@ -3607,13 +3607,6 @@ router.post('/CoachingStream', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             if(thisExam){
-                
-            /*coaching.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1, rank:1, city:1, pincode:1, exams:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
-                    if (!err){
-                        //console.log(providerList);
-                        res.json(providerList);
-                    } else {throw err;}
-                });*/
             var examId = thisExam._id;
             //console.log(examId);
             var sortString = "$tRank." + examId;
@@ -4440,7 +4433,7 @@ router.post('/coachingGroup2', function(req, res) {
                         thisStreamExam.exams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );
                     }
                 });
-                console.log(streamExams);
+                //console.log(streamExams);
             }    
             
             
@@ -6043,33 +6036,74 @@ function slugify(string) {
 };
 router.get('/generateurlslugs', function(req, res) {
     res.json(true);
-    console.log('I am here');
+    //console.log('I am here');
     
     var allCoachings = coaching
-        .find({location: {$exists: true}, disabled: false}, {name:1, location: 1, city: 1})
-        .deepPopulate('location')
+        .find({newGooglePlace: {$exists: true}, areaslug: {$exists: true}, disabled: false}, {newGooglePlace: 1, areaslug: 1})
+        .limit(10)
+        //.deepPopulate('location')
         .exec(function (err, allCoachings) {
         if (!err){
             console.log('There are '  +allCoachings.length + " coachings!");
             allCoachings.forEach(function(thisCoaching, index){
-                var coachingName = thisCoaching.name;
-                var coachingArea = thisCoaching.location.area;
-                var coachingCity = thisCoaching.city;
+                //var coachingName = thisCoaching.name;
+                //var coachingArea = thisCoaching.location.area;
+                //var coachingCity = thisCoaching.city;
                 
-                thisCoaching.nameslug = slugify(coachingName);
-                thisCoaching.areaslug = slugify(coachingArea + " " + coachingCity);
+                //thisCoaching.nameslug = slugify(coachingName);
+                //thisCoaching.areaslug = slugify(coachingArea + " " + coachingCity);
                 
                 //console.log(thisCoaching.urlslug1);
                 //console.log(thisCoaching.urlslug2);
                 
+                var addressTypes = thisCoaching.newGooglePlace.address_components.types;
+                var sl1 = "sublocality_level_1";
+                var sl2 = "sublocality_level_2";
+                var sl3 = "sublocality_level_3";
+                var aal1 = "locality";
+                var thisSL1 = "";
+                var thisSL2 = "";
+                var thisSL3 = "";
+                var thisAAL1 = "";
+                var valid = false;
+                thisCoaching.newGooglePlace.address_components.forEach(function(thisAddressComponent, acindex){
+                    var sla1 = thisAddressComponent.types.indexOf(sl1);
+                    if(sla1 != -1){
+                        thisSL1 = thisAddressComponent.long_name;
+                        valid = true;
+                    }
+                    var sla2 = thisAddressComponent.types.indexOf(sl2);
+                    if(sla2 != -1){
+                        thisSL2 = thisAddressComponent.long_name;
+                        valid = true;
+                    }
+                    var sla3 = thisAddressComponent.types.indexOf(sl3);
+                    if(sla3 != -1){
+                        thisSL3 = thisAddressComponent.long_name;
+                        valid = true;
+                    }
+                    var aala1 = thisAddressComponent.types.indexOf(aal1);
+                    if(aala1 != -1){
+                        thisAAL1 = thisAddressComponent.long_name;
+                        //valid = true;
+                    }
+                });
+                if(valid){
+                    var newareaslug = thisSL3 + " " + thisSL2 + " " + thisSL3 + " " + thisAAL1; 
+                    newareaslug = slugify(newareaslug);
+                    console.log(thisCoaching._id + " | " + thisCoaching.areaslug + " | " + newareaslug);
+                    //console.log();
+                }else{
+                    //console.log("Couldn't make area slug");
+                }
                 
                 
                 
-                thisCoaching.save(function(err, thisCoaching) {
+                
+                /*thisCoaching.save(function(err, thisCoaching) {
                 if (err) return console.error(err);
                     console.log("Coaching saved " + thisCoaching._id);
-                    //res.json('Done');
-                });
+                });*/
                 
             });
             

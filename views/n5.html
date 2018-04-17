@@ -218,10 +218,20 @@
 </div>-->
 
 <div class="width100 baseFont paddingB40 marginB40">
+<div layout="row" layout-align="start start" class="width100 paddingTB20">
+    <div hide-xs flex="15">
+        
+    </div>
+    <div layout="column" layout-align="start start" flex class="width100">
+        <h1 flex class="bold pageTitleFont textBlack margin0 ">
+            {{coachingGroup.name}}
+        </h1>
+    </div>
+</div>
 
 <div layout="row" layout-align="start start" class="width100">
-    <div hide-xs flex="15">
-        <ul class="nav nav-list affix">
+    <div hide-xs flex="10">
+        <ul class="nav nav-list affix paddingTB10 smallFont">
             <li><a du-smooth-scroll="overview" offset="200" du-smooth-scroll du-scrollspy du-active-class="active">Overview</a></li>
             <li><a du-smooth-scroll="coursesresults" offset="200" du-smooth-scroll du-scrollspy du-active-class="active">Courses & Results</a></li>
             <li><a du-smooth-scroll="photos" offset="200" du-scrollspy du-active-class="active">Photos</a></li>
@@ -231,49 +241,78 @@
         
         
     </div>
+    <div hide-xs flex="5">
+    </div>
     <div layout="column" layout-align="start start" flex class="width100">
-        <h1 flex class="bold pageTitleFont textBlack margin0 ">
-            {{coachingGroup.name}}
-        </h1>
+        
         <div layout="column" layout-align="start start" class="width100" id="overview">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Overview
         </h2>
         <div layout="column" layout-align="start start" class="width100 subSection">
             <div class="width100">CENTRE INFORMATION</div>
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div flex="50" layout="column" layout-align="start start" ng-if="coachingGroup.phone[0]">
-                    <div class="width100 bold"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;&nbsp;Phone</div>
-                    <div>
-                        {{coachingGroup.phone[0]}}
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.phone[0]">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/phone.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Phone</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">{{coachingGroup.phone[0]}}</div>
+                        
                     </div>
                 </div>
-                <div flex="50" layout="column" layout-align="start start" ng-if="coachingGroup.mobile[0]">
-                    <div class="width100 bold"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;Mobile</div>
-                    <div>
-                        {{coachingGroup.mobile[0]}}
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.mobile[0]">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/mobile.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Mobile</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">{{coachingGroup.mobile[0]}}</div>
+                        
                     </div>
                 </div>
-                <div flex="50" layout="column" layout-align="start start" ng-if="coachingGroup.email[0]">
-                    <div class="width100 bold"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;Email</div>
-                    <div>
-                        {{coachingGroup.email[0]}}
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.email[0]">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/email.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Email</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">{{coachingGroup.email[0]}}</div>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        <div layout="column" layout-align="start start" class="width100 subSection">
-            <h3 class="width100 h3Font margin0 bold">{{coachingGroup.name}},<span ng-if="coachingGroup.location">
-                {{coachingGroup.location.area}},
-            </span>&nbsp;{{coachingGroup.city}}
-            </h3>
-            <div class="width100">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{coachingGroup.address}}, {{coachingGroup.city}}<span ng-if="coachingGroup.pincode">, {{coachingGroup.pincode}}</span>
+            
+        <div  layout="column" layout-align="start start" class="paddingTB5 width100 subSection">
+            <div layout="row" layout-align="start center" class="width100">
+                <div flex="5"><img src="images/icons/n5/general/location.png" class="n5IconLg" />
+                </div>
+                <div flex class="width100 bold"><h3 class="width100 h3Font margin0 bold">{{coachingGroup.name}},<span ng-if="coachingGroup.location">
+                    {{coachingGroup.location.area}},
+                </span>&nbsp;{{coachingGroup.city}}
+                </h3></div>
             </div>
-            
-            
-            
-        </div>
+            <div layout="row" layout-align="start center" class="width100">
+                <div flex="5">
+                </div>
+                <div flex class="narrowLine">
+                    {{coachingGroup.address}}, {{coachingGroup.city}}<span ng-if="coachingGroup.pincode">, {{coachingGroup.pincode}}</span>
+                </div>
+
+            </div>
+        </div>    
+        
         <div class="width100 min20vh subSection" ng-if="coachingGroup.mapAddress && coachingGroup.mapAddress!=''">
             <ng-map default-style="false" zoom-to-include-markers=true  scrollwheel="false" minimum-zoom="12"  maximum-zoom="14">
             <marker position="{{coachingGroup.mapAddress}}"
@@ -283,9 +322,14 @@
             </ng-map>
 
         </div>
+        <div layout="column" layout-align="start start" class="width100 subSection">
+            <div class="width100">AMENITIES</div>
+            
+        </div>    
+           
         </div>
         <div layout="column" layout-align="start start" class="width100" id="coursesresults">
-        <h3 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <h3 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Courses & Results at {{coachingGroup.name}}
         </h3>
         <md-content class="width100 subSection whiteBackground">
@@ -293,7 +337,7 @@
             <md-tab ng-repeat="stream in coachingGroup.streamExams" label="{{stream.displayname}}">
             <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect md-dynamic-height>
                 <md-tab ng-repeat="exam in coachingGroup.streamExams[streamIndex].exams" label="{{exam.exam_page_name}}">
-                    <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+                    <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
                         {{exam.exam_page_name}} Courses at {{coachingGroup.name}}
                     </h3>
 
@@ -329,7 +373,7 @@
 
                     </div>
                 </div>
-                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
                     {{exam.exam_page_name}} Results at {{coachingGroup.name}}
                 </h3>
                 <div layout="column" layout-align="start start" class="width100 paddingLR5">
@@ -383,7 +427,7 @@
                     </div>
                 </div>    
                     
-                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
                     {{exam.exam_page_name}} Student Reviews at {{coachingGroup.name}}
                 </h3>
                 <div layout="column" layout-align="start start" class="width100 paddingLR5">
@@ -395,18 +439,16 @@
 
                     </div>-->
                     
-                    <div layout="column" layout-align="center start" ng-repeat="otherReview in exam.reviews" ng-if="$index< loaded.reviews" class="paddingTB10 paddingLR20">
+                    <div layout="column" layout-align="center start" ng-repeat="otherReview in exam.reviews" ng-if="$index< loaded.reviews" class="padding10 gainsboroBorder marginB5">
                     <div layout="column" layout-align="start start" class="marginB10 width100">
                         <div layout="row" layout-align="start center">
-                            <div ng-if="otherReview.user.image">
-                            <img ng-src="{{otherReview.user.image}}" id="userPicSmall" class="img-circle"/>
+                            <div ng-if="otherReview.user.image" class="marginR10">
+                            <img ng-src="{{otherReview.user.image}}" id="userPic" class="img-circle"/>
                             </div>
-                            <div layout="column" layout-align="center start" class="marginL10">
-                            <div layout="row" layout-align="start center">
-                                <span>
+                            <div layout="column" layout-align="center start" class="width100">
+                            <div layout="row" layout-align="start center" class="width100">
                                 {{otherReview.user.basic.name}}
-                                </span>
-                                <span class="font12 textLightGrey marginL5">
+                                <!--<span class="font12 textLightGrey marginL5">
                                 reviewed 
                                 <span>
                                     {{otherReview.institute.name}} Centre
@@ -418,10 +460,11 @@
                                 <span>
                                     on {{otherReview._created | date:'longDate'}}
                                 </span>    
-                                </span>
+                                </span>-->
                             </div>
-                            <div layout="row" layout-align="start center" class="font12 textLightGrey">
-                                {{otherReview.institute.address}}
+                            <div layout="row" layout-align="start center" class="width100 smallFont wideLine2">
+                                {{otherReview._created | date:'longDate'}}
+                                <!--{{otherReview.institute.address}}-->
                             </div>    
                                 
                             </div>
@@ -446,7 +489,7 @@
                     </div>
                         
                     </div>
-                    <div layout="row" layout-align="start start" class="font12 marginT10">
+                    <div layout="row" layout-align="start start" class="marginT10 wideLine">
                         {{otherReview.text}}
                     </div>
                     <div layout="row" layout-xs="column" layout-align="start center" class="width100 font12 marginT10 paddingTB10 gainsboroBorder" ng-if="otherReview.user._id == user.userId">
@@ -493,7 +536,7 @@
         </div>
         
         <div layout="column" layout-align="start start" class="width100" id="photos">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Photos
         </h2>
         <div layout="column" layout-align="start start" class="width100">
@@ -520,7 +563,7 @@
         </div>
         
         <div layout="column" layout-align="start start" class="width100" id="videos">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Videos
         </h2>
         <div layout="column" layout-align="start start" class="width100">
@@ -553,7 +596,7 @@
         </div>
         
         <div layout="column" layout-align="start start" class="width100" id="faculties">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader whiteSmokeBottomBorder paddingB5 bold" layout-wrap>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Faculty at {{coachingGroup.name}}
         </h2>
         <div layout="column" layout-align="start start" class="width100">
@@ -619,7 +662,7 @@
     </div>
     <div flex="25" layout="column" layout-align="start start" class="width100" hide-xs>
         <div layout="column" layout-align="start start" class="width100 subSection">
-            <div class="h2Font width100 bold whiteSmokeBottomBorder">Other Centres</div>
+            <div class="h2Font width100 bold brandBottomBorder">Other Centres</div>
             <div layout="column" layout-align="start start" class="width100 subSection">
                 <div layout="column" layout-align="start start" class="width100 smallerFont" ng-repeat="centre in cityGroupCentres">
                     <div class="width100">{{centre.groupName}}<span ng-if="centre.location.area">, {{centre.location.area}}, {{centre.city}}</span></div>
