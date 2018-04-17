@@ -4431,7 +4431,19 @@ router.post('/coachingGroup2', function(req, res) {
                     streamExams[thisSIndex].exams.push(newExam);
                 }
             });
-            //console.log(streamExams);
+                
+            if(streamExams && streamExams.length > 0){
+                streamExams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );  
+                
+                streamExams.forEach(function(thisStreamExam, seIndex){
+                    if(thisStreamExam.exams && thisStreamExam.exams.length > 0){
+                        thisStreamExam.exams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );
+                    }
+                });
+                console.log(streamExams);
+            }    
+            
+            
                 
             var allGroupCoachings = coaching
             .find({groupName: thisCentreGroupName, disabled:false, type: 'Coaching'}, {course: 1, photo: 1, video: 1, faculty: 1})

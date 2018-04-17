@@ -271,11 +271,26 @@ router.post('/groupReviews2', function(req, res) {
             var allGroupInstitutes = allCentres.map(function(a) {return a._id;});
                 
             var groupReviews = review
-            .find({provider: { $in : allGroupInstitutes }, exam: {$in: allExamIds}, active: true})
+            .find({institute: { $in : allGroupInstitutes }, exam: {$in: allExamIds}, active: true})
             .exec(function(err, groupReviews) {
             if (!err){
             if(groupReviews){
-            console.log(groupReviews);
+                
+            var reviewUserIds = groupReviews.map(function(a) {return a.user;});  
+            var reviewInstituteIds = groupReviews.map(function(a) {return a.institute;});
+                
+            var reviewUsers = user
+            .find({_id: { $in : reviewUserIds }}, {basic: 1, image: 1})
+            .exec(function(err, reviewUsers) {
+            if (!err){
+            if(reviewUsers){
+                
+            var reviewCoachings = coaching
+            .find({_id: { $in : reviewInstituteIds }}, {name:1, location:1, address:1, city:1})
+            .exec(function(err, reviewCoachings) {
+            if (!err){
+            if(reviewCoachings){
+                
             groupReviews.forEach(function(thisReview, rindex){
             var thisRExam = thisReview.exam.toString();
             var thisRExamIndex = allExamIds.indexOf(thisRExam); 
@@ -285,12 +300,12 @@ router.post('/groupReviews2', function(req, res) {
             }else{
                 console.log('Something went very wrong!!');
             }
-
-
             });
 
             var streamexams = [];
             var streamexamIds = [];
+            var nReviews = groupReviews.length;
+            var rCounter = 0;
             groupReviews.forEach(function(thisReview, rindex){
                 var thisRExamId = thisReview.exam._id;
                 var thisRExamStream = thisReview.exam.stream._id;
@@ -329,22 +344,58 @@ router.post('/groupReviews2', function(req, res) {
                     thisStreamExamIndex = streamexams[thisStreamIndex].exams.length;
                     streamexams[thisStreamIndex].exams.push(newExam);
                 }
-
-                if(thisStreamExamIndex != -1){
+                var thisReviewCoachingIds = reviewCoachings.map(function(a) {return a._id.toString();});
+                var thisReviewUserIds = reviewUsers.map(function(a) {return a._id.toString();});
+                
+                var cIndex = thisReviewCoachingIds.indexOf(thisReview.institute.toString());
+                var uIndex = thisReviewUserIds.indexOf(thisReview.user.toString());
+                
+                if(thisStreamExamIndex != -1 && cIndex != -1 && uIndex != -1){
                     var newReview = {
-                        name: thisReview.name,
-                        rank: thisReview.rank,
-                        category: thisReview.category,
-                        year: thisReview.year,
-                        image: thisReview.image,
-                        provider: thisReview.provider,
+                        institute: reviewCoachings[cIndex],
+                        user: reviewUsers[uIndex],
+                        faculty: thisReview.faculty,
+                        competitive_environment: thisReview.competitive_environment,
+                        quality_of_material: thisReview.quality_of_material,
+                        infrastructure: thisReview.infrastructure,
+                        text: thisReview.text,
+                        year_of_start: thisReview.year_of_start,
+                        tags: thisReview.tags,
+                        _created: thisReview._created,
+                        checked: thisReview.checked,
                         active: thisReview.active,
                     };
                     streamexams[thisStreamIndex].exams[thisStreamExamIndex].reviews.push(newReview);
+                    rCounter += 1;
+                    if(rCounter == nReviews){
+                        res.json(streamexams);
+                    }
+                }else{
+                    rCounter += 1;
                 }
             });
             //console.log(streamexams);
-            res.json(streamexams);
+            
+                
+                
+                
+
+
+            }else{
+                res.json([]);
+            }
+            }else {throw err;}
+            });
+                
+                
+                
+            }else{
+                res.json([]);
+            }
+            }else {throw err;}
+            });
+                
+            
             }else{
                 res.json([]);
             }

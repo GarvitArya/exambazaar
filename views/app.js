@@ -155,10 +155,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
-              name: 'lightgallery',
+              name: 'stripjs',
               files: [
-                    'lightgallery.css',
-                    'lightgallery.min.js',
+                    'strip.css',
+                    'strip.pkgd.min.js',
               ]
             },
             
@@ -7735,14 +7735,33 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
      
     exambazaar.controller("n5Controller", 
-    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', '$document', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews, $document){
+        var top = 400;
+        var duration = 2000;
+        var offset = 400;
+        $scope.toTheTop = function() {
+          $document.scrollTopAnimated(top, duration).then(function() {
+            console && console.log('You just scrolled to the top!');
+          });
+        };
+        
+        $scope.reviewParams = [
+            {name: "faculty", displayname:"Faculty and Teaching Experience"},
+            {name: "competitive_environment", displayname:"Competitive Environment"},
+            {name: "quality_of_material", displayname:"Quality of material"},
+            {name: "infrastructure", displayname:"Infrastructure"},
+        ];
+        var section3 = angular.element(document.getElementById('section-3'));
+        $scope.toSection3 = function() {
+          $document.scrollToElementAnimated(section3, offset, duration);
+        }
         
         $scope.coachingGroup = thisGroup.data;
         var resultStreamExams = thisGroupResults.data;
         $scope.cityGroupCentres = cityGroupCentres.data;
-        $scope.groupReviews = thisGroupReviews.data;
+        var reviewStreamExams = thisGroupReviews.data;
         
-        console.log($scope.groupReviews);
+        
         $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
         $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
         $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Tech Powered", "Exhaustive Content", "Effective Test Series"];
@@ -7769,9 +7788,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.loaded = {
             photo: 10,    
-            results: 8,    
-            video: 4,    
+            results: 10,    
+            reviews: 4,    
+            courses: 2,    
             faculty: 8,    
+            video: 4,    
         };
         
         $scope.loadMorePhotos = function(){
@@ -7780,14 +7801,20 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.loaded.photo += loadMore;
             }
         };
-        $scope.loadMoreResults = function(){
-            var loadMore = 4;
-            if($scope.activeExam.results.length > $scope.loaded.results){
+        $scope.loadMoreCourses = function(exam){
+            var loadMore = 2;
+            if(exam.course.length > $scope.loaded.courses){
+                $scope.loaded.courses += loadMore;
+            }
+        };
+        $scope.loadMoreResults = function(exam){
+            var loadMore = 5;
+            if(exam.results.length > $scope.loaded.results){
                 $scope.loaded.results += loadMore;
             }
         };
         $scope.loadMoreVideos = function(){
-            var loadMore = 2;
+            var loadMore = 4;
             if($scope.coachingGroup.video.length > $scope.loaded.video){
                 $scope.loaded.video += loadMore;
             }
@@ -7830,10 +7857,37 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             });
             
+            reviewStreamExams.forEach(function(thisReviewStream, rindex){
+                var thisRStreamId = thisReviewStream._id.toString();
+                var thisRStreamIndex = streamIds.indexOf(thisRStreamId);
+                
+                if(thisRStreamIndex != -1){
+                thisReviewStream.exams.forEach(function(thisReviewExam, eindex){
+                    var thisRExamId = thisReviewExam._id;
+                    var examIds = $scope.coachingGroup.streamExams[thisRStreamIndex].exams.map(function(a) {return a._id.toString();});
+                    var thisRExamIndex = examIds.indexOf(thisRExamId);
+                    
+                    if(thisRExamIndex != -1){
+                        $scope.coachingGroup.streamExams[thisRStreamIndex].exams[thisRExamIndex].reviews = thisReviewExam.reviews;
+                        
+                        
+                    }else{
+                        console.log('Exam: Something went very wrong!!');
+                    }
+
+                });
+                //$scope.coachingGroup.streamExams[thisRStreamIndex].exams;
+                    
+                    
+                    
+                }else{
+                    console.log('Stream: Something went very wrong!!');
+                }
+                
+            });
             
         }
-        console.log($scope.coachingGroup);
-        //console.log(resultStreamExams);
+        
         if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             $scope.activeStream = $scope.coachingGroup.streamExams[0];
             if($scope.coachingGroup.streamExams[0].exams && $scope.coachingGroup.streamExams[0].exams.length > 0){
@@ -7851,7 +7905,23 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.loaded.results = 8;
         };
         
+        function getParameterByName(url, name) {
+          name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+          var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(url);
+          return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        };
         
+        if($scope.coachingGroup.video && $scope.coachingGroup.video.length > 0){
+            $scope.coachingGroup.video.forEach(function(thisVideo, vindex){
+                var thumb = getParameterByName(thisVideo.link, 'v');
+                var url = 'http://img.youtube.com/vi/' + thumb + '/hqdefault.jpg';
+                thisVideo.thumbnail = url;
+                
+            });
+        }
+        
+        console.log($scope.coachingGroup);
     }]);
    
     exambazaar.controller("p5Controller", 
@@ -37575,9 +37645,9 @@ function getLatLng(thisData) {
                     };
                     return reviewService.groupReviews2(groupCity);
                 }],
-                /*lightgallery: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['lightgallery'], {serie: true});
-                }],*/
+                stripjs: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['stripjs'], {serie: true});
+                }],
                 
                 
                 
