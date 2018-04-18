@@ -6057,7 +6057,7 @@ router.get('/generateurlslugs', function(req, res) {
     ];
     
     var allCoachings = coaching
-        .find({newGooglePlace: {$exists: true}, disabled: false, newGooglePlaceAddress: {$exists: false}}, {newGooglePlace: 1, areaslug: 1})
+        .find({newGooglePlace: {$exists: true}, disabled: false, newGooglePlaceAddress: {$exists: true}}, {newGooglePlace: 1, areaslug: 1})
         .limit(1000)
         //.deepPopulate('location')
         .exec(function (err, allCoachings) {

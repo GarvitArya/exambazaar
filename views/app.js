@@ -2270,6 +2270,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.googlePlaces = function() {
             return $http.get('/api/masters/googlePlaces/');
         };
+        this.googlePlacesByText = function() {
+            return $http.get('/api/masters/googlePlacesByText/');
+        };
         this.googlePlacesById = function() {
             return $http.get('/api/masters/googlePlacesById/');
         };
@@ -19167,6 +19170,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });   
             };
+            $scope.googlePlacesByText = function(){
+                MasterService.googlePlacesByText().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
+            
             $scope.googlePlacesById = function(){
                 MasterService.googlePlacesById().success(function (data, status, headers) {
                     console.log(data);
