@@ -736,13 +736,15 @@ router.get('/bulkSaveLatLng', function(req, res) {
     var geocoder = NodeGeocoder(options);
     //latlng: {$exists: false}, possibleGeoCodings:{$exists: false},latlngna:true,  disabled: false
     //_id: '5870efd080ea0e0698890921'
-    var allProviders = coaching.find( {}, {latlng:1, latlngna:1, address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
+    //latlng:1, latlngna:1, 
+    
+    var allProviders = coaching.find( {}, {address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
         console.log('Looking at: ' + nLength + ' providers!');
         allProviders.forEach(function(thisprovider, index){
-            var thisLatLng = thisprovider.latlng;
+            //var thisLatLng = thisprovider.latlng;
             var searchAddress = thisprovider.address + ", " + thisprovider.city + " " + thisprovider.pincode;
             console.log("Coaching Id is: " + thisprovider._id);
             console.log("Search Address is: " + searchAddress);
@@ -800,7 +802,7 @@ router.get('/bulkSaveLatLng', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(1);
+    }).limit(100);
     
     
     
@@ -841,11 +843,13 @@ router.get('/syncGooglePlaceId', function(req, res) {
                 
                 
             }
+            var gpIdArray = [];
             var allGPIds = [];
             if(gpId1){
-                gpId2.push(gpId1);
+                gpIdArray = [gpId1];
+                gpIdArray = gpIdArray.concat(gpId2);
             }
-            gpId2.forEach(function(thisPId, pindex){
+            gpIdArray.forEach(function(thisPId, pindex){
                 if(thisPId){
                     allGPIds.push(thisPId);
                 }
@@ -864,6 +868,7 @@ router.get('/syncGooglePlaceId', function(req, res) {
             }else{
                 //console.log("More than 1 Google Place Id for Coaching Id: " + thisprovider._id + ". They are: " + allGPIds);
                 mcounter += 1;
+                thisprovider.googlePlaceId = allGPIds[0];
                 thisprovider.multipleGooglePlaceIds = allGPIds;
                                 
                 thisprovider.save(function(err, thisprovider) {

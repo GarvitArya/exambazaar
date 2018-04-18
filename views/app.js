@@ -41243,12 +41243,12 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup' && stateTo != 'bookAppointment' && stateTo != 'availDiscount'){
             $mdDialog.hide();
         }
-        $rootScope.compactMode = true;
-        /*if(stateTo == 'blog' || stateTo == 'showblog'){
-            $rootScope.compactMode = true;
-        }else{
+        
+        if(stateTo == 'landing'){
             $rootScope.compactMode = false;
-        }*/
+        }else{
+            $rootScope.compactMode = true;
+        }
         
         if($cookies.getObject('sessionuser')){
             var user = $cookies.getObject('sessionuser');

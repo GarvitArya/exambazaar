@@ -6037,27 +6037,52 @@ function slugify(string) {
 router.get('/generateurlslugs', function(req, res) {
     res.json(true);
     //console.log('I am here');
+    //, areaslug: {$exists: true}
+    var addressFields = [
+        'administrative_area_level_1',
+        'administrative_area_level_2',
+        'country',
+        'floor',
+        'locality',
+        'neighborhood',
+        'point_of_interest',
+        'postal_code',
+        'premise',
+        'route',
+        'street_number',
+        'sublocality_level_1',
+        'sublocality_level_2',
+        'sublocality_level_3',
+        'subpremise',
+    ];
     
     var allCoachings = coaching
-        .find({newGooglePlace: {$exists: true}, areaslug: {$exists: true}, disabled: false}, {newGooglePlace: 1, areaslug: 1})
-        .limit(10)
+        .find({newGooglePlace: {$exists: true}, disabled: false, newGooglePlaceAddress: {$exists: false}}, {newGooglePlace: 1, areaslug: 1})
+        .limit(1000)
         //.deepPopulate('location')
         .exec(function (err, allCoachings) {
         if (!err){
+            var nCoachings = allCoachings.length;
+            var counter = 0;
             console.log('There are '  +allCoachings.length + " coachings!");
+            var allTypes = [];
             allCoachings.forEach(function(thisCoaching, index){
-                //var coachingName = thisCoaching.name;
-                //var coachingArea = thisCoaching.location.area;
-                //var coachingCity = thisCoaching.city;
-                
-                //thisCoaching.nameslug = slugify(coachingName);
-                //thisCoaching.areaslug = slugify(coachingArea + " " + coachingCity);
-                
-                //console.log(thisCoaching.urlslug1);
-                //console.log(thisCoaching.urlslug2);
-                
-                var addressTypes = thisCoaching.newGooglePlace.address_components.types;
-                var sl1 = "sublocality_level_1";
+                thisCoaching.newGooglePlace.address_components.forEach(function(thisAddressComponent, acindex){
+                    var addressTypes = thisAddressComponent.types;
+                    var thisType = '';
+                    if(addressTypes && addressTypes.length > 0){
+                        thisType = addressTypes[0];
+                    }
+                    
+                    if(addressFields.indexOf(thisType) != -1){
+                        if(!thisCoaching.newGooglePlaceAddress){
+                            thisCoaching.newGooglePlaceAddress = {};
+                        }
+                        thisCoaching.newGooglePlaceAddress[thisType] = thisAddressComponent.long_name;
+                        
+                    }
+                });
+                /*var sl1 = "sublocality_level_1";
                 var sl2 = "sublocality_level_2";
                 var sl3 = "sublocality_level_3";
                 var aal1 = "locality";
@@ -6092,20 +6117,20 @@ router.get('/generateurlslugs', function(req, res) {
                     var newareaslug = thisSL3 + " " + thisSL2 + " " + thisSL3 + " " + thisAAL1; 
                     newareaslug = slugify(newareaslug);
                     console.log(thisCoaching._id + " | " + thisCoaching.areaslug + " | " + newareaslug);
-                    //console.log();
                 }else{
-                    //console.log("Couldn't make area slug");
-                }
-                
-                
-                
-                
-                /*thisCoaching.save(function(err, thisCoaching) {
+                    
+                }*/
+                thisCoaching.save(function(err, thisCoaching) {
                 if (err) return console.error(err);
                     console.log("Coaching saved " + thisCoaching._id);
-                });*/
+                    counter += 1;
+                    if(counter == nCoachings){
+                        console.log("All Done");
+                    }
+                });
                 
             });
+            
             
         } else {throw err;}
     });

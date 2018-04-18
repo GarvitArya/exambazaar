@@ -248,6 +248,7 @@ var coachingSchema = mongoose.Schema({
     multipleGooglePlaceIds:[{type: String}],
     googlePlace:Schema.Types.Mixed,
     newGooglePlace:Schema.Types.Mixed,
+    newGooglePlaceAddress:Schema.Types.Mixed,
     googlePlaceSearchTry:Boolean,
     examCirf: Schema.Types.Mixed,
     gRank: Schema.Types.Mixed,
