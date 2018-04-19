@@ -7745,6 +7745,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
      
     exambazaar.controller("n5Controller", 
     [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', '$document', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews, $document){
+        $scope.coachingGroup = thisGroup.data;
+        var resultStreamExams = thisGroupResults.data;
+        $scope.cityGroupCentres = cityGroupCentres.data;
+        var reviewStreamExams = thisGroupReviews.data;
+        if($scope.coachingGroup){
+            $rootScope.HTTPStatusCode = '200';
+        }else{
+            $rootScope.HTTPStatusCode = '404';
+        }
+        
         var top = 400;
         var duration = 2000;
         var offset = 400;
@@ -7819,10 +7829,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
           $document.scrollToElementAnimated(section3, offset, duration);
         }
         
-        $scope.coachingGroup = thisGroup.data;
-        var resultStreamExams = thisGroupResults.data;
-        $scope.cityGroupCentres = cityGroupCentres.data;
-        var reviewStreamExams = thisGroupReviews.data;
+        
         
         
         $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
@@ -7889,7 +7896,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
         
-        if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
+        if($scope.coachingGroup && $scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             var streamIds = $scope.coachingGroup.streamExams.map(function(a) {return a._id.toString();});
             resultStreamExams.forEach(function(thisResultStream, rindex){
                 var thisRStreamId = thisResultStream._id.toString();
@@ -7951,7 +7958,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
         }
         
-        if($scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
+        if($scope.coachingGroup && $scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             $scope.activeStream = $scope.coachingGroup.streamExams[0];
             if($scope.coachingGroup.streamExams[0].exams && $scope.coachingGroup.streamExams[0].exams.length > 0){
                 $scope.activeExam = $scope.coachingGroup.streamExams[0].exams[0];
@@ -7975,7 +7982,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
           return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         };
         
-        if($scope.coachingGroup.video && $scope.coachingGroup.video.length > 0){
+        if($scope.coachingGroup && $scope.coachingGroup.video && $scope.coachingGroup.video.length > 0){
             $scope.coachingGroup.video.forEach(function(thisVideo, vindex){
                 var thumb = getParameterByName(thisVideo.link, 'v');
                 var url = 'http://img.youtube.com/vi/' + thumb + '/hqdefault.jpg';
@@ -7984,7 +7991,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         }
         
-        console.log($scope.coachingGroup);
     }]);
    
     exambazaar.controller("p5Controller", 
@@ -41233,7 +41239,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
     ];
     $transitions.onStart( {}, function($transition$) {
         //stateTo === $transition$.$to();
-        
+        $rootScope.HTTPStatusCode = '200';
         
         
         

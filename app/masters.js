@@ -1080,12 +1080,13 @@ router.get('/googlePlaces', function(req, res) {
 //to get google places by TEXT SEARCH
 router.get('/googlePlacesByText', function(req, res) {
     res.json(true);
-    var GooglePlaces = require('google-places');
+    //var GooglePlaces = require('google-places');
+    var GooglePlaces = require('node-googleplaces');
 
     var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
     //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
     //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
-    var allProviders = coaching.find( {disabled: false,  newGooglePlace: {$exists: false}, pincode: {$exists: true}, pincode: {$ne: ''}, googlePlaceSearchByTextTry: {$ne: true}, _id: '58726ce789517d2a6c260d11'}, {newGooglePlace:1, name: 1, pincode: 1, city: 1},function(err, allProviders) {
+    var allProviders = coaching.find( {disabled: false,  newGooglePlace: {$exists: false}, googlePlace: {$exists: false}, pincode: {$exists: true}, pincode: {$ne: ''}, googlePlaceSearchByTextTry: {$ne: true}}, {newGooglePlace:1, name: 1, pincode: 1, city: 1},function(err, allProviders) {
         //googlePlaceSearchTry: false,
     if (!err){
         var nLength = allProviders.length;
@@ -1098,54 +1099,59 @@ router.get('/googlePlacesByText', function(req, res) {
             var thisPincode = thisprovider.pincode;
             var thisCity = thisprovider.city;
             var searchString = thisName + "+" + thisPincode + "+" + thisCity;
-            /*thisprovider.googlePlaceSearchByTextTry = true;                    
-            thisprovider.save(function(err, thisprovider) {
+            thisprovider.googlePlaceSearchByTextTry = true;                    
+            /*thisprovider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
             });*/
             console.log('Searching for query: ' + searchString);
-            places.search({keyword: searchString}, function(err, response) {
-                console.log(response);
-
-                if(response && response.results.length > 0){
+        
+            
+            places.textSearch({query: searchString}, function(err, response) {
+                if(response && response.text){
+                
+                var response = JSON.parse(response.text);
+                
+                if(response && response.results && response.results.length > 0){
                     var results = response.results;
                     
                     results.forEach(function(thisResult, rindex){
                         var googlePlaceName = thisResult.name;
                         var googlePlaceId = thisResult.place_id;
 
-                        /*console.log(thisName + " "+ googlePlaceName);
-                        var distance = levenshteinDistance(thisName, googlePlaceName, function(err, distance){
-                            console.log(distance);
-                        });*/
+                        
 
                         var f = FuzzySet([googlePlaceName]);
                         var fResults = f.get(thisName, minScore=.33);
-                        //console.log(fResults);
-                        //googlePlaceName.indexOf(thisName) != -1 || thisName.indexOf(googlePlaceName)!= -1
+                        
                         if(fResults.length > 0){
-                            //console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
-                            //console.log(thisResult);
+                            if(!thisprovider.textBasedGooglePlaces){
+                                thisprovider.textBasedGooglePlaces = [];
+                            }
+                            
+                            thisprovider.textBasedGooglePlaces.push(thisResult);
 
-
-                            thisprovider.textBasedGooglePlace = thisResult;
-
-                            thisprovider.save(function(err, thisprovider) {
-                                if (err) return console.error(err);
-                                nSaves += 1;
-                                console.log(nSaves + " out of " + nLength + " ^ Provider google place saved: " + thisprovider._id);
-                                //res.send('Done');
-                            });
+                            
                         }else{
                             //console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
                         }
-
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            nSaves += 1;
+                            console.log(nSaves + " out of " + nLength + " ^ Provider google place saved: " + thisprovider._id);
+                            //res.send('Done');
+                        });
                     });
 
                     
                 }else{
-                    //console.log("search: " + thisprovider._id + " found nothing");
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        
+                        //console.log(nSaves + " out of " + nLength + " ^ Provider google place saved: " + thisprovider._id);
+                        //res.send('Done');
+                    });
                 }
-
+            }
             });
         });
         
@@ -1154,7 +1160,7 @@ router.get('/googlePlacesByText', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(10);
+    }).limit(100);
     
 });
 router.get('/googlePlacesById', function(req, res) {
