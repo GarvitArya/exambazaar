@@ -2958,24 +2958,30 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
     }]); 
-    exambazaar.controller("p4Controller2", 
+    exambazaar.controller("n4Controller", 
     [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', 'thisStreamExamCity', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification, thisStreamExamCity){
-        
-        
         
         var topURLSlug = $stateParams.topURLSlug;
         var examslug = $stateParams.examslug;
         var cityslug = $stateParams.cityslug;
         var slugInfo = thisStreamExamCity.data;
-        
+        //console.log(slugInfo);
+        if(slugInfo){
+            
+        }else{
+            $rootScope.HTTPStatusCode = '404';
+        }
         var cURL = "https://www.exambazaar.com/" + examslug + "/" + cityslug;
         $scope.canonicalFlip = true;
         $rootScope.canonicalUrl = cURL;
         console.log("Canonical URL is: " + $rootScope.canonicalUrl);
         
-        $scope.categoryName = slugInfo.streamName;
-        $scope.subCategoryName = slugInfo.examName;
-        $scope.city = slugInfo.cityName;
+        if(slugInfo){
+            $scope.categoryName = slugInfo.streamName;
+            $scope.subCategoryName = slugInfo.examName;
+            $scope.city = slugInfo.cityName;
+        }
+        
         
         $scope.examBadgeClass = function(thisExam){
             
@@ -18657,12 +18663,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         coachingService.CoachingStream(streamInfo).success(function (data, status, headers) {
             var items = data;
-            if(items.length == 0){
+            if(!items){
                 this.finished = true;
+                this.busy = false;
             }
-            this.items = this.items.concat(items);
-            this.skip += items.length;
-            this.busy = false;
+            if(items){
+                if(items.length == 0){
+                    this.finished = true;
+                }
+                this.items = this.items.concat(items);
+                this.skip += items.length;
+                this.busy = false;
+            }
+            
         }.bind(this))
         .error(function (data, status, header, config) {
             console.log("Error ");
@@ -41101,8 +41114,8 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'p4.html',
-                    controller: 'p4Controller2',
+                    templateUrl: 'n4.html',
+                    controller: 'n4Controller',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -41135,7 +41148,7 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p4.html',
-                    controller: 'p4Controller2',
+                    controller: 'n4Controller',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

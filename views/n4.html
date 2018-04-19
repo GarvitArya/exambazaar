@@ -1,0 +1,773 @@
+<style>
+    #categories{
+        margin-top: 20px;
+    }
+    #categoryFont{
+        min-height: 5vh;
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        margin-right: 0px;
+        padding: 5px;
+        
+        box-shadow: 2px 2px 2px #6A6968;
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+    }
+    #pageHeaderFont{
+        letter-spacing: 2px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        color: #20C39A;
+    }
+    
+    #coachingHeader{
+        color: #20C39A;
+        letter-spacing: 1px;
+    }
+    #coachingCourses{
+        letter-spacing: 0px;
+    }
+    #knowmore{
+        width:100%;
+        background-color: #20C39A;
+        margin-top: 10px;
+    }
+    #fullPageGradient1{
+        
+    }
+    
+    .nohighlight{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: rgba(0,0,0,0.6);
+        
+    }
+    .highlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #20C39A;
+        color: #20C39A;
+    }
+    
+    #normal{
+        color: #20C39A;
+        letter-spacing: 0px;
+    }
+    #normal a{
+        color: #20C39A;
+    }
+    #leftTabs{
+        
+        margin-bottom: 20px;
+    }
+    
+    #subcategory{
+        height: 100%;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 10vh;
+        
+        /*border-style: solid;
+        border-radius: 10px;*/
+        
+        /*border-width: 2px;
+        border-color: whitesmoke;
+        box-shadow: 1px 1px 1px #6A6968;
+        border: 1px solid #ccc;
+        */
+        
+        background-color: white;
+        box-shadow: 0 0 7px gainsboro;
+    }
+    #sponsoredsubcategory{
+        height: 100%;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 10vh;
+        
+        /*border-style: solid;
+        border-radius: 10px;*/
+        
+        /*border-width: 2px;
+        border-color: whitesmoke;
+        box-shadow: 1px 1px 1px #6A6968;
+        border: 1px solid #ccc;
+        */
+        
+        background-color: white;
+        background-color: #F1FFFA;
+        box-shadow: 0 0 7px gainsboro;
+    }
+    
+    #rightTabs{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
+        
+    }
+    
+    .label-eb{
+        background: #20C39A;
+    }
+    .btn:active{
+        background: #20C39A;
+    }
+    .btn:selected{
+        background: #20C39A;
+    }
+    .pageLogo{
+        max-width: 100%;
+        max-height: 100%;
+    }
+    #pageLogoHolder{
+        height: 150px;
+        width: 150px;
+    }
+    #coachingList{
+        /*min-height: 40vh;*/
+    }
+    a{
+        color: #20C39A;
+    }
+    
+    #distanceBadge{
+        font-size: 10px;
+        border: 1px solid #6A6968;
+        background: transparent;
+        color: #6A6968;
+    }
+    a, a:visited, a:link{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    .description{
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    .pageLogo{
+        max-height: 100%;
+        max-width: 80%;
+    }
+    .badge.streamBadge{
+        padding: 10px;
+        border: 1px solid #FF5A5F;
+        background: white;
+        color: black;
+    }
+    .badge.currentBadge{
+        padding: 10px;
+        border: 1px solid darkgray;
+        background: gainsboro;
+        color: darkgray;
+    }
+    
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+</style>
+
+
+<div id="spacer1" hide-xs>
+</div>
+<div id="spacerXS" hide-gt-xs>
+</div>
+
+<div class="whiteBackground" >
+    
+    <div layout="row" layout-align="start start" class="width100">
+    
+    <div layout="column" layout-align="start start" class="width100">
+        <div layout="row" layout-align="start end" class="width100 min10vh textBlack">
+        <div hide-xs flex="5">
+        </div>    
+        
+        <div flex-gt-xs="25" flex-xs="35" layout="row" layout-align="start end" class="paddingLR10">
+            <md-input-container class="margin0 width100 textBlack">
+            <!--<label>Stream</label>-->
+            <md-select ng-model="selectedStream"
+            md-on-close="clearSearchTermStream()"
+            data-md-container-class="p4SelectHeader" aria-label="Stream?">
+            <md-select-header class="demo-select-header">
+            <input ng-model="searchTermStream"
+            type="search"
+            class="demo-header-searchbox md-text" aria-label="Stream?">
+                <!--placeholder="Search for a Stream.."-->
+            </md-select-header>
+            <md-optgroup label="streamExams">
+            <md-option ng-value="newStream" ng-repeat="newStream in streamExams | orderBy:['-rank'] |
+            filter:searchTermStream">{{newStream.stream}}</md-option>
+            </md-optgroup>
+            </md-select>
+            </md-input-container>
+        </div>
+        <div  flex-gt-xs="25" flex-xs="35"  layout="row" layout-align="start end" class="paddingLR10">   
+            <md-input-container class="margin0 width100 textBlack">
+            <!--<label>City</label>-->
+            <md-select ng-model="selectedCity"
+            md-on-close="clearSearchTermCity()"
+            data-md-container-class="p4SelectHeader" aria-label="City?">
+            <md-select-header class="demo-select-header">
+            <input ng-model="searchTermCity"
+            type="search"
+            class="demo-header-searchbox md-text" aria-label="City?">
+                <!--placeholder="Search for a City.."-->
+            </md-select-header>
+            <md-optgroup label="allCities">
+            <md-option ng-value="city" ng-repeat="city in allCities | orderBy:['-count'] |
+            filter:searchTermCity">{{city.name}}</md-option>
+            </md-optgroup>
+            </md-select>
+            </md-input-container>
+        </div>
+        <div  flex="20"  layout="row" layout-align="start center" class="paddingLR10">
+            <md-button class="md-next md-large tolowercase margin0 width100" ng-click="setSearch()">
+                Go
+            </md-button>
+        </div>
+    </div>
+        <div layout="row" layout-align="start center" class="width100 min10vh textBlack">
+        <div hide-xs flex="5">
+        </div>
+        <div flex layout-wrap class="paddingLR10">
+            <span class="marginR10">All {{currentStream.stream}} Exams</span>
+            <span ng-repeat="thisExam in currentStream.exams | orderBy: ['-rank']" class="">
+                <span class="badge padding5 margin5" ng-class="examBadgeClass(thisExam)" ng-click="setExam(thisExam)">
+                    {{thisExam.seoname}}
+                </span>
+                
+            </span>
+            
+        </div>
+        </div>
+        <!--
+        <div layout="row" layout-xs="column" layout-align="start center" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
+            <div layout="column" layout-align="center center"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="" hide-xs>
+                <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+            </div>
+            <div layout="column" layout-align="start start" flex class="paddingTB10  textBlack">
+                <div class="width100 font32 bold narrowLine marginTB10 ">
+                    {{subcategory.seoname}} Exam
+                </div>
+                <div layout="column" layout-align="start start" flex flex-xs="100">
+                    <div layout="row" layout-align="start start" class="width100 textDarkGrey">
+                        <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
+                    </div>
+                    <div layout="row" layout-align="start start" class="width100">
+                        {{subcategory.briefDescription}}
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingTB20 width100">
+                <div layout="column" layout-align="start start" class="width100">
+                    <div layout="row" layout-align="center start" class="width100">
+                        <div flex>Frequency</div>
+                        <div flex>{{subcategory.frequency}}</div>
+                    </div>
+                    <div layout="row" layout-align="center start" class="width100">
+                        <div flex>Mode</div>
+                        <div flex>
+                            <div ng-if="activeExamCycle.examMode">
+                                Online Only
+                            </div>
+                            <div ng-if="!activeExamCycle.examMode">
+                                Online & Offline
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100 marginLR20 marginT40">
+                    <md-button class="md-danger md-small tolowercase font12 width50 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
+                        Read More
+                    </md-button>
+                </div>
+            </div>
+        </div>
+        -->
+        
+        
+        
+        <div layout="row" layout-align="start start" class="width100">
+            <div hide-xs flex="5">
+            </div>
+            <div flex class="paddingLR10">
+            <h1 class="width100 marginT10 marginB10 h1Font narrowLine spacedLetter1">
+                {{subcategory.coaching_page_name}} Coaching in {{city}}
+            </h1>
+            </div>
+        </div>
+        <div layout="row" layout-align="start start"  class="width100 marginB10 baseFont narrowLine spacedLetter1 textDarkGrey">
+            <div hide-xs flex="5">
+            </div>
+            <div flex>
+                <div flex class="paddingLR10" ng-if="allCoachings.items.length > 0">
+                    We have found the following {{subcategory.coaching_page_name}} Coaching Classes in {{city}}!
+                </div>
+                <div flex class="paddingLR10" ng-if="allCoachings.items.length == 0 && allCoachings.finished">
+                    Sorry! We found no coaching classes in {{city}} for {{subcategory.coaching_page_name}} Exam!
+                </div>
+            </div>
+            
+            <h3 hide-xs layout="column" layout-align="start start" flex="25" class="paddingLR30 h3Font margin0">
+                Recommended Reading
+            </h3>
+        </div>
+    </div>
+    </div>
+    <div layout="row" layout-align="start start" class="width100">
+        <div hide-xs flex="5">
+        
+        </div>
+        <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
+            
+            <div infinite-scroll='allCoachings.nextPage()' infinite-scroll-disabled='allCoachings.busy' infinite-scroll-distance='1' layout="column" layout-align="start start" class="width100">
+                
+                <div layout="column"  ng-repeat="coachingGroup in allCoachings.items" class="fourthFont width100 marginB20">
+                    <!--| orderBy: ['-examCirfScore','-count','expertReview', 'logo']-->
+                    <div layout="row" layout-align="center center" layout-xs="column" ng-if="$index%7 == 1" class="min10vh padding20 width100 blueBackground text-white marginB20 font14">
+                        <div class="marginR20">Would you like us to do an Expert Review for you?</div>
+                        <md-button class="md-danger md-small tolowercase font14 margin0" ui-sref="contact" target="_blank"> 
+                            Contact us
+                        </md-button>
+                    </div>
+                    
+                    
+                    <div layout="row" layout-align="start start" layout-xs="column" id="subcategory" ng-if="!coachingGroup.sponsoredRank">
+                        <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                            <img ng-src="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}} Logo" class="pageLogo" ng-if="coachingGroup && coachingGroup.logo && coachingGroup.logo != ''"/>
+                            <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup || !coachingGroup.logo || coachingGroup.logo == ''"/>
+                        </div>
+                        <div flex layout="column" layout-align="center start" class="paddingL20 width100">
+                            <div layout="row" layout-align="start center" class="width100 ">
+                            <div layout="column" layout-align="start start" class="paddingR20">
+                                <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                                <h2 class=" text-primary thirdFont font18 bold">{{coachingGroup.groupName}}</h2>
+                                </a>
+                                <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
+                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} {{subcategory.coaching_page_name}} Coaching Centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    </h4>
+                                    <span class="marginLR5">
+                                        <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
+                                            Nearest Centre: {{distance.text}}
+                                        </span>
+                                    </span>
+
+                                    <!--<span>
+                                      <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
+                                    </span>-->
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="end start" flex class="">
+                                <button class="btn bookButton heroButton tolowercase margin0" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Book a Visit
+                                </button>
+                                <button class="btn bookButton tolowercase margin0" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                            </div>
+                            </div>
+                            
+                            
+                            <div layout="row" layout-align="start center" flex>
+                                <ng-rate-it ng-model="coachingGroup.examCirfScore" ng-if="coachingGroup.examCirfScore > 0" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
+                                </ng-rate-it>
+                                    
+                                
+                            </div>
+                            <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
+                                <a ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
+                            </div>
+                            <div layout="row" layout-align="end center" class="width100">
+                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100" flex>
+                                <h3 class="font14 bold bold wideLine basicFont margin0" ng-if="coachingGroup.examsOffered.length > 0">
+                                    {{category.displayname}} Courses at {{coachingGroup.groupName}}
+                                </h3>
+                                <div layout="row" layout-align="start center" layout-wrap class="marginT5">
+                                    <div layout="row"  layout-align="start center" ng-repeat="exam in coachingGroup.examsOffered | orderBy:'-rank'">
+                                        <div>{{exam.coaching_page_name}}</div>
+                                        <div ng-if="!$last">
+                                            &nbsp;|&nbsp;
+                                        </div>
+                                    </div >
+                                    <!--<div ng-if="!$last">
+                                        &nbsp;|&nbsp;
+                                    </div>-->
+                                </div>
+                            </div>
+                            <!--<div layout="row" layout-align="end start" flex="20">
+                                <button class="btn actionButton heroButton tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                                </button>
+                                <button class="btn actionButton  tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                            </div>-->
+                            </div>
+
+                            <h3 class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
+                                 {{subcategory.coaching_page_name}}&nbsp;Results of {{coachingGroup.groupName}}
+
+                            </h3>
+                            <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
+                                
+                            <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
+                                <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}" alt="{{result.name}}">
+                                <!--id="imageContainer2"<img ng-src="{{result.image}}" id="thumbnailImage2"/>-->
+                                <!--<div layout="row" layout-align="end center" class="text-white font10 paddingR5" id="thumbnailResultTextTop">
+                                    {{result.name}}
+                                </div>-->
+                                <div layout="row" layout-align="center center" class="text-white font8" id="thumbnailResultText">
+                                    <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
+                                        <span ng-if="subcategory.resultFormat == 'Rank'">
+                                            AIR {{result.rank}}
+                                        </span>
+                                        <span ng-if="subcategory.resultFormat == 'Marks'">
+                                            {{result.marks}}
+                                        </span>
+                                    </div>
+                                    <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
+                                        {{result.year}}
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </div>    
+                            <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index == 9" class="padding5">
+                                <div class="width100" id="imageContainer2">
+                                <img ng-src="{{result.image}}" id="thumbnailImage2"/>
+                                  
+                                <!--<div layout="row" layout-align="end center" class="text-white font10" id="thumbnailResultTextTop">
+                                    {{result.name}}
+                                </div>-->
+                                <div layout="row" layout-align="center center" class="text-white font8" id="thumbnailResultText">
+                                    <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
+                                        <span ng-if="subcategory.resultFormat == 'Rank'">
+                                            AIR {{result.rank}}
+                                        </span>
+                                        <span ng-if="subcategory.resultFormat == 'Marks'">
+                                            {{result.marks}}
+                                        </span>
+                                    </div>
+                                    <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
+                                        {{result.year}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-align="center center" class="width100 font12 text-white text-center" id="thumbnailText">
+                                    + many more
+                                </div>
+                                </div>
+                                
+                            </div>    
+
+                            
+
+                            </div>
+
+                            <div layout="row" layout-align="start start" class="width100 basicFont paddingTB20 gainsboroTopBorder" ng-if="coachingGroup.expertReview">
+                                
+                                <div flex="25"  class="">
+                                   <div id="expertImage" ng-style="{'background-image':'url({{coachingGroup.expertReview.coverPhoto}})'}" class="max10vh width100 "> 
+                                    </div> 
+                                </div>
+                                
+                                <div flex layout="column" layout-align="center start" class="paddingL20">
+                                <div class="width100 font14 bold wideLine" > 
+                                    <a ui-sref="showblog({ blogpostSlug:{{'coachingGroup.expertReview.urlslug'}} })" target="_blank" id="coachingHeader">
+                                    {{coachingGroup.expertReview.title}}
+                                    </a>
+                                    
+                                </div>
+                                <div class="width100 marginTB10 wideLine fourthFont">
+                                    {{coachingGroup.expertReview.seoDescription}}
+                                </div>
+                                
+                                
+                                
+                                </div> 
+                                 
+
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                    <div layout="row" layout-align="start start" layout-xs="column" id="sponsoredsubcategory" ng-if="coachingGroup.sponsoredRank > 0">
+                        <div layout="column" layout-align="start center" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                            <div class="width100 min40vh">
+                                <img ng-src="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}} Logo" class="pageLogo" ng-if="coachingGroup && coachingGroup.logo && coachingGroup.logo != ''"/>
+                                <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup || !coachingGroup.logo || coachingGroup.logo == ''"/>
+                            
+                            </div>
+                            
+                            <div class="width100 smallFont paddingL10 marginT40 spacedLetter1"><!--<i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;&nbsp;-->SPONSORED</div>
+                        </div>
+                        <div flex layout="column" layout-align="center start" class="paddingL20 width100">
+                            <div layout="row" layout-align="start center" class="width100 ">
+                            <div layout="column" layout-align="start start" class="paddingR20">
+                                <h2 class=" text-primary thirdFont font18 bold">
+                                    <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                                        {{coachingGroup.groupName}}
+                                    </a>
+                                </h2>
+                                <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
+                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    </h4>
+                                    <span class="marginLR5">
+                                        <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
+                                            Nearest Centre: {{distance.text}}
+                                        </span>
+                                    </span>
+
+                                    <!--<span>
+                                      <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
+                                    </span>-->
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="end start" flex class="">
+                                <button class="btn bookButton heroButton tolowercase margin0" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Book a Visit
+                                </button>
+                                <button class="btn bookButton tolowercase margin0" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                            </div>
+                            </div>
+                            
+                            
+                            <div layout="row" layout-align="start center" flex>
+                                <ng-rate-it ng-model="coachingGroup.examCirfScore" ng-if="coachingGroup.examCirfScore > 0" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
+                                </ng-rate-it>
+                                    
+                                
+                            </div>
+                            <div class="width100 smallFont  spacedLetter1" hide-gt-xs>SPONSORED</div>
+                            <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
+                                <a ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
+                            </div>
+                            <div layout="row" layout-align="end center" class="width100">
+                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100" flex>
+                                <h3 class="font14 bold bold wideLine basicFont margin0" ng-if="coachingGroup.examsOffered.length > 0">
+                                    {{category.displayname}} Courses at {{coachingGroup.groupName}}
+                                </h3>
+                                <div layout="row" layout-align="start center" layout-wrap class="marginT5">
+                                    <div layout="row"  layout-align="start center" ng-repeat="exam in coachingGroup.examsOffered | orderBy:'-rank'">
+                                        <div>{{exam.displayname}}</div>
+                                        <div ng-if="!$last">
+                                            &nbsp;|&nbsp;
+                                        </div>
+                                    </div >
+                                    <!--<div ng-if="!$last">
+                                        &nbsp;|&nbsp;
+                                    </div>-->
+                                </div>
+                            </div>
+                            <!--<div layout="row" layout-align="end start" flex="20">
+                                <button class="btn actionButton heroButton tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                                </button>
+                                <button class="btn actionButton  tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                            </div>-->
+                            </div>
+
+                            <h3 class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
+                                 {{subcategory.displayname}}&nbsp;Results of {{coachingGroup.groupName}}
+
+                            </h3>
+                            <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
+                                
+                            <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
+                                <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}">
+                                <!--id="imageContainer2"<img ng-src="{{result.image}}" id="thumbnailImage2"/>-->
+                                <!--<div layout="row" layout-align="end center" class="text-white font10 paddingR5" id="thumbnailResultTextTop">
+                                    {{result.name}}
+                                </div>-->
+                                <div layout="row" layout-align="center center" class="text-white font8" id="thumbnailResultText">
+                                    <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
+                                        <span ng-if="subcategory.resultFormat == 'Rank'">
+                                            AIR {{result.rank}}
+                                        </span>
+                                        <span ng-if="subcategory.resultFormat == 'Marks'">
+                                            {{result.marks}}
+                                        </span>
+                                    </div>
+                                    <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
+                                        {{result.year}}
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </div>    
+                            <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index == 9" class="padding5">
+                                <div class="width100" id="imageContainer2">
+                                <img ng-src="{{result.image}}" id="thumbnailImage2"/>
+                                  
+                                <!--<div layout="row" layout-align="end center" class="text-white font10" id="thumbnailResultTextTop">
+                                    {{result.name}}
+                                </div>-->
+                                <div layout="row" layout-align="center center" class="text-white font8" id="thumbnailResultText">
+                                    <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
+                                        <span ng-if="subcategory.resultFormat == 'Rank'">
+                                            AIR {{result.rank}}
+                                        </span>
+                                        <span ng-if="subcategory.resultFormat == 'Marks'">
+                                            {{result.marks}}
+                                        </span>
+                                    </div>
+                                    <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
+                                        {{result.year}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-align="center center" class="width100 font12 text-white text-center" id="thumbnailText">
+                                    + many more
+                                </div>
+                                </div>
+                                
+                            </div>    
+
+                            
+
+                            </div>
+
+                            <div layout="row" layout-align="start start" class="width100 basicFont paddingTB20 gainsboroTopBorder" ng-if="coachingGroup.expertReview">
+                                
+                                <div flex="25"  class="">
+                                   <div id="expertImage" ng-style="{'background-image':'url({{coachingGroup.expertReview.coverPhoto}})'}" class="max10vh width100 "> 
+                                    </div> 
+                                </div>
+                                
+                                <div flex layout="column" layout-align="center start" class="paddingL20">
+                                <div class="width100 font14 bold wideLine" > 
+                                    <a ui-sref="showblog({ blogpostSlug:{{'coachingGroup.expertReview.urlslug'}} })" target="_blank" id="coachingHeader">
+                                    {{coachingGroup.expertReview.title}}
+                                    </a>
+                                    
+                                </div>
+                                <div class="width100 marginTB10 wideLine fourthFont">
+                                    {{coachingGroup.expertReview.seoDescription}}
+                                </div>
+                                
+                                
+                                
+                                </div> 
+                                 
+
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allCoachings.busy'>
+                    <img src='ebloader2.gif' />
+                    <div>Loading data...</div>
+
+                </div>
+            </div>
+            
+            
+            
+        </div>
+        <div hide-xs  layout="column" layout-align="start start" flex="25" class="paddingLR30">
+            <div infinite-scroll='allBlogs.nextPage()' infinite-scroll-disabled='allBlogs.busy' infinite-scroll-distance='1' layout="column" layout-align="start start" class="width100">
+                
+            <div layout="row" layout-align="start start" class="width100 marginB30 gainsboroBorder" ng-repeat="blogpost in allBlogs.items | orderBy: '-_published'" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
+                <div layout="column" layout-align="center start" class="width100" id="blogpost" >
+                <div layout="column" layout-align="center center" class="suggestedblogpostImage width100">
+                <!--ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}"-->    
+                <img ng-src="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">    
+                    
+                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                    <div flex layout="row" layout-align="start center">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                </div>
+                </div>
+
+                <div layout="column" layout-align="start center" class="min10vh paddingLR15 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                    <div layout="row" layout-align="start start" class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2" >
+                            {{blogpost.title}}
+                        </div>
+
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <div flex layout="column" layout-align="start start" class="narrowLine margin0 font12 textLightGrey">
+                            By {{blogpost.user.basic.name}}
+                        </div>
+                        <div layout="column" layout-align="center start" class="narrowLine margin0 font12 textLightGrey">
+                            {{blogpost._published | date: "MMMM dd"}}
+                        </div>
+                    </div>
+
+                </div>    
+                </div>
+                        
+            </div>
+            
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allBlogs.busy'>
+                <img src='ebloader2.gif' />
+                <div>Loading data...</div>
+            </div>
+        </div>
+    </div>
+</div>
