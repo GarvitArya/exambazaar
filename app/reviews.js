@@ -274,7 +274,7 @@ router.post('/groupReviews2', function(req, res) {
             .find({institute: { $in : allGroupInstitutes }, exam: {$in: allExamIds}, active: true})
             .exec(function(err, groupReviews) {
             if (!err){
-            if(groupReviews){
+            if(groupReviews && groupReviews.length > 0){
                 
             var reviewUserIds = groupReviews.map(function(a) {return a.user;});  
             var reviewInstituteIds = groupReviews.map(function(a) {return a.institute;});
@@ -372,6 +372,9 @@ router.post('/groupReviews2', function(req, res) {
                     }
                 }else{
                     rCounter += 1;
+                    if(rCounter == nReviews){
+                        res.json(streamexams);
+                    }
                 }
             });
             //console.log(streamexams);

@@ -4461,7 +4461,7 @@ router.post('/coachingGroup2', function(req, res) {
                 });
             }
             var allGroupCoachings = coaching
-            .find({groupName: thisCentreGroupName, disabled:false, type: 'Coaching'}, {course: 1, photo: 1, video: 1, faculty: 1})
+            .find({groupName: thisCentreGroupName, disabled:false, type: 'Coaching'}, {course: 1, photo: 1, video: 1, faculty: 1, description: 1, cirf:1, rating:1, website: 1, facebookPage: 1, twitter: 1, youtubeChannel: 1})
             .deepPopulate('photo.tags video.tags')
             .exec(function (err, allGroupCoachings) {
                 
@@ -4538,7 +4538,94 @@ router.post('/coachingGroup2', function(req, res) {
                 if(thisCoaching.faculty && thisCoaching.faculty.length > 0){
                     allFaculty = allFaculty.concat(thisCoaching.faculty);
                 }
+                if(thisCoaching.description && thisCoaching.description != ''){
+                    thisGroup.description = thisCoaching.description;
+                }
+                if(thisCoaching.website && thisCoaching.website.length > 0 && !thisGroup.websiteUrl){
+                    var websiteUrl = thisCoaching.website[0].trim();
+                    var prefix = 'http://';
+                    if (websiteUrl.substr(0, prefix.length) !== prefix){
+                        var prefix2 = 'https://';
+                        if (websiteUrl.substr(0, prefix2.length) !== prefix2){
+                            websiteUrl = prefix + websiteUrl;
+                        }
+                    }
+                    thisGroup.websiteUrl = websiteUrl;
+                }
+                if(thisCoaching.facebookPage && thisCoaching.facebookPage != '' && !thisGroup.facebookPage){
+                    var websiteUrl = thisCoaching.facebookPage.trim();
+                    var prefix = 'http://';
+                    if (websiteUrl.substr(0, prefix.length) !== prefix){
+                        var prefix2 = 'https://';
+                        if (websiteUrl.substr(0, prefix2.length) !== prefix2){
+                            websiteUrl = prefix + websiteUrl;
+                        }
+                    }
+                    thisGroup.facebookPage = websiteUrl;
+                }
+                if(thisCoaching.twitter && thisCoaching.twitter != '' && !thisGroup.twitter){
+                    var websiteUrl = thisCoaching.twitter.trim();
+                    var prefix = 'http://';
+                    if (websiteUrl.substr(0, prefix.length) !== prefix){
+                        var prefix2 = 'https://';
+                        if (websiteUrl.substr(0, prefix2.length) !== prefix2){
+                            websiteUrl = prefix + websiteUrl;
+                        }
+                    }
+                    thisGroup.twitter = websiteUrl;
+                }
+                if(thisCoaching.youtubeChannel && thisCoaching.youtubeChannel != '' && !thisGroup.youtubeChannel){
+                    var websiteUrl = thisCoaching.youtubeChannel.trim();
+                    var prefix = 'http://';
+                    if (websiteUrl.substr(0, prefix.length) !== prefix){
+                        var prefix2 = 'https://';
+                        if (websiteUrl.substr(0, prefix2.length) !== prefix2){
+                            websiteUrl = prefix + websiteUrl;
+                        }
+                    }
+                    thisGroup.youtubeChannel = websiteUrl;
+                }
+                if(thisCoaching.rating && thisCoaching.rating.facilities && thisCoaching.rating.facilities.n_classrooms){
+                    thisGroup.facilities = thisCoaching.rating.facilities;
+                }
+                if(thisCoaching.cirf && thisCoaching.cirf.length > 0){
+                    thisCoaching.cirf.forEach(function(thisCirf, cirfIndex){
+
+                    var thisExamId = thisCirf.exam.toString();
+                    var thisExamIndex = allExamIds.indexOf(thisExamId);
+
+                    if(thisExamIndex != -1){
+                    var thisExamStreamId = allExamStreamIds[thisExamIndex];
+                    var thisStreamIndex = streamExamStreamIds.indexOf(thisExamStreamId);
+                    if(thisStreamIndex != -1){
+                        var thisStreamExams = streamExams[thisStreamIndex].exams;
+                        if(thisStreamExams && thisStreamExams.length > 0){
+                        var thisStreamExamIds = thisStreamExams.map(function(a) {return a._id.toString();});
+                        var thisStreamExamArrayIndex = thisStreamExamIds.indexOf(thisExamId);
+                        if(thisStreamExamArrayIndex != -1 && thisCirf.cirf){
+                            streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].cirf = thisCirf;
+                            streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].cirf.rating5 = Number(thisCirf.cirf) * 5/ 100;
+                            
+                            streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].cirf.rating5 = Math.round(streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].cirf.rating5*2)/2;
+                            
+                        }
+
+
+                        }
+
+                    }
+
+                    }else{
+                        console.log('Could not find exam!!');
+                    }
+
+                    }); 
+                    
+                }
+                    
+                    
                 });
+                thisGroup.nCentres = allGroupCoachings.length;
                 thisGroup.photo = allPhotos;
                 thisGroup.video = allVideos;
                 thisGroup.faculty = allFaculty;
@@ -4549,6 +4636,13 @@ router.post('/coachingGroup2', function(req, res) {
                     "photo",
                     "_id",
                     "name",
+                    "nCentres",
+                    "facilities",
+                    "description",
+                    "websiteUrl",
+                    "facebookPage",
+                    "twitter",
+                    "youtubeChannel",
                     "address",
                     "city",
                     "pincode",
@@ -4704,12 +4798,6 @@ router.post('/coachingGroup2', function(req, res) {
 
                     var thisExamId = thisCourse.exam.toString();
                     var thisExamIndex = allExamIds.indexOf(thisExamId);
-                    /*if(thisExamIndex == -1){
-                        console.log(thisExamId);    
-                        console.log(allExamIds);    
-                        console.log(thisExamIndex);   
-                    }*/    
-
 
                     if(thisExamIndex != -1){
                     var thisExamStreamId = allExamStreamIds[thisExamIndex];
@@ -4737,10 +4825,6 @@ router.post('/coachingGroup2', function(req, res) {
                         console.log('Could not find exam!!');
                     }
 
-                    /*if(thisCentreExams.indexOf(thisCourse.exam) != -1){
-                        allCourses.push(thisCourse);
-                    }*/
-
                     });
 
                     }
@@ -4754,6 +4838,12 @@ router.post('/coachingGroup2', function(req, res) {
                     if(thisCoaching.faculty && thisCoaching.faculty.length > 0){
                         allFaculty = allFaculty.concat(thisCoaching.faculty);
                     }
+                    if(thisCoaching.description && thisCoaching.description != ''){
+                        thisGroup.description = thisCoaching.description;
+                    }
+                    if(thisCoaching.cirf && thisCoaching.cirf.length > 0){
+                        thisGroup.cirf = thisCoaching.cirf;
+                    }
                     });
                     thisGroup.photo = allPhotos;
                     thisGroup.video = allVideos;
@@ -4765,6 +4855,8 @@ router.post('/coachingGroup2', function(req, res) {
                         "photo",
                         "_id",
                         "name",
+                        "description",
+                        "cirf",
                         "address",
                         "city",
                         "pincode",

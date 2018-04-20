@@ -737,7 +737,7 @@ router.get('/bulkSaveLatLng', function(req, res) {
     
     setInterval(function(){
     
-    var allProviders = coaching.find( {disabled: false, type: 'Coaching', address: {$exists: true}, $and: [{googlePlace: {$exists: false}}, {newGooglePlace: {$exists: false}}, {textBasedGooglePlaces: {$exists: false}}], wideGeocodingSearch: {$ne: true}}, {address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
+    var allProviders = coaching.find( {disabled: false, type: 'Coaching', address: {$exists: true}, $and: [{googlePlace: {$exists: false}}, {newGooglePlace: {$exists: false}}, {textBasedGooglePlaces: {$exists: true}}], wideGeocodingSearch: {$ne: true}}, {address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -788,10 +788,10 @@ router.get('/bulkSaveLatLng', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(50).skip(5);
+    }).limit(50).skip(0);
     
     
-    }, 10000);
+    }, 20000);
     
 
 });
@@ -922,27 +922,12 @@ router.get('/googlePlaces', function(req, res) {
     var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
     //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
     //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
+    var limit = 100;
+    var skip = 3600;
+    setInterval(function(){
     
-
-    /*places.autocomplete({input: 'Allen Career Institute Jaipur'}, function(err, response) {
-      if(err) { console.log(err); return; }
-        var results = response.predictions;
-      console.log(response.predictions.length);
-      console.log("autocomplete: ", response.predictions);
-
-      var success = function(err, response) {
-        if(err) { console.log(err); return; }
-        console.log("did you mean: ", response.result.name);
-      };
-
-      for(var index in response.predictions) {
-        places.details({reference: response.predictions[index].reference}, success);
-      }
-    });*/
-    var ObjectId = require('mongodb').ObjectID;
-    //, exams: ObjectId("58ac27030be6311eccbbc3a6")
-    //58726b2c89517d2a6c260cfc
-    var allProviders = coaching.find( {latlng: {$exists: true}, latlngna:false,  disabled: false,  googlePlace: {$exists: false}}, {latlng:1, name: 1, address: 1, city: 1},function(err, allProviders) {
+    console.log(skip + " | " + limit);    
+    var allProviders = coaching.find( {latlng: {$exists: true}, disabled: false}, {latlng:1, name: 1, address: 1, city: 1},function(err, allProviders) {
         //googlePlaceSearchTry: false,
     if (!err){
         var nLength = allProviders.length;
@@ -961,38 +946,33 @@ router.get('/googlePlaces', function(req, res) {
             var lastArea = parts[parts.length - 1];
             var searchString = thisName + " " + lastArea + " " + thisCity;
             //console.log(thisName + " " + JSON.stringify(coordinates));
-            thisprovider.googlePlaceSearchTry = true;
+            /*thisprovider.googlePlaceSearchTry = true;
                                 
             thisprovider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                //console.log("Google place search try saved for: " + thisprovider._id);
-                //res.send('Done');
-            });
-            //name: thisName, location:coordinates, radius:1000
+            });*/
+            
+            
             if(thisName && coordinates){
+                //console.log(coordinates);
                 places.search({name: thisName, location:coordinates, radius:1000}, function(err, response) {
                     //, rankby:'distance'
-                    
+                    if(err){
+                        console.log(err);
+                    }
                     if(response && response.results.length > 0){
+                        
                         var results = response.results;
-                        //console.log("search: " + thisName + " " + thisprovider._id);
+                        var valid = false;
                         results.forEach(function(thisResult, rindex){
                             var googlePlaceName = thisResult.name;
                             var googlePlaceId = thisResult.place_id;
                             
-                            /*console.log(thisName + " "+ googlePlaceName);
-                            var distance = levenshteinDistance(thisName, googlePlaceName, function(err, distance){
-                                console.log(distance);
-                            });*/
-                            
                             var f = FuzzySet([googlePlaceName]);
-                            var fResults = f.get(thisName, minScore=.33);
-                            //console.log(fResults);
-                            //googlePlaceName.indexOf(thisName) != -1 || thisName.indexOf(googlePlaceName)!= -1
-                            if(fResults.length > 0){
-                                //console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
-                                //console.log(thisResult);
-                                
+                            var fResults = f.get(thisName, minScore=.5);
+                            
+                            if(fResults.length > 0 && !valid){
+                                valid = true;    
                                 
                                 thisprovider.googlePlace = thisResult;
                                 
@@ -1005,44 +985,17 @@ router.get('/googlePlaces', function(req, res) {
                             }else{
                                 //console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
                             }
-                            /*var matching = matchingName(thisName, googlePlaceName,function(err, matching){
-                                console.log('Matching: ' + matching);
-                                if(matching){
-                                    console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
-                                    console.log(thisResult); 
-                                }else{
-                                    console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
-                                }
-                            });*/
-                            
-                            
                               
                         });
                         
-                        /*{ 
-                            geometry:{
-                            location: { lat: 30.73562609999999, lng: 76.74880189999999 },
-                            viewport: { northeast: [Object], southwest: [Object] } 
-                            },
-                            icon: 'https://maps.gstatic.com/mapfiles/place_api/icons/school-71.png',
-                            id: 'c88be54d91516cd66605195dd9bfb53bf4cfbcf0',
-                            name: 'Maxx Institute',
-                            place_id: 'ChIJ____r8PtDzkRWm7k_Z1L7aQ',
-                            reference: 'CmRSAAAA8A_cn5P5spdNrRviG6pcI5Rh8Np28xfBvK5ILMfKqHgbYmR93Z7dzvQAtceb8XuYaJqcYAyWut0Z7KJaqCNEho7PigSLGYAPtq76PVCRL4GG5Z7BgUMFe1dnpsIdRgvKEhDIaXVonnBha4T8LGlgzH_8GhTefTB2QfFgRV1YZ5QPD4nhLSOj1A',
-                            scope: 'GOOGLE',
-                            types: [ 'point_of_interest', 'establishment' ],
-                            vicinity: 'Sco 223, Top Floor, Sector 37-c, Sector 37-c, Chandigarh' 
-                        }*/
-                          /*places.details({reference: response.results[0].reference}, function(err, response) {
-                            console.log("search details: ", response.result.website);
-                            // search details:  http://www.vermonster.com/
-                          });*/
                     }else{
                         //console.log("search: " + thisprovider._id + " found nothing");
                     }
                   
                 });
             }
+                
+            
         });
         
         if(nLength == 0){
@@ -1050,17 +1003,9 @@ router.get('/googlePlaces', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(250);
-    //
-    /*places.search({name: 'Shekhawati Institute Of Competitions', location:[26.876856,75.79724999999996], rankby:'distance'}, function(err, response) {
-      console.log("search: ", response.results);
-
-      places.details({reference: response.results[0].reference}, function(err, response) {
-        console.log("search details: ", response.result.website);
-        // search details:  http://www.vermonster.com/
-      });
-    });*/
-    
+    }).limit(limit).skip(skip);
+    skip += limit;
+    }, 20000);
 });
 
 //to get google places by TEXT SEARCH
@@ -1154,9 +1099,6 @@ router.get('/googlePlacesById', function(req, res) {
     var GooglePlaces = require('google-places');
 
     var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
-    //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
-    //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
-    //googlePlace: {$exists: false},
     var allProviders = coaching.find( {googlePlaceId: {$exists: true}, newGooglePlace: {$exists: false}}, {googlePlaceId: 1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
@@ -1197,6 +1139,56 @@ router.get('/googlePlacesById', function(req, res) {
     
 });
 
+router.get('/googlePlacesInfoById', function(req, res) {
+    res.json('Done');
+    var GooglePlaces = require('google-places');
+
+    var limit = 100;
+    var skip = 0;
+    setInterval(function(){
+    
+    var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
+    var allProviders = coaching.find( {googlePlace: {$exists: true}, googlePlaceInfo: {$exists: false}}, {googlePlace: 1, googlePlaceInfo: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var nSaves = 0;
+        var counter = 0;
+        console.log('There are: ' + nLength + " coachings!");
+        allProviders.forEach(function(thisprovider, index){
+            var thisGooglePlaceId = thisprovider.googlePlace.place_id;
+            //console.log(thisprovider._id + " | " + thisGooglePlaceId);
+            if(thisGooglePlaceId){
+            places.details({placeid: thisGooglePlaceId}, function(err, response) {
+              if(err) { console.log(err); return; }
+                //console.log(response);
+                if(response.result){
+                    thisprovider.googlePlaceInfo = response.result;
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(counter + ". Provider saved: " + thisprovider._id);
+                        
+                        if(counter == nLength){
+                            console.log("All done! Saved: " + counter + " coachings!");
+                        }
+                    });
+                }
+                
+            });
+            }
+            
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    }).limit(limit).skip(skip);
+    skip += limit;    
+    }, 20000);    
+    
+});
 router.get('/wideGooglePlaceById', function(req, res) {
     res.json('Done');
     var GooglePlaces = require('google-places');
@@ -1251,9 +1243,9 @@ router.get('/wideGooglePlaceById', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(100).skip(940);
+    }).limit(100).skip(220);
     
-    }, 10000);
+    }, 20000);
     
 });
 

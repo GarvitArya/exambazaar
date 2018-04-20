@@ -17,12 +17,12 @@
         width: 90px;
     }
     .sectionHeader{
-        margin-top: 20px;
+        margin-top: 25px;
         margin-bottom: 10px;
     }
     .subSection{
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
     #showmore{
         font-weight: bold;
@@ -234,9 +234,9 @@
         <ul class="nav nav-list affix paddingTB10 smallFont">
             <li><a du-smooth-scroll="overview" offset="200" du-smooth-scroll du-scrollspy du-active-class="active">Overview</a></li>
             <li><a du-smooth-scroll="coursesresults" offset="200" du-smooth-scroll du-scrollspy du-active-class="active">Courses & Results</a></li>
-            <li><a du-smooth-scroll="photos" offset="200" du-scrollspy du-active-class="active">Photos</a></li>
-            <li><a du-smooth-scroll="videos" offset="200" du-scrollspy du-active-class="active">Videos</a></li>
-            <li><a du-smooth-scroll="faculties" offset="200" du-scrollspy du-active-class="active">Faculty</a></li>
+            <li><a du-smooth-scroll="photos" offset="200" du-scrollspy du-active-class="active" ng-if="coachingGroup.photo.length > 0">Photos</a></li>
+            <li><a du-smooth-scroll="videos" offset="200" du-scrollspy du-active-class="active" ng-if="coachingGroup.video.length > 0">Videos</a></li>
+            <li><a du-smooth-scroll="faculties" offset="200" du-scrollspy du-active-class="active" ng-if="coachingGroup.faculty.length > 0">Faculty</a></li>
         </ul>
         
         
@@ -246,11 +246,73 @@
     <div layout="column" layout-align="start start" flex class="width100">
         
         <div layout="column" layout-align="start start" class="width100" id="overview">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
+        <h2 layout="row" layout-align="start start" class="width100 h2Font margin0 sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Overview
         </h2>
         <div layout="column" layout-align="start start" class="width100 subSection">
-            <div class="width100">CENTRE INFORMATION</div>
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.websiteUrl">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/website.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Website</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">
+                        <a ng-href="{{coachingGroup.websiteUrl}}" target="_blank" rel="nofollow" id="linkFont">
+                            {{coachingGroup.websiteUrl}}
+                        </a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.facebookPage || coachingGroup.twitter || coachingGroup.youtubeChannel">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/socialmedia.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Social Media</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">
+                        <a ng-href="{{coachingGroup.facebookPage}}" target="_blank" rel="nofollow" id="linkFont" class="paddingR10" ng-if="coachingGroup.facebookPage">
+                            Facebook
+                        </a>
+                        <a ng-href="{{coachingGroup.twitter}}" target="_blank" rel="nofollow" id="linkFont" class="paddingR10" ng-if="coachingGroup.twitter">
+                            Twitter
+                        </a>
+                        <a ng-href="{{coachingGroup.youtubeChannel}}" target="_blank" rel="nofollow" id="linkFont" class="paddingR10" ng-if="coachingGroup.youtubeChannel">
+                            Youtube
+                        </a>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.nCentres">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10"><img src="images/icons/n5/general/centres.png" class="n5Icon" />
+                        </div>
+                        <div flex class="width100 bold">Total Centres</div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="10">
+                        </div>
+                        <div flex class="narrowLine">
+                        {{coachingGroup.nCentres}} centre<span ng-if="coachingGroup.nCentres > 1">s</span> in India
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div layout="column" layout-align="start start" class="width100 subSection">
+            
+            <div class="width100 brandLightBottomBorder padding5 marginTB5">CENTRE INFORMATION</div>
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
                 <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.phone[0]">
                     <div layout="row" layout-align="start center" class="width100">
@@ -322,9 +384,24 @@
             </ng-map>
 
         </div>
-        <div layout="column" layout-align="start start" class="width100 subSection">
-            <div class="width100">AMENITIES</div>
-            
+        <div layout="column" layout-align="start start" class="width100 subSection" ng-if="coachingGroup.facilities">
+            <div class="width100 brandLightBottomBorder padding5 marginTB5">AMENITIES</div>
+            <div layout="row" layout-align="start start" class="width100" layout-wrap >
+                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-repeat="facility in facilities">
+                    <div layout="row" layout-align="start center" class="width100">
+                        <div flex="25">
+                            
+                            <img ng-src="{{facility.present}}" class="n5IconLg" ng-if="coachingGroup.facilities[facility.field]" />
+                            <img ng-src="{{facility.absent}}" class="n5IconLg" ng-if="!coachingGroup.facilities[facility.field]" />
+                            
+                        </div>
+                        <div flex class="width100" ng-class="{textLightGrey : !coachingGroup.facilities[facility.field], bold: coachingGroup.facilities[facility.field]}">
+                            {{facility.name}}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
         </div>    
            
         </div>
@@ -337,14 +414,22 @@
             <md-tab ng-repeat="stream in coachingGroup.streamExams" label="{{stream.displayname}}">
             <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect md-dynamic-height>
                 <md-tab ng-repeat="exam in coachingGroup.streamExams[streamIndex].exams" label="{{exam.exam_page_name}}">
-                    <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
+                    <div layout="row" layout-align="start center" class="width100 sectionHeader brandBottomBorder paddingB5 bold">
+                    <h3 layout="row" layout-align="start start" class="width100 h3Font margin0" layout-wrap flex>
                         {{exam.exam_page_name}} Courses at {{coachingGroup.name}}
                     </h3>
+                    <div layout="row" layout-align="end center" ng-show="exam.cirf.rating5">
+                        <md-tooltip>Rated {{exam.cirf.rating5}} out of 5 for {{exam.exam_page_name}}</md-tooltip>
+                        <ng-rate-it ng-model="exam.cirf.rating5" ng-if="exam.cirf.rating5 > 0" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
 
+                        </ng-rate-it>
+
+                    </div>
+                    </div>
                     <div ng-if="coachingGroup.cityPosition[exam._id] && coachingGroup.cityPosition[exam._id] <= 5" class="marginT10 marginB20">
                     {{coachingGroup.name}} is EB Rank #{{coachingGroup.cityPosition[exam._id]}} for {{exam.exam_page_name}} in {{coachingGroup.city}}
                     </div>
-
+                    
                     <div layout="column" layout-align="start start" class="width100 paddingLR5">
                     <div layout="column" layout-align="start start" class="boxShadow padding10 marginB10 width100" ng-repeat="course in exam.course" ng-show="$index < loaded.courses">
                         <div layout="row" layout-align="start start" class="width100">
@@ -535,7 +620,7 @@
         </md-content>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100" id="photos">
+        <div layout="column" layout-align="start start" class="width100" id="photos" ng-if="coachingGroup.photo.length > 0">
         <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Photos
         </h2>
@@ -562,7 +647,7 @@
         </div>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100" id="videos">
+        <div layout="column" layout-align="start start" class="width100" id="videos" ng-if="coachingGroup.video.length > 0">
         <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Videos
         </h2>
@@ -595,7 +680,7 @@
         </div>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100" id="faculties">
+        <div layout="column" layout-align="start start" class="width100" id="faculties" ng-if="coachingGroup.faculty.length > 0">
         <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
             Faculty at {{coachingGroup.name}}
         </h2>

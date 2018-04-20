@@ -7759,12 +7759,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
      
     exambazaar.controller("n5Controller", 
-    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', '$document', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews, $document){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', '$document', '$stateParams', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews, $document, $stateParams){
+        console.log($stateParams);
+        if($stateParams.exam){
+            $scope.selectedExam = $stateParams.exam;
+        }
         $scope.coachingGroup = thisGroup.data;
         var resultStreamExams = thisGroupResults.data;
         $scope.cityGroupCentres = cityGroupCentres.data;
         var reviewStreamExams = thisGroupReviews.data;
         if($scope.coachingGroup){
+            console.log($scope.coachingGroup);
             $rootScope.HTTPStatusCode = '200';
             if($scope.coachingGroup.nameslug != '' && $scope.coachingGroup.areaslug != ''){
                 var nameareaslug = $scope.coachingGroup.nameslug + "/" + $scope.coachingGroup.areaslug;
@@ -7787,52 +7792,62 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.facilities = [
             {
                 field: 'printed_notes',
+                name: 'Printed Notes',
                 present: 'images/icons/n5/facilities/black/study-material.png',
                 absent: 'images/icons/n5/facilities/grey/study-material.png',
             },
             {
                 field: 'test_series',
+                name: 'Test Series',
                 present: 'images/icons/n5/facilities/black/test-series.png',
                 absent: 'images/icons/n5/facilities/grey/test-series.png',
             },
             {
                 field: 'dlp',
+                name: 'Distance Learning',
                 present: 'images/icons/n5/facilities/black/dlp.png',
                 absent: 'images/icons/n5/facilities/grey/dlp.png',
             },
             {
                 field: 'hostel',
+                name: 'Hostel',
                 present: 'images/icons/n5/facilities/black/hostel.png',
                 absent: 'images/icons/n5/facilities/grey/hostel.png',
             },
             {
                 field: 'doubt_sessions',
+                name: 'Doubt Sessions',
                 present: 'images/icons/n5/facilities/black/doubt.png',
                 absent: 'images/icons/n5/facilities/grey/doubt.png',
             },
             {
                 field: 'periodic_performance_tests',
+                name: 'Periodic Tests',
                 present: 'images/icons/n5/facilities/black/practice.png',
                 absent: 'images/icons/n5/facilities/grey/practice.png',
             },
             {
                 field: 'online_lectures',
+                name: 'Online Lectures',
                 present: 'images/icons/n5/facilities/black/online-lectures.png',
                 absent: 'images/icons/n5/facilities/grey/online-lectures.png',
                 
             },
             {
                 field: 'n_classrooms',
+                name: 'Classrooms',
                 present: 'images/icons/n5/facilities/black/class.png',
                 absent: 'images/icons/n5/facilities/grey/class.png',
             },
             {
                 field: 'counselling',
+                name: 'Counselling',
                 present: 'images/icons/n5/facilities/black/counselling.png',
                 absent: 'images/icons/n5/facilities/grey/counselling.png',
             },
             {
                 field: 'entrance_test',
+                name: 'Entrance Exam',
                 present: 'images/icons/n5/facilities/black/entrance-exam.png',
                 absent: 'images/icons/n5/facilities/grey/entrance-exam.png',
             },
@@ -7976,6 +7991,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
             });
+            
             
         }
         
@@ -37745,6 +37761,9 @@ function getLatLng(thisData) {
         })
         .state('showGroupCity', {
             url: '/ebinternal/c/:nameslug/:areaslug',
+            params: {
+                exam: null
+            },
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -37795,7 +37814,9 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['stripjs'], {serie: true});
                 }],
                 
-                
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
                 
             }
         })
