@@ -242,7 +242,7 @@ router.post('/urlslug', function(req, res) {
                     .findOne({ '_id': ustream },{name: 1})
                     .exec(function (err, thisStream) {
                     if (!err){
-                        console.log(thisStream);
+                        //console.log(thisStream);
                         slugInfo.streamName = thisStream.name;
                         var thisCity = city
                         .findOne({ '_id': ucity },{name: 1})
@@ -307,7 +307,7 @@ router.post('/streamExamCity', function(req, res) {
         .exec(function (err, thisUrlslug) {
         if (!err){
             if(thisUrlslug){
-                console.log(thisUrlslug);
+                //console.log(thisUrlslug);
                 var uexam = thisUrlslug.exam;
                 var ucity = thisUrlslug.city;
                 var slugInfo = {
@@ -320,12 +320,12 @@ router.post('/streamExamCity', function(req, res) {
                 if (!err){
                     slugInfo.examName = thisExam.name;
                     var ustream = thisExam.stream;
-                    console.log(ustream);
+                    //console.log(ustream);
                     var thisStream = stream
                     .findOne({ '_id': ustream },{name: 1})
                     .exec(function (err, thisStream) {
                     if (!err){
-                        console.log(thisStream);
+                        //console.log(thisStream);
                         slugInfo.streamName = thisStream.name;
                         var thisCity = city
                         .findOne({ '_id': ucity },{name: 1})

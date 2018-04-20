@@ -25,7 +25,11 @@ var coachingSchema = mongoose.Schema({
         lat: String,
         lng: String
     },
-    
+    //wide latlng is based on the last 2 parts of the address, city pair
+    widelatlng: {
+        lat: String,
+        lng: String
+    },
     loc: {
         type: { type: String },
         coordinates: []
@@ -215,42 +219,25 @@ var coachingSchema = mongoose.Schema({
             }
         ],
     },
-    newgeocodings:{
-        searched: {type: Boolean,default: false},
-        _when: {type: Date},
-        geocodings: [
-            {
-                formattedAddress: {type: String},
-                latitude: {type: String},
-                longitude: {type: String},
-                extra: {
-                    googlePlaceId: {type: String},
-                    confidence: {type: String},
-                    premise: {type: String},
-                    subpremise: {type: String},
-                    neighborhood: {type: String},
-                    establishment: {type: String},
-                },
-                administrativeLevels:{
-                    level1long: {type: String},
-                    level1short: {type: String},
-                    city: {type: String},
-                    country: {type: String},
-                    countryCode: {type: String},
-                    zipcode: {type: String},
-                    provider: {type: String},
-                }
-            }
-        ],
-    },
     cirf: [Schema.Types.Mixed],
     googlePlaceId:{type: String},
     multipleGooglePlaceIds:[{type: String}],
     googlePlace:Schema.Types.Mixed,
+    wideGeocodingSearch:{type: Boolean,default: false},
+    wideGeocodings:[Schema.Types.Mixed],
     textBasedGooglePlaces:[Schema.Types.Mixed],
     newGooglePlace:Schema.Types.Mixed,
+    wideGooglePlace:Schema.Types.Mixed,
+    textGooglePlace:Schema.Types.Mixed,
     textBasedGooglePlace:Schema.Types.Mixed,
     newGooglePlaceAddress:Schema.Types.Mixed,
+    wideGooglePlaceAddress:Schema.Types.Mixed,
+    textGooglePlaceAddress:Schema.Types.Mixed,
+    sublocality:{
+        level1: {type: String},
+        source: {type: String},
+    },
+    
     googlePlaceSearchTry:Boolean,
     googlePlaceSearchByTextTry:Boolean,
     examCirf: Schema.Types.Mixed,
@@ -264,6 +251,7 @@ var coachingSchema = mongoose.Schema({
     sponsoredRank: Schema.Types.Mixed,
     nameslug: {type: String},
     areaslug: {type: String},
+    nameareaslugs: [{type: String}],
 });
 
 coachingSchema.index({ loc: '2dsphere'});

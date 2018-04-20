@@ -732,13 +732,12 @@ router.get('/bulkSaveLatLng', function(req, res) {
       apiKey: 'AIzaSyCBZDrCuQ2l79RItjz5xoK_lEIJv_V3Pak',
       formatter: null
     };
-
+    var tCounter = 0;
     var geocoder = NodeGeocoder(options);
-    //latlng: {$exists: false}, possibleGeoCodings:{$exists: false},latlngna:true,  disabled: false
-    //_id: '5870efd080ea0e0698890921'
-    //latlng:1, latlngna:1, 
     
-    var allProviders = coaching.find( {}, {address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
+    setInterval(function(){
+    
+    var allProviders = coaching.find( {disabled: false, type: 'Coaching', address: {$exists: true}, $and: [{googlePlace: {$exists: false}}, {newGooglePlace: {$exists: false}}, {textBasedGooglePlaces: {$exists: false}}], wideGeocodingSearch: {$ne: true}}, {address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -746,51 +745,38 @@ router.get('/bulkSaveLatLng', function(req, res) {
         allProviders.forEach(function(thisprovider, index){
             //var thisLatLng = thisprovider.latlng;
             var searchAddress = thisprovider.address + ", " + thisprovider.city + " " + thisprovider.pincode;
-            console.log("Coaching Id is: " + thisprovider._id);
-            console.log("Search Address is: " + searchAddress);
+            var str_array = thisprovider.address.split(',');
+            var new_array = [];
+            for(var i = str_array.length-1; i >= 0; i--) {
+               // Trim the excess whitespace.
+               str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+               if(str_array[i] != '' && new_array.length < 2){
+                   new_array.push(str_array[i]);
+               }
+            }
+            new_array = new_array.reverse();
+            searchAddress = new_array.join(", ");
+            searchAddress = searchAddress + ", " + thisprovider.city;
+            //console.log(searchAddress);
             
             geocoder.geocode(searchAddress, function(err, res) {
                 if(err) { console.log(err); return; }
                 if(res && res.length > 0){
-                    //console.log(thisprovider.name + " " + searchAddress + " " + res.length);
-                    
-                    thisprovider.possibleGeoCodings = {
-                        searched: true,
-                        _when: Date.now(),
-                        geocodings: [],
-                    };
-                    res.forEach(function(thisgeocode, gindex){
-                        if(thisgeocode){
-                            console.log(thisgeocode);
-                            
-                            var newgeocode = {};
-                            for (var property in thisgeocode) {
-                            newgeocode[property] = thisgeocode[property];
-                            }
-                            thisprovider.possibleGeoCodings.geocodings.push(newgeocode);
-                        }
-                    });
-                    var nGeocodings = thisprovider.possibleGeoCodings.geocodings.length;
+                    //console.log(res);
+                    if(!thisprovider.wideGeocodings){
+                        thisprovider.wideGeocodings = [];
+                    }
+                    thisprovider.wideGeocodings = res;
+                    thisprovider.wideGeocodingSearch = true;
                     thisprovider.save(function(err, thisprovider) {
                         if (err) return console.error(err);
-                        console.log(nGeocodings + " geocodings added for provider id: "+ thisprovider._id);
-
+                        tCounter += 1;
+                        console.log(tCounter + ". Wide geocodings added for provider id: "+ thisprovider._id);
                     });
-                    
-                    
-                    
-                    
-                    //JSON.stringify(res)
                 }else{
-                    thisprovider.possibleGeoCodings = {
-                        searched: true,
-                        _when: Date.now(),
-                        geocodings: null,
-                    };
+                    thisprovider.wideGeocodingSearch = true;
                     thisprovider.save(function(err, thisprovider) {
                         if (err) return console.error(err);
-                        console.log("None geocodings added for provider id: "+ thisprovider._id);
-
                     });
                 }
               
@@ -802,10 +788,10 @@ router.get('/bulkSaveLatLng', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(100);
+    }).limit(50).skip(5);
     
     
-    
+    }, 10000);
     
 
 });
@@ -1208,6 +1194,126 @@ router.get('/googlePlacesById', function(req, res) {
         
     } else {throw err;}
     }).limit(100);//.skip(20);
+    
+});
+
+router.get('/wideGooglePlaceById', function(req, res) {
+    res.json('Done');
+    var GooglePlaces = require('google-places');
+
+    var places = new GooglePlaces('AIzaSyCs1Q1NsFZy0o-RHqoWaXyxda_ZVgTKIaw');
+    //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
+    //AIzaSyCs1Q1NsFZy0o-RHqoWaXyxda_ZVgTKIaw
+    //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
+    //googlePlace: {$exists: false},
+    
+    setInterval(function(){
+    
+    var allProviders = coaching.find( {wideGeocodings: {$exists: true}, wideGooglePlace: {$exists: false}}, {wideGeocodings: 1, wideGooglePlace: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var nSaves = 0;
+        var counter = 0;
+        console.log('There are: ' + nLength + " coachings!");
+        allProviders.forEach(function(thisprovider, index){
+            var geocodings = thisprovider.wideGeocodings;
+            var thisGooglePlaceId = null;
+            geocodings.forEach(function(thiscoding, gindex){
+                if(thiscoding && thiscoding.extra && thiscoding.extra.googlePlaceId && !thisGooglePlaceId){
+                    thisGooglePlaceId = thiscoding.extra.googlePlaceId;
+                }
+            });
+            //console.log(thisGooglePlaceId);
+            if(thisGooglePlaceId){
+            places.details({placeid: thisGooglePlaceId}, function(err, response) {
+              if(err) { console.log(err); return; }
+                //console.log(response);
+                if(response.result){
+                    thisprovider.wideGooglePlace = response.result;
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(counter + ". Provider saved: " + thisprovider._id);
+                        
+                        if(counter == nLength){
+                            console.log("All done! Saved: " + counter + " coachings!");
+                        }
+                    });
+                }
+                
+            });
+            }
+            
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    }).limit(100).skip(940);
+    
+    }, 10000);
+    
+});
+
+router.get('/textGooglePlaceById', function(req, res) {
+    res.json('Done');
+    var GooglePlaces = require('google-places');
+
+    var places = new GooglePlaces('AIzaSyCs1Q1NsFZy0o-RHqoWaXyxda_ZVgTKIaw');
+    //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
+    //AIzaSyCs1Q1NsFZy0o-RHqoWaXyxda_ZVgTKIaw
+    //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
+    //googlePlace: {$exists: false},
+    
+    setInterval(function(){
+    console.log('Starting Text Based Google Place');
+    var allProviders = coaching.find( {textBasedGooglePlaces: {$exists: true}, textGooglePlace: {$exists: false}}, {textBasedGooglePlaces: 1, textGooglePlace: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var nSaves = 0;
+        var counter = 0;
+        console.log('There are: ' + nLength + " coachings!");
+        allProviders.forEach(function(thisprovider, index){
+            var geocodings = thisprovider.textBasedGooglePlaces;
+            var thisGooglePlaceId = null;
+            geocodings.forEach(function(thiscoding, gindex){
+                if(thiscoding && thiscoding.place_id && !thisGooglePlaceId){
+                    thisGooglePlaceId = thiscoding.place_id;
+                }
+            });
+            //console.log(thisGooglePlaceId);
+            if(thisGooglePlaceId){
+            places.details({placeid: thisGooglePlaceId}, function(err, response) {
+              if(err) { console.log(err); return; }
+                //console.log(response);
+                if(response.result){
+                    thisprovider.textGooglePlace = response.result;
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(counter + ". Provider saved: " + thisprovider._id);
+                        
+                        if(counter == nLength){
+                            console.log("All done! Saved: " + counter + " coachings!");
+                        }
+                    });
+                }
+                
+            });
+            }
+            
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    }).limit(100).skip(0);
+    
+    }, 10000);
     
 });
 router.post('/addIntern/', function(req, res) {

@@ -2209,6 +2209,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.rank0 = function() {
             return $http.get('/api/coachings/setRank0');
         };
+        this.maintainNameAreaSlug = function() {
+            return $http.get('/api/coachings/maintainNameAreaSlug');
+        };
         this.logoService = function() {
             return $http.get('/api/coachings/logoService');
         };
@@ -2275,6 +2278,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.googlePlacesById = function() {
             return $http.get('/api/masters/googlePlacesById/');
+        };
+        this.wideGooglePlaceById = function() {
+            return $http.get('/api/masters/wideGooglePlaceById/');
+        };
+        this.textGooglePlaceById = function() {
+            return $http.get('/api/masters/textGooglePlaceById/');
         };
         this.bulkSaveLatLng = function() {
             return $http.get('/api/masters/bulkSaveLatLng/');
@@ -7757,9 +7766,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         var reviewStreamExams = thisGroupReviews.data;
         if($scope.coachingGroup){
             $rootScope.HTTPStatusCode = '200';
+            if($scope.coachingGroup.nameslug != '' && $scope.coachingGroup.areaslug != ''){
+                var nameareaslug = $scope.coachingGroup.nameslug + "/" + $scope.coachingGroup.areaslug;
+                $rootScope.canonicalUrl = "https://www.exambazaar.com/c/ebinteral/" + nameareaslug;
+            }
+            
         }else{
             $rootScope.HTTPStatusCode = '404';
         }
+        
         
         var top = 400;
         var duration = 2000;
@@ -17737,6 +17752,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', 'Notification', 'resultService', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList, Notification, resultService){
+            $scope.maintainNameAreaSlug = function () {
+                //alert('Here');
+                coachingService.maintainNameAreaSlug().success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             $scope.generateurlslugs = function () {
                 //alert('Here');
                 coachingService.generateurlslugs().success(function (data, status, headers) {
@@ -19206,7 +19230,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });   
             };
-            
+            $scope.wideGooglePlaceById = function(){
+                MasterService.wideGooglePlaceById().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
+            $scope.textGooglePlaceById = function(){
+                MasterService.textGooglePlaceById().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
             $scope.bulkSaveLatLng = function(){
                 MasterService.bulkSaveLatLng().success(function (data, status, headers) {
                     console.log(data);

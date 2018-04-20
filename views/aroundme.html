@@ -186,6 +186,26 @@
             </div>
         </div>
     </md-button>
+    <md-button class="md-black md-small tolowercase" ng-click="wideGooglePlaceById()" ng-if="masterUser"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-map-marker font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Wide Google Places by ID
+            </div>
+        </div>
+    </md-button>
+    <md-button class="md-black md-small tolowercase" ng-click="textGooglePlaceById()" ng-if="masterUser"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-map-marker font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Text Google Place by ID
+            </div>
+        </div>
+    </md-button>
     <md-button class="md-danger md-small tolowercase" ng-click="bulkSaveLatLng()" ng-if="masterUser"> <!--aroundme-->
         <div layout="row" layout-align="start center">
             <div layout="row" layout-align="start center" class="marginR10">

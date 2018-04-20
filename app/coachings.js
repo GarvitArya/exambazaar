@@ -4112,8 +4112,6 @@ router.post('/savecoaching', function(req, res) {
     } else {throw err;}
     }); //.limit(500)
 });
-
-
 router.get('/getGroupInfo/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching group info for: ' + coachingId);
@@ -4344,19 +4342,47 @@ router.post('/cityGroupCentres', function(req, res) {
         } else {throw err;}
     });
 });
+router.get('/maintainNameAreaSlug', function(req, res) {
+    res.json(true);
+    var allproviders =  coaching.find({disabled: false, nameslug: {$exists: true}, areaslug: {$exists: true}}, {nameslug: 1, areaslug:1, name:1, nameareaslugs: 1},function(err, allproviders) {
+    if (!err && allproviders && allproviders.length > 0){
+        var nLength = allproviders.length;
+        console.log('There are ' + nLength + ' coachings!');
+        
+         allproviders.forEach(function(thisprovider, index){
+            var thisName = thisprovider.exams;
+            var nameslug = thisprovider.nameslug;
+            var areaslug = thisprovider.areaslug;
+            var nameareaslug = nameslug + "/" + areaslug;
+            if(!thisprovider.nameareaslugs){
+                thisprovider.nameareaslugs = [];
+            }
+            var nasIndex = thisprovider.nameareaslugs.indexOf(nameareaslug);
+            if(nasIndex == -1){
+                thisprovider.nameareaslugs.push(nameareaslug);
+                thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    //console.log(thisprovider._id + " saved!");
+                });  
+            }
+            
+            
+         });
+    }
+    });
+});
 
 router.post('/coachingGroup2', function(req, res) {
     var namearea = req.body;
     var nameslug = namearea.nameslug;
     var areaslug = namearea.areaslug;
+    var nameareaslug = nameslug + "/" + areaslug;
     var thisGroup = coaching
         .findOne({'nameslug': nameslug, 'areaslug': areaslug, disabled:false, type: 'Coaching'}, {nameslug: 1, areaslug: 1, name:1, groupName: 1, address: 1, city: 1, pincode: 1, logo: 1, mobile: 1, phone: 1, email:1, exams: 1, cityPosition: 1, location: 1, mapAddress: 1})
         //course: 1, photo: 1, video: 1, faculty: 1, 
         .deepPopulate('location')
         .exec(function (err, thisGroup) {
-        if (!err){
-        if(thisGroup){
-            console.log(thisGroup._id);
+        if (!err && thisGroup){
             var thisCentreExams = thisGroup.exams;
             var thisCentreGroupName = thisGroup.groupName;
 
@@ -4433,11 +4459,7 @@ router.post('/coachingGroup2', function(req, res) {
                         thisStreamExam.exams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );
                     }
                 });
-                //console.log(streamExams);
-            }    
-            
-            
-                
+            }
             var allGroupCoachings = coaching
             .find({groupName: thisCentreGroupName, disabled:false, type: 'Coaching'}, {course: 1, photo: 1, video: 1, faculty: 1})
             .deepPopulate('photo.tags video.tags')
@@ -4516,12 +4538,7 @@ router.post('/coachingGroup2', function(req, res) {
                 if(thisCoaching.faculty && thisCoaching.faculty.length > 0){
                     allFaculty = allFaculty.concat(thisCoaching.faculty);
                 }
-                    
-                    
-                    
                 });
-                //thisGroup.course = allCourses;
-                
                 thisGroup.photo = allPhotos;
                 thisGroup.video = allVideos;
                 thisGroup.faculty = allFaculty;
@@ -4546,7 +4563,6 @@ router.post('/coachingGroup2', function(req, res) {
                     "location",
                     "mapAddress",
                 ];
-                //console.log(thisGroup.location);
                 var newGroup = {};
                 for (var property in thisGroup) {
                     if(allowedProperties.indexOf(property) != -1){
@@ -4554,11 +4570,7 @@ router.post('/coachingGroup2', function(req, res) {
                     }
                     
                 };
-                //console.log(streamExams);
                 newGroup.streamExams = streamExams;
-                //console.log(thisGroup.course.length + " | " + allCourses.length);
-                //console.log(thisGroup.photo.length + " | " + allPhotos.length);
-                //console.log(newGroup);
                 res.json(newGroup);
 
             }else{  
@@ -4566,39 +4578,239 @@ router.post('/coachingGroup2', function(req, res) {
             }
 
             });
-
             }else{
                 res.json(thisGroup);
             }
-                
-                
-                
             });
-                
             }else{
                 res.json(thisGroup);
             }
-            
-                
-                
-                
             });
-                
-            
-
-
             }else{
                 res.json(thisGroup);
             }
-
-
-            //console.log(thisCentreExams);
-            //res.json(thisGroup);
         }else{
-            res.json(null);
-        }
             
-        } else {throw err;}
+            
+            console.log("Doing Secondary Search Now!");
+            var thisGroup = coaching
+            .findOne({'nameareaslugs': nameareaslug, disabled:false, type: 'Coaching'}, {nameslug: 1, areaslug: 1, name:1, groupName: 1, address: 1, city: 1, pincode: 1, logo: 1, mobile: 1, phone: 1, email:1, exams: 1, cityPosition: 1, location: 1, mapAddress: 1})
+            //course: 1, photo: 1, video: 1, faculty: 1, 
+            .deepPopulate('location')
+            .exec(function (err, thisGroup) {
+            if (!err && thisGroup){
+                var thisCentreExams = thisGroup.exams;
+                var thisCentreGroupName = thisGroup.groupName;
+
+                if(thisCentreExams && thisCentreExams.length > 0){
+                var streamExams = [];
+                var streamExamStreamIds = [];
+                var allExams = exam
+                .find({_id: thisCentreExams, active:true}, {exam_page_name:1, stream: 1, rank: 1, logo: 1, resultFormat: 1})
+                //.deepPopulate('photo.tags video.tags')
+                .exec(function (err, allExams) {
+                if(allExams){
+                var allExamIds = allExams.map(function(a) {return a._id.toString();});
+                var allExamStreamIds = allExams.map(function(a) {return a.stream.toString();});
+
+                var allStreams = stream
+                .find({_id: allExamStreamIds, active:true}, {displayname:1, rank: 1, logo: 1})
+                .exec(function (err, allStreams) {
+                if(allStreams){
+                var allStreamIds = allStreams.map(function(a) {return a._id.toString();});
+                allStreams.forEach(function(thisStream, sIndex){
+                    if(streamExams.length > 0){
+                        streamExamStreamIds = streamExams.map(function(a) {return a._id.toString();});
+                    }
+                    var thisSIndex = streamExamStreamIds.indexOf(thisStream._id.toString());
+
+                    if(thisSIndex == -1){
+                        var newStream = {
+                            _id: thisStream._id.toString(),
+                            displayname: thisStream.displayname,
+                            logo: thisStream.logo,
+                            rank: thisStream.rank,
+                            exams: [],
+                        };
+                        streamExams.push(newStream);
+                    }else{
+
+                    }
+
+                });
+
+                var allowedProperties = [
+                    "_id",
+                    "exam_page_name",
+                    "stream",
+                    "rank",
+                    "logo",
+                    "resultFormat",      
+                ];
+                allExams.forEach(function(thisGroupExam, tgIndex){
+                    var thisGroupExamStream = thisGroupExam.stream.toString();
+                    if(streamExams.length > 0){
+                        streamExamStreamIds = streamExams.map(function(a) {return a._id.toString();});
+                    }
+                    var thisSIndex = streamExamStreamIds.indexOf(thisGroupExamStream);
+                    if(thisSIndex == -1){
+                        console.log('Something went very wrong!!');
+                    }else{
+                        var newExam = {};
+                        for (var property in thisGroupExam) {
+                            if(allowedProperties.indexOf(property) != -1){
+                                newExam[property] = thisGroupExam[property];
+                            }
+
+                        };
+                        streamExams[thisSIndex].exams.push(newExam);
+                    }
+                });
+
+                if(streamExams && streamExams.length > 0){
+                    streamExams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );  
+
+                    streamExams.forEach(function(thisStreamExam, seIndex){
+                        if(thisStreamExam.exams && thisStreamExam.exams.length > 0){
+                            thisStreamExam.exams.sort(function(a,b) {return (a.rank > b.rank) ? -1 : ((b.rank > a.rank) ? 1 : 0);} );
+                        }
+                    });
+                }
+                var allGroupCoachings = coaching
+                .find({groupName: thisCentreGroupName, disabled:false, type: 'Coaching'}, {course: 1, photo: 1, video: 1, faculty: 1})
+                .deepPopulate('photo.tags video.tags')
+                .exec(function (err, allGroupCoachings) {
+
+                if(allGroupCoachings && allGroupCoachings.length > 0){
+                    var result1 = [], result2 = [];
+                    for (var i = 0; i < allGroupCoachings.length; i++) {
+                      if (allGroupCoachings[i]._id.toString() === thisGroup._id.toString()) {
+                        result1.push(allGroupCoachings[i]);
+                      } else {
+                        result2.push(allGroupCoachings[i]);
+                      }
+                    }
+                    allGroupCoachings = result1.concat(result2);
+                    var allCourses = [];
+                    var allPhotos = [];
+                    var allVideos = [];
+                    var allFaculty = [];
+                    if(streamExams.length > 0){
+                        streamExamStreamIds = streamExams.map(function(a) {return a._id.toString();});
+                    }
+                    allGroupCoachings.forEach(function(thisCoaching, cIndex){
+                    if(thisCoaching.course && thisCoaching.course.length > 0){
+                    thisCoaching.course.forEach(function(thisCourse, courseIndex){
+
+                    var thisExamId = thisCourse.exam.toString();
+                    var thisExamIndex = allExamIds.indexOf(thisExamId);
+                    /*if(thisExamIndex == -1){
+                        console.log(thisExamId);    
+                        console.log(allExamIds);    
+                        console.log(thisExamIndex);   
+                    }*/    
+
+
+                    if(thisExamIndex != -1){
+                    var thisExamStreamId = allExamStreamIds[thisExamIndex];
+                    var thisStreamIndex = streamExamStreamIds.indexOf(thisExamStreamId);
+                    if(thisStreamIndex != -1){
+                        var thisStreamExams = streamExams[thisStreamIndex].exams;
+                        if(thisStreamExams && thisStreamExams.length > 0){
+                        var thisStreamExamIds = thisStreamExams.map(function(a) {return a._id.toString();});
+                        var thisStreamExamArrayIndex = thisStreamExamIds.indexOf(thisExamId);
+                        if(thisStreamExamArrayIndex != -1){
+                            if(!streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].course){
+                                streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].course = [];
+                            }
+                            streamExams[thisStreamIndex].exams[thisStreamExamArrayIndex].course.push(thisCourse);
+
+
+                        }
+
+
+                        }
+
+                    }
+
+                    }else{
+                        console.log('Could not find exam!!');
+                    }
+
+                    /*if(thisCentreExams.indexOf(thisCourse.exam) != -1){
+                        allCourses.push(thisCourse);
+                    }*/
+
+                    });
+
+                    }
+                    //console.log("Photos " + thisCoaching.photo.length);
+                    if(thisCoaching.photo && thisCoaching.photo.length > 0){
+                        allPhotos = allPhotos.concat(thisCoaching.photo);
+                    }
+                    if(thisCoaching.video && thisCoaching.video.length > 0){
+                        allVideos = allVideos.concat(thisCoaching.video);
+                    }
+                    if(thisCoaching.faculty && thisCoaching.faculty.length > 0){
+                        allFaculty = allFaculty.concat(thisCoaching.faculty);
+                    }
+                    });
+                    thisGroup.photo = allPhotos;
+                    thisGroup.video = allVideos;
+                    thisGroup.faculty = allFaculty;
+
+                    var allowedProperties = [
+                        "faculty",
+                        "video",
+                        "photo",
+                        "_id",
+                        "name",
+                        "address",
+                        "city",
+                        "pincode",
+                        "logo",
+                        "groupName",
+                        "areaslug",
+                        "nameslug",
+                        "phone",
+                        "mobile",
+                        "email",
+                        "cityPosition",
+                        "location",
+                        "mapAddress",
+                    ];
+                    var newGroup = {};
+                    for (var property in thisGroup) {
+                        if(allowedProperties.indexOf(property) != -1){
+                            newGroup[property] = thisGroup[property];
+                        }
+
+                    };
+                    newGroup.streamExams = streamExams;
+                    res.json(newGroup);
+
+                }else{  
+                    res.json(thisGroup);
+                }
+
+                });
+                }else{
+                    res.json(thisGroup);
+                }
+                });
+                }else{
+                    res.json(thisGroup);
+                }
+                });
+                }else{
+                    res.json(thisGroup);
+                }
+            }else{
+                res.json(null);
+            }
+        });
+            
+        }
     });
 });
 router.post('/coachingGroupCityCentres', function(req, res) {
@@ -6055,8 +6267,13 @@ router.get('/generateurlslugs', function(req, res) {
         'sublocality_level_3',
         'subpremise',
     ];
-    
-    var allCoachings = coaching
+    var googleMethods = [
+        'googlePlaceAddress',
+        'newGooglePlaceAddress',
+        'textGooglePlaceAddress',
+        'wideGooglePlaceAddress',
+    ];
+    /*var allCoachings = coaching
         .find({newGooglePlace: {$exists: true}, disabled: false, newGooglePlaceAddress: {$exists: true}}, {newGooglePlace: 1, areaslug: 1})
         .limit(1000)
         //.deepPopulate('location')
@@ -6082,44 +6299,46 @@ router.get('/generateurlslugs', function(req, res) {
                         
                     }
                 });
-                /*var sl1 = "sublocality_level_1";
-                var sl2 = "sublocality_level_2";
-                var sl3 = "sublocality_level_3";
-                var aal1 = "locality";
-                var thisSL1 = "";
-                var thisSL2 = "";
-                var thisSL3 = "";
-                var thisAAL1 = "";
-                var valid = false;
-                thisCoaching.newGooglePlace.address_components.forEach(function(thisAddressComponent, acindex){
-                    var sla1 = thisAddressComponent.types.indexOf(sl1);
-                    if(sla1 != -1){
-                        thisSL1 = thisAddressComponent.long_name;
-                        valid = true;
-                    }
-                    var sla2 = thisAddressComponent.types.indexOf(sl2);
-                    if(sla2 != -1){
-                        thisSL2 = thisAddressComponent.long_name;
-                        valid = true;
-                    }
-                    var sla3 = thisAddressComponent.types.indexOf(sl3);
-                    if(sla3 != -1){
-                        thisSL3 = thisAddressComponent.long_name;
-                        valid = true;
-                    }
-                    var aala1 = thisAddressComponent.types.indexOf(aal1);
-                    if(aala1 != -1){
-                        thisAAL1 = thisAddressComponent.long_name;
-                        //valid = true;
+                thisCoaching.save(function(err, thisCoaching) {
+                if (err) return console.error(err);
+                    console.log("Coaching saved " + thisCoaching._id);
+                    counter += 1;
+                    if(counter == nCoachings){
+                        console.log("All Done");
                     }
                 });
-                if(valid){
-                    var newareaslug = thisSL3 + " " + thisSL2 + " " + thisSL3 + " " + thisAAL1; 
-                    newareaslug = slugify(newareaslug);
-                    console.log(thisCoaching._id + " | " + thisCoaching.areaslug + " | " + newareaslug);
-                }else{
+                
+            });
+            
+            
+        } else {throw err;}
+    });*/
+    /*setInterval(function(){
+    var allCoachings = coaching
+        .find({wideGooglePlace: {$exists: true}, disabled: false, wideGooglePlaceAddress: {$exists: false}}, {wideGooglePlace: 1, wideGooglePlaceAddress:1, areaslug: 1})
+        .limit(1000)
+        .exec(function (err, allCoachings) {
+        if (!err){
+            var nCoachings = allCoachings.length;
+            var counter = 0;
+            console.log('Find wide google address for '  +allCoachings.length + " coachings!");
+            var allTypes = [];
+            allCoachings.forEach(function(thisCoaching, index){
+                thisCoaching.wideGooglePlace.address_components.forEach(function(thisAddressComponent, acindex){
+                    var addressTypes = thisAddressComponent.types;
+                    var thisType = '';
+                    if(addressTypes && addressTypes.length > 0){
+                        thisType = addressTypes[0];
+                    }
                     
-                }*/
+                    if(addressFields.indexOf(thisType) != -1){
+                        if(!thisCoaching.wideGooglePlaceAddress){
+                            thisCoaching.wideGooglePlaceAddress = {};
+                        }
+                        thisCoaching.wideGooglePlaceAddress[thisType] = thisAddressComponent.long_name;
+                        
+                    }
+                });
                 thisCoaching.save(function(err, thisCoaching) {
                 if (err) return console.error(err);
                     console.log("Coaching saved " + thisCoaching._id);
@@ -6134,6 +6353,129 @@ router.get('/generateurlslugs', function(req, res) {
             
         } else {throw err;}
     });
+    }, 30000);*/
+    
+    /*setInterval(function(){
+    var allCoachings = coaching
+        .find({textGooglePlace: {$exists: true}, disabled: false, textGooglePlaceAddress: {$exists: false}}, {textGooglePlace: 1, textGooglePlaceAddress:1, areaslug: 1})
+        .limit(1000)
+        .exec(function (err, allCoachings) {
+        if (!err){
+            var nCoachings = allCoachings.length;
+            var counter = 0;
+            console.log('Arrange text google address for '  +allCoachings.length + " coachings!");
+            var allTypes = [];
+            allCoachings.forEach(function(thisCoaching, index){
+                thisCoaching.textGooglePlace.address_components.forEach(function(thisAddressComponent, acindex){
+                    var addressTypes = thisAddressComponent.types;
+                    var thisType = '';
+                    if(addressTypes && addressTypes.length > 0){
+                        thisType = addressTypes[0];
+                    }
+                    
+                    if(addressFields.indexOf(thisType) != -1){
+                        if(!thisCoaching.textGooglePlaceAddress){
+                            thisCoaching.textGooglePlaceAddress = {};
+                        }
+                        thisCoaching.textGooglePlaceAddress[thisType] = thisAddressComponent.long_name;
+                        
+                    }
+                });
+                thisCoaching.save(function(err, thisCoaching) {
+                if (err) return console.error(err);
+                    console.log("Coaching saved " + thisCoaching._id);
+                    counter += 1;
+                    if(counter == nCoachings){
+                        console.log("All Done");
+                    }
+                });
+                
+            });
+            
+            
+        } else {throw err;}
+    });
+    }, 30000);*/
+    
+    var allCoachings = coaching
+        .find( { disabled: false, sublocality: {$exists: false}, $or: [ {newGooglePlaceAddress: {$exists: true}}, {googlePlaceAddress: {$exists: true}}, {wideGooglePlaceAddress: {$exists: true}}, {textGooglePlaceAddress: {$exists: true}} ] },  {name: 1, address: 1, wideGooglePlaceAddress: 1, newGooglePlaceAddress: 1, googlePlaceAddress: 1, textGooglePlaceAddress: 1, sublocality: 1})
+        //.limit(1000)
+        .exec(function (err, allCoachings) {
+        if (!err){
+            var nCoachings = allCoachings.length;
+            var counter = 0;
+            console.log('Finding sublocality for '  +allCoachings.length + " coachings!");
+            var allTypes = [];
+            allCoachings.forEach(function(thisCoaching, index){
+                var found = false;
+                googleMethods.forEach(function(thisMethod, mindex){
+                    if(thisCoaching[thisMethod] && thisCoaching[thisMethod]['sublocality_level_1'] && !found){
+                        found = true;
+                        if(!thisCoaching.sublocality){
+                            thisCoaching.sublocality = {};
+                        }
+                        thisCoaching.sublocality.level1 = thisCoaching[thisMethod]['sublocality_level_1'];
+                        thisCoaching.sublocality.source = thisMethod;
+                        thisCoaching.save(function(err, thisCoaching) {
+                            if (err) return console.error(err);
+                            counter += 1;
+                            console.log(counter + ". Coaching saved: " + thisCoaching._id);
+                        });
+                    }
+                });
+            });
+            
+        }
+    });
+});
+
+router.get('/findsublocality', function(req, res) {
+    
+    
+    var allProviders = coaching.find( {wideGeocodings: {$exists: true}, wideGooglePlace: {$exists: false}}, {wideGeocodings: 1, wideGooglePlace: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var nSaves = 0;
+        var counter = 0;
+        console.log('There are: ' + nLength + " coachings!");
+        allProviders.forEach(function(thisprovider, index){
+            var geocodings = thisprovider.wideGeocodings;
+            var thisGooglePlaceId = null;
+            geocodings.forEach(function(thiscoding, gindex){
+                if(thiscoding && thiscoding.extra && thiscoding.extra.googlePlaceId && !thisGooglePlaceId){
+                    thisGooglePlaceId = thiscoding.extra.googlePlaceId;
+                }
+            });
+            //console.log(thisGooglePlaceId);
+            if(thisGooglePlaceId){
+            places.details({placeid: thisGooglePlaceId}, function(err, response) {
+              if(err) { console.log(err); return; }
+                //console.log(response);
+                if(response.result){
+                    thisprovider.wideGooglePlace = response.result;
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(counter + ". Provider saved: " + thisprovider._id);
+                        
+                        if(counter == nLength){
+                            console.log("All done! Saved: " + counter + " coachings!");
+                        }
+                    });
+                }
+                
+            });
+            }
+            
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    }).limit(100).skip(940);
+    
     
 });
 
