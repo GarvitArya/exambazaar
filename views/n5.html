@@ -16,25 +16,50 @@
         height: 90px;
         width: 90px;
     }
+    .sectionBox{
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
     .sectionHeader{
-        margin-top: 25px;
+        margin-top: 10px;
         margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #20C39A;
+        font-weight: bold;
     }
     .subSection{
-        margin-top: 15px;
-        margin-bottom: 15px;
+        padding-top: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .subSectionHeader{
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid lightgray;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .infoBox{
+        font-weight: bold;
     }
     #showmore{
-        font-weight: bold;
+        /*font-weight: bold;
         background: #EEEEEE;
         color: #9C9C9C;
         border: 1px solid #EEEEEE;
+        padding: 5px;*/
+        margin-top: 10px;
+        margin-bottom: 10px;
         padding: 5px;
+        color: black;
+        border: 1px solid lightgray;
     }
     #showmore:hover {
-        background: #FF5A5F;
-        color: white;
-        border: 1px solid #FF5A5F;
+        background: whitesmoke;
+        color: black;
+        border: 1px solid whitesmoke;
     }
     .badge{
         font-family: 'Fira Sans', sans-serif;
@@ -184,7 +209,7 @@
       width: 100%;
       height: 100%;
       position: absolute;
-      background: url("images/icons/youtube.png") no-repeat;
+      background: url("images/icons/youtube2.png") no-repeat;
       background-position: 50% 50%;
       background-size: 25%;
     }
@@ -198,34 +223,58 @@
         color: white;
         font-weight: bold;
     }
+    
+    .ngTruncateToggleText {
+        margin-left: 5px;
+        font-size: 90%;
+        color: #20C39A;
+    }
+    md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
+        color: red !important;
+        background-color:red !important;
+    }
+    .streamTab{
+        background: #20C39A;
+        color: white;
+    }
+    .reviewBadge{
+        font-size: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background: #20C39A;
+        color: white;
+        margin-left: 10px;
+    }
 </style>
 
 <div id="spacer3" class="hide-xs whiteBackground">
 </div>
 <div id="spacerXS" class="hide-gt-xs whiteBackground">
 </div>
-<!--<div layout="row" layout-align="start end" id="heroHeader">
-    <div hide-xs flex="5">
-    </div>
-    <div layout="column" layout-align="end end" class="paddingB10">
-        <div layout="column" layout-align="center center" class="padding10 whiteBackground" id="pageLogoHolder">
+
+<div class="width100" layout="row" layout-align="center start">
+<div class="baseFont paddingB40 marginB40" flex-xs="90" flex-gt-xs="100">
+<div layout="row" layout-align="start center" class="width100 paddingT10">
+    <div hide-xs flex="15" class="">
+        <div layout="column" layout-align="center center" class="width100">
+        <div layout="column" layout-align="center center" class="whiteBackground" id="pageLogoHolder">
             <img  ng-if="coachingGroup.logo" ng-src="{{coachingGroup.logo}}" class="pageLogo" alt="{{coachingGroup.name}} Logo" />
             <img  ng-if="!coachingGroup.logo || coachingGroup.logo==''" ng-src="{{defaultCoachingLogo}}" class="pageLogo" alt="{{coachingGroup.name}} Logo" />
-
-
         </div>
-    </div>
-</div>-->
-
-<div class="width100 baseFont paddingB40 marginB40">
-<div layout="row" layout-align="start start" class="width100 paddingTB20">
-    <div hide-xs flex="15">
-        
+        </div>
     </div>
     <div layout="column" layout-align="start start" flex class="width100">
         <h1 flex class="bold pageTitleFont textBlack margin0 ">
             {{coachingGroup.name}}
         </h1>
+        
+        <div layout="row" layout-align="end center" ng-show="coachingGroup.streamExams[0].exams[0].cirf.rating5">
+            <md-tooltip>Rated {{coachingGroup.streamExams[0].exams[0].cirf.rating5}} out of 5 for {{coachingGroup.streamExams[0].exams[0].exam_page_name}}</md-tooltip>
+            <ng-rate-it ng-model="coachingGroup.streamExams[0].exams[0].cirf.rating5" ng-if="coachingGroup.streamExams[0].exams[0].cirf.rating5 > 0" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
+
+            </ng-rate-it>
+
+        </div>
     </div>
 </div>
 
@@ -245,17 +294,20 @@
     </div>
     <div layout="column" layout-align="start start" flex class="width100">
         
-        <div layout="column" layout-align="start start" class="width100" id="overview">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font margin0 sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
+        <div layout="column" layout-align="start start" class="width100 sectionBox " id="overview">
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader margin0" layout-wrap>
             Overview
         </h2>
+        <div class="subBaseFont subSection" ng-if="coachingGroup.description">
+            <p ng-text-truncate="coachingGroup.description" ng-tt-chars-threshold="200"></p>
+        </div>
         <div layout="column" layout-align="start start" class="width100 subSection">
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.websiteUrl">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.websiteUrl">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/website.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Website</div>
+                        <div flex class="width100 infoBox subBaseFont">Website</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -268,11 +320,11 @@
                         
                     </div>
                 </div>
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.facebookPage || coachingGroup.twitter || coachingGroup.youtubeChannel">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.facebookPage || coachingGroup.twitter || coachingGroup.youtubeChannel">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/socialmedia.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Social Media</div>
+                        <div flex class="width100 infoBox subBaseFont">Social Media</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -292,11 +344,11 @@
                     </div>
                 </div>
                 
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.nCentres">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.nCentres">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/centres.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Total Centres</div>
+                        <div flex class="width100 infoBox subBaseFont">Total Centres</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -312,13 +364,15 @@
         </div>
         <div layout="column" layout-align="start start" class="width100 subSection">
             
-            <div class="width100 brandLightBottomBorder padding5 marginTB5">CENTRE INFORMATION</div>
+            <h3 class="width100 h3Font subSectionHeader margin0">
+                Centre Information
+            </h3>
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.phone[0]">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.phone[0]">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/phone.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Phone</div>
+                        <div flex class="width100 infoBox subBaseFont">Phone</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -327,11 +381,11 @@
                         
                     </div>
                 </div>
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.mobile[0]">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.mobile[0]">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/mobile.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Mobile</div>
+                        <div flex class="width100 infoBox subBaseFont">Mobile</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -340,11 +394,11 @@
                         
                     </div>
                 </div>
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-if="coachingGroup.email[0]">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-if="coachingGroup.email[0]">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10"><img src="images/icons/n5/general/email.png" class="n5Icon" />
                         </div>
-                        <div flex class="width100 bold">Email</div>
+                        <div flex class="width100 infoBox subBaseFont">Email</div>
                     </div>
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="10">
@@ -354,48 +408,64 @@
                     </div>
                 </div>
             </div>
+            
+            
+            
+            <div layout="row" layout-align="start start" class="width100 marginT20" >
+                <div layout="column" layout-align="start start" flex class="paddingR10">
+                    <div  layout="column" layout-align="start start" class="width100">
+                        <div layout="row" layout-align="start center" class="width100">
+                            <div flex="10"><img src="images/icons/n5/general/location.png" class="n5Icon" />
+                            </div>
+                            <div flex class="width100 infoBox subBaseFont">
+                                {{coachingGroup.name}},<span ng-if="coachingGroup.location">
+                                {{coachingGroup.location.area}},
+                            </span>&nbsp;{{coachingGroup.city}}    
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100">
+                            <div flex="10">
+                            </div>
+                            <div flex class="wideLine">
+                                {{coachingGroup.address}}, {{coachingGroup.city}}<span ng-if="coachingGroup.pincode">, {{coachingGroup.pincode}}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    
+                    <!--<div class="width100">Nearby Coachings</div>-->
+                </div>
+                <div flex class="min10vh paddingL10">
+                    <ng-map default-style="false" zoom-to-include-markers=true  scrollwheel="false" minimum-zoom="12"  maximum-zoom="14" ng-if="coachingGroup.mapAddress && coachingGroup.mapAddress!=''">
+                    <marker position="{{coachingGroup.mapAddress}}"
+                          title="{{coachingGroup.name}}"
+                          animation="Animation.DROP"
+                          centered="true"></marker>
+                    </ng-map>
+                </div>
+
+            </div>
+            
         </div>
             
-        <div  layout="column" layout-align="start start" class="paddingTB5 width100 subSection">
-            <div layout="row" layout-align="start center" class="width100">
-                <div flex="5"><img src="images/icons/n5/general/location.png" class="n5Icon" />
-                </div>
-                <div flex class="width100 bold"><h3 class="width100 h3Font margin0 bold">{{coachingGroup.name}},<span ng-if="coachingGroup.location">
-                    {{coachingGroup.location.area}},
-                </span>&nbsp;{{coachingGroup.city}}
-                </h3></div>
-            </div>
-            <div layout="row" layout-align="start center" class="width100">
-                <div flex="5">
-                </div>
-                <div flex class="narrowLine">
-                    {{coachingGroup.address}}, {{coachingGroup.city}}<span ng-if="coachingGroup.pincode">, {{coachingGroup.pincode}}</span>
-                </div>
-
-            </div>
-        </div>    
+            
         
-        <div class="width100 min20vh subSection" ng-if="coachingGroup.mapAddress && coachingGroup.mapAddress!=''">
-            <ng-map default-style="false" zoom-to-include-markers=true  scrollwheel="false" minimum-zoom="12"  maximum-zoom="14">
-            <marker position="{{coachingGroup.mapAddress}}"
-                  title="{{coachingGroup.name}}"
-                  animation="Animation.DROP"
-                  centered="true"></marker>
-            </ng-map>
-
-        </div>
+        
         <div layout="column" layout-align="start start" class="width100 subSection" ng-if="coachingGroup.facilities">
-            <div class="width100 brandLightBottomBorder padding5 marginTB5">AMENITIES</div>
+            <h3 class="width100 subSectionHeader margin0 h3Font">Facilities
+            </h3>
             <div layout="row" layout-align="start start" class="width100" layout-wrap >
-                <div  layout="column" layout-align="start start" flex="50" class="paddingTB5" ng-repeat="facility in facilities">
+                <div  layout="column" layout-align="start start" flex="50" class="paddingB10" ng-repeat="facility in facilities | orderBy:'-available'">
                     <div layout="row" layout-align="start center" class="width100">
                         <div flex="25">
                             
-                            <img ng-src="{{facility.present}}" class="n5IconLg" ng-if="coachingGroup.facilities[facility.field]" />
-                            <img ng-src="{{facility.absent}}" class="n5IconLg" ng-if="!coachingGroup.facilities[facility.field]" />
+                            <img ng-src="{{facility.present}}" class="n5IconLg" ng-if="facility.available" />
+                            <img ng-src="{{facility.absent}}" class="n5IconLg" ng-if="!facility.available" />
                             
                         </div>
-                        <div flex class="width100" ng-class="{textLightGrey : !coachingGroup.facilities[facility.field], bold: coachingGroup.facilities[facility.field]}">
+                        <!--, bold: coachingGroup.facilities[facility.field]}-->
+                        <div flex class="width100" ng-class="{textLightGrey : !facility.available}">
                             {{facility.name}}
                         </div>
                     </div>
@@ -405,18 +475,35 @@
         </div>    
            
         </div>
-        <div layout="column" layout-align="start start" class="width100" id="coursesresults">
-        <h3 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
-            Courses & Results at {{coachingGroup.name}}
+        <div layout="column" layout-align="start start" class="width100 sectionBox" id="coursesresults">
+        <h3 layout="row" layout-align="start start" class="width100 h2Font sectionHeader" layout-wrap>
+            Courses & Results of {{coachingGroup.name}}
         </h3>
-        <md-content class="width100 subSection whiteBackground">
-        <md-tabs md-selected="streamIndex" md-border-bottom md-autoselect md-dynamic-height>
-            <md-tab ng-repeat="stream in coachingGroup.streamExams" label="{{stream.displayname}}">
+        <md-content class="width100 whiteBackground">
+            <!--md-border-bottom md-autoselect -->
+        <md-tabs md-selected="streamIndex" md-dynamic-height>
+            <md-tab ng-repeat="stream in coachingGroup.streamExams">
+            <!--label="{{stream.displayname}}"-->    
+            <md-tab-label>
+                <span class="streamTab">
+                {{stream.displayname}} Stream
+                </span>
+                
+              <!--<img src="img/removeTab.png" ng-click="removeTab(tab)" class="delete">-->
+            </md-tab-label>    
+            <md-tab-body>    
             <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect md-dynamic-height>
                 <md-tab ng-repeat="exam in coachingGroup.streamExams[streamIndex].exams" label="{{exam.exam_page_name}}">
-                    <div layout="row" layout-align="start center" class="width100 sectionHeader brandBottomBorder paddingB5 bold">
-                    <h3 layout="row" layout-align="start start" class="width100 h3Font margin0" layout-wrap flex>
-                        {{exam.exam_page_name}} Courses at {{coachingGroup.name}}
+                     <!--&& coachingGroup.cityPosition[exam._id] > 0-->
+                    <div ng-if="coachingGroup.cityPosition[exam._id]" class="subSection width100">
+                    {{coachingGroup.name}} is EB Rank #{{coachingGroup.cityPosition[exam._id]}} for {{exam.exam_page_name}} in {{coachingGroup.city}}
+                    </div>
+                    
+                    <div layout="column" layout-align="start start" class="subSection width100">
+                    
+                    <div layout="row" layout-align="start center" class="width100 subSectionHeader">
+                    <h3 layout="row" layout-align="start start" class="width100 h3Font bold margin0" layout-wrap flex>
+                        {{exam.exam_page_name}} Courses of {{coachingGroup.name}}
                     </h3>
                     <div layout="row" layout-align="end center" ng-show="exam.cirf.rating5">
                         <md-tooltip>Rated {{exam.cirf.rating5}} out of 5 for {{exam.exam_page_name}}</md-tooltip>
@@ -426,49 +513,60 @@
 
                     </div>
                     </div>
-                    <div ng-if="coachingGroup.cityPosition[exam._id] && coachingGroup.cityPosition[exam._id] <= 5" class="marginT10 marginB20">
-                    {{coachingGroup.name}} is EB Rank #{{coachingGroup.cityPosition[exam._id]}} for {{exam.exam_page_name}} in {{coachingGroup.city}}
-                    </div>
                     
-                    <div layout="column" layout-align="start start" class="width100 paddingLR5">
-                    <div layout="column" layout-align="start start" class="boxShadow padding10 marginB10 width100" ng-repeat="course in exam.course" ng-show="$index < loaded.courses">
+                    
+                    <div layout="column" layout-align="start start" class="width100 ">
+                        
+                    <div layout="row" layout-align="start start" class="width100 bold">
+                        <div flex="80" class="baseFont">Course</div>
+                        <div layout="row" layout-align="end start">Fees</div>
+                    </div>    
+                    <div layout="column" layout-align="start start" class="marginTB5 width100 brandBottomBorder3 paddingB10" ng-repeat="course in exam.course" ng-show="$index < loaded.courses">
                         <div layout="row" layout-align="start start" class="width100">
-                            <div flex>{{course.name}}</div>
-                            <div>₹ {{course.fees}}</div>
+                            
+                            <div flex="80" class="baseFont">{{course.name}}</div>
+                            <div layout="row" layout-align="end start">
+                                
+                                <span ng-if="course.fees">₹ {{course.fees}}</span>
+                            </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="width100">
+                        <div layout="row" layout-align="start start" class="width100 smallFont">
                             {{course.idealFor}}
                         </div>
-                        <div layout="row" layout-align="start start" class="width100">
+                        <div layout="row" layout-align="start start" class="width100 smallFont">
                             <div flex>
                                 {{course.mode}}
-                            </div>
-                            <div flex>
-                                {{course.duration}}
+                                <span ng-if="course.duration"> | {{course.duration}}</span>
+                                <span ng-if="course.hoursPerWeek"> | {{course.hoursPerWeek}}</span>
+                                
                             </div>
                         </div>
                     </div>
-                    <div class="width100 padding10">
+                    <div class="width100">
                         <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreCourses(exam)" class="width100 spacedLetter1" ng-show="exam.course.length > loaded.courses">
-                            SHOW MORE
+                            Show More
                         </div>
                     </div>
-                    <div layout="column" layout-align="center center" class="min20vh boxShadow padding10 marginB10 width100" ng-if="!exam.course || exam.course.length == 0">
-                        Sorry no courses are yet listed for {{exam.exam_page_name}} at {{coachingGroup.name}} 
+                    <div layout="column" layout-align="center center" class="min20vh  padding10 marginB10 width100" ng-if="!exam.course || exam.course.length == 0">
+                        Sorry no courses are yet listed for {{exam.exam_page_name}} of {{coachingGroup.name}} 
 
                     </div>
                 </div>
-                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
-                    {{exam.exam_page_name}} Results at {{coachingGroup.name}}
+                </div>
+                    
+                <div layout="column" layout-align="start start" class="subSection width100">   
+                    
+                <h3 layout="row" layout-align="start start" class="width100 h3Font subSectionHeader margin0" layout-wrap>
+                    {{exam.exam_page_name}} Results of {{coachingGroup.name}}
                 </h3>
-                <div layout="column" layout-align="start start" class="width100 paddingLR5">
+                <div layout="column" layout-align="start start" class="width100 ">
                     <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                        <div layout="column" layout-align="start start" flex="20" ng-repeat="result in exam.results" ng-if="$index< loaded.results" class="padding10">
+                        <div layout="column" layout-align="start start" flex="20" ng-repeat="result in exam.results" ng-if="$index< loaded.results" class="padding1">
                             
                             <a  ng-href="{{result.image}}" class="strip width100" data-strip-caption="{{result.name}} AIR {{result.rank}} | {{result.year}}" data-strip-options="overlap: false" data-strip-group="groupResults" title="{{result.name}}">
-                            <div ng-hide="$index >= loaded.results - 1" title="{{result.name}} AIR {{result.rank}} | {{result.year}}" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
+                            <div ng-hide="$index >= loaded.results - 1" title="{{result.name}} AIR {{result.rank}} | {{result.year}}" id="n5thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
                             </div>
-                            <div layout="column" layout-align="center center" class="smallFont width100 padding5" ng-hide="$index >= loaded.results - 1">
+                            <div layout="column" layout-align="center center" class="smallerFont width100 padding1" ng-hide="$index >= loaded.results - 1">
                                 <div layout="row" layout-align="center center" class="width100 text-center wideLine">
                                     {{result.name}}
                                 </div>
@@ -482,13 +580,14 @@
                             
 
                             
-                            <div ng-if="$index == loaded.results - 1" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
-                                <div layout="row" layout-align="center center" class="width100 text-white text-center" ng-click="loadMoreResults()" id="thumbnailText">
-                                    +{{exam.results.length - loaded.results}} more results
+                            <div ng-if="$index == loaded.results - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
+                                <div layout="column" layout-align="center center" class="width100 text-center" ng-click="loadMoreResults(exam)" id="thumbnailText">
+                                    <span class="h3Font text-white">+{{exam.results.length - loaded.results}}</span>
+                                    <span class="smallerFont text-white">{{exam.exam_page_name}} Results</span>
                                 </div>
                                 
                             </div>
-                            <div ng-if="$index == loaded.results - 1" layout="column" layout-align="center center" class="smallFont width100 padding5">
+                            <div ng-if="$index == loaded.results - 1" layout="column" layout-align="center center" class="smallerFont width100 padding1">
                                 <div layout="row" layout-align="center center" class="width100 text-center wideLine">
                                     {{result.name}}
                                 </div>
@@ -500,82 +599,80 @@
 
 
                     </div>
-                    <div class="width100 padding10">
+                    <div class="width100">
                         <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreResults(exam)" class="width100 spacedLetter1" ng-show="exam.results.length > loaded.results">
-                            SHOW MORE
+                            Show More
                         </div>
                     </div>
 
-                    <div layout="column" layout-align="center center" class="min20vh boxShadow padding10 marginB10 width100" ng-if="!exam.results || exam.results.length == 0">
-                        Sorry no results are yet available for {{exam.exam_page_name}} at {{coachingGroup.name}} 
+                    <div layout="column" layout-align="center center" class="min20vh  padding10 marginB10 width100" ng-if="!exam.results || exam.results.length == 0">
+                        Sorry no results are yet available for {{exam.exam_page_name}} of {{coachingGroup.name}} 
 
                     </div>
                 </div>    
+                </div>
                     
-                <h3 layout="row" layout-align="start start" class="width100 h3Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
-                    {{exam.exam_page_name}} Student Reviews at {{coachingGroup.name}}
+                <div layout="column" layout-align="start start" class="subSection width100">    
+                <h3 layout="row" layout-align="start start" class="width100 h3Font subSectionHeader margin0" layout-wrap>
+                    {{exam.exam_page_name}} Student Reviews of {{coachingGroup.name}}
                 </h3>
-                <div layout="column" layout-align="start start" class="width100 paddingLR5">
-                    <!--<div layout="column" layout-align="start start" class="width100 padding5" ng-repeat="review in exam.reviews" ng-if="$index< loaded.reviews" layout-wrap>
-                        <div layout="column" layout-align="start start" flex="20"  class="padding10 boxShadow width100">
-                            {{review.user.basic.name}}
-                        </div>
-
-
-                    </div>-->
-                    
-                    <div layout="column" layout-align="center start" ng-repeat="otherReview in exam.reviews" ng-if="$index< loaded.reviews" class="padding10 gainsboroBorder marginB5">
-                    <div layout="column" layout-align="start start" class="marginB10 width100">
-                        <div layout="row" layout-align="start center">
+                <div layout="column" layout-align="start start" class="width100 ">
+                    <div layout="column" layout-align="center start" ng-repeat="otherReview in exam.reviews" ng-if="$index< loaded.reviews" class="marginTB5 width100 brandBottomBorder3 paddingB10">
+                    <div layout="row" layout-xs="column" layout-align="start start" class="width100">
+                        <div layout="row" layout-align="start center" flex>
                             <div ng-if="otherReview.user.image" class="marginR10">
                             <img ng-src="{{otherReview.user.image}}" id="userPic" class="img-circle"/>
                             </div>
                             <div layout="column" layout-align="center start" class="width100">
                             <div layout="row" layout-align="start center" class="width100">
+                                
+                            <div>
                                 {{otherReview.user.basic.name}}
-                                <!--<span class="font12 textLightGrey marginL5">
-                                reviewed 
-                                <span>
-                                    {{otherReview.institute.name}} Centre
-                                    <span ng-if="thisGroup.location.area">
-                                    , {{otherReview.institute.location.area}}
-                                    </span>
-                                    <md-tooltip>{{otherReview.institute.address}}</md-tooltip>
-                                </span>
-                                <span>
-                                    on {{otherReview._created | date:'longDate'}}
-                                </span>    
-                                </span>-->
                             </div>
-                            <div layout="row" layout-align="start center" class="width100 smallFont wideLine2">
+                            <div class="reviewBadge">
+                                {{otherReview.year_of_start}}
+                            </div>
+                                
+                            <!--<span class="font12 textLightGrey marginL5">
+                            reviewed 
+                            <span>
+                                {{otherReview.institute.name}} Centre
+                                <span ng-if="thisGroup.location.area">
+                                , {{otherReview.institute.location.area}}
+                                </span>
+                                <md-tooltip>{{otherReview.institute.address}}</md-tooltip>
+                            </span>
+                            <span>
+                                on {{otherReview._created | date:'longDate'}}
+                            </span>    
+                            </span>-->
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 smallFont">
                                 {{otherReview._created | date:'longDate'}}
                                 <!--{{otherReview.institute.address}}-->
                             </div>    
                                 
                             </div>
                         </div>
-                        
-                    </div>
-                    <div layout="row" layout-align="start start" class="marginB5 width100">
-                        
-                        
-                        <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 font12" ng-repeat="reviewParam in reviewParams">
-                            <div layout="row" layout-align="start start">
-                            <div flex class="textBlack  text-left">
-                                {{reviewParam.displayname}}
-                            </div>
-                            <div layout="row" layout-align="start center" >
+                        <div layout="row" layout-align="start center" class="smallFont" flex layout-wrap>
+                        <div layout="row" layout-align="start center" ng-repeat="reviewParam in reviewParams" class="paddingL10" flex>
+                            <div layout="row" layout-align="center center" flex-gt-xs="80" flex-xs="100">
+                            <md-tooltip>
+                                {{reviewParam.displayname}}: {{otherReview[reviewParam.name] | number:1}} out of 5
+                            </md-tooltip>
+                            <div layout="row" layout-align="start center">
+                                <img ng-src="{{reviewParam.icon}}" class="n5IconSm" />        
+                            </div>    
+                            <div flex layout="row" layout-align="center center" class="">
                                 {{otherReview[reviewParam.name] | number:1}}
                             </div>
                             </div>
                         </div>
-
+                        </div>
                     </div>
-                        
-                    </div>
-                    <div layout="row" layout-align="start start" class="marginT10 wideLine">
-                        {{otherReview.text}}
+                    
+                    <div layout="row" layout-align="start start" class="marginT10 baseFont">
+                        <p ng-text-truncate="otherReview.text" ng-tt-chars-threshold="150"></p>
                     </div>
                     <div layout="row" layout-xs="column" layout-align="start center" class="width100 font12 marginT10 paddingTB10 gainsboroBorder" ng-if="otherReview.user._id == user.userId">
                         <div flex layout="row" layout-align="start center" class="bold paddingL10">
@@ -599,97 +696,160 @@
                         </div>
                     </div>
                 </div>
-                    <div class="width100 padding10">
+                    <div class="width100">
                         <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreReviews()" class="width100 spacedLetter1" ng-show="exam.reviews.length > loaded.reviews">
-                            SHOW MORE
+                            Show More
                         </div>
                     </div>
 
-                    <div layout="column" layout-align="center center" class="min20vh boxShadow padding10 marginB10 width100" ng-if="!exam.reviews || exam.reviews.length == 0">
-                        Sorry no student reviews are yet available for {{exam.exam_page_name}} courses at {{coachingGroup.name}} 
+                    <div layout="column" layout-align="center center" class="min20vh  padding10 marginB10 width100" ng-if="!exam.reviews || exam.reviews.length == 0">
+                        Sorry no student reviews are yet available for {{exam.exam_page_name}} courses of {{coachingGroup.name}} 
 
                     </div>
+                </div>    
                 </div>    
 
                 </md-tab>
 
 
             </md-tabs>
+            </md-tab-body>
             </md-tab>
         </md-tabs>
         </md-content>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100" id="photos" ng-if="coachingGroup.photo.length > 0">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
+        <div layout="column" layout-align="start start" class="width100 sectionBox" id="photos" ng-if="coachingGroup.photo.length > 0">
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader margin0" layout-wrap>
             Photos
         </h2>
-        <div layout="column" layout-align="start start" class="width100">
-            <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div flex="20" class="padding10" ng-repeat="photo in coachingGroup.photo" ng-if="$index<loaded.photo">
-                    <a  ng-href="{{photo.image}}" class="strip" data-strip-caption="{{photo.description}}" data-strip-options="overlap: false" data-strip-group="groupPhotos" title="{{photo.description}}">
-                    <div ng-hide="$index >=loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+        <div layout="column" layout-align="start start" class="width100 subSection">
+            <div layout="row" layout-align="start start" class="width100">
+                <div flex="50" class="padding1">
+                    <a  ng-href="{{coachingGroup.photo[0].image}}" class="strip" data-strip-caption="{{coachingGroup.photo[0].description}}" data-strip-options="overlap: false" data-strip-group="groupPhotos" title="{{coachingGroup.photo[0].description}}">
+                    <div id="n5thumbnailImage" ng-style="{'background-image':'url({{coachingGroup.photo[0].image}})'}">
                     </div>
 
                     </a>
-                    <div ng-show="$index == loaded.photo - 1" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="loadMorePhotos()">
+                </div>
+                <div flex layout="column" layout-align="start start">
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex ng-repeat="photo in coachingGroup.photo" ng-if="$index<loaded.photo && $index>=1 && $index <=2" class="padding1">
+                    <a  ng-href="{{photo.image}}" class="strip" data-strip-caption="{{photo.description}}" data-strip-options="overlap: false" data-strip-group="groupPhotos" title="{{photo.description}}">
+                    <div ng-hide="$index >=loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                    </div>
+
+                    </a>
+                    <div ng-show="$index == loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="loadMorePhotos()">
                         <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
                             +{{coachingGroup.photo.length - loaded.photo + 1}} more photos
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="width100 padding10">
-                <div layout="row" layout-align="center center" id="showmore" ng-click="loadMorePhotos()" class="width100 spacedLetter1" ng-show="coachingGroup.photo.length > loaded.photo">
-                    SHOW MORE
-                </div>
-            </div>
-        </div>
-        </div>
-        
-        <div layout="column" layout-align="start start" class="width100" id="videos" ng-if="coachingGroup.video.length > 0">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
-            Videos
-        </h2>
-        <div layout="column" layout-align="start start" class="width100">
-            
-            <div layout="row" layout-align="start start" class="width100 videos" layout-wrap>
-                <!--<div flex="50" ng-repeat="video in coachingGroup.video" class="padding10" ng-if="$index< loaded.video">
-                    <div ng-if="$index < loaded.video" class="width100">
-                        <div class="embed-responsive embed-responsive-16by9">
-                        <youtube-video class="" video-url="video.link" class="embed-responsive-item" player-vars="playerVars"></youtube-video>
-                        </div>
-                        
                     </div>
-                </div>-->
-                <div flex="25" ng-repeat="video in coachingGroup.video" class="padding10" ng-if="$index< loaded.video">
-                    
-                    <a class="strip video" ng-href="{{video.link}}" data-strip-options="overlap: false" data-strip-group="groupVideos">
-                        <span></span>
-                        <img ng-src="{{video.thumbnail}}" class="width100"/>
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex ng-repeat="photo in coachingGroup.photo" ng-if="$index<loaded.photo && $index>=3 && $index <=4" class="padding1">
+                    <a  ng-href="{{photo.image}}" class="strip" data-strip-caption="{{photo.description}}" data-strip-options="overlap: false" data-strip-group="groupPhotos" title="{{photo.description}}">
+                    <div ng-hide="$index >=loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                    </div>
+
                     </a>
+                    <div ng-show="$index == loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="loadMorePhotos()">
+                        <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
+                            +{{coachingGroup.photo.length - loaded.photo + 1}} more photos
+                        </div>
+                    </div>
+                    </div>
+                </div>    
                 </div>
                 
             </div>
             
-            <div class="width100 padding10">
-                <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreVideos()" class="width100 spacedLetter1" ng-show="coachingGroup.video.length > loaded.video">
-                    SHOW MORE
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+            <div flex="20" class="padding1" ng-repeat="photo in coachingGroup.photo" ng-if="$index<loaded.photo && $index >=5">
+                <a  ng-href="{{photo.image}}" class="strip" data-strip-caption="{{photo.description}}" data-strip-options="overlap: false" data-strip-group="groupPhotos" title="{{photo.description}}">
+                <div ng-hide="$index >=loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
+                </div>
+
+                </a>
+                <div ng-show="$index == loaded.photo - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="loadMorePhotos()">
+                    <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
+                        +{{coachingGroup.photo.length - loaded.photo + 1}} more photos
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="width100">
+                <div layout="row" layout-align="center center" id="showmore" ng-click="loadMorePhotos()" class="width100 spacedLetter1" ng-show="coachingGroup.photo.length > loaded.photo">
+                    Show More
                 </div>
             </div>
         </div>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100" id="faculties" ng-if="coachingGroup.faculty.length > 0">
-        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader brandBottomBorder paddingB5 bold" layout-wrap>
-            Faculty at {{coachingGroup.name}}
+        <div layout="column" layout-align="start start" class="width100 sectionBox" id="videos" ng-if="coachingGroup.video.length > 0">
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader margin0" layout-wrap>
+            Videos
         </h2>
-        <div layout="column" layout-align="start start" class="width100">
+        <div layout="column" layout-align="start start" class="width100 subSection">
+            
+            
+            <div layout="row" layout-align="start start" class="width100">
+                <div flex="50" class="padding1">
+                    <a class="strip video" ng-href="{{coachingGroup.video[0].link}}" data-strip-options="overlap: false" data-strip-group="groupVideos">
+                        <span></span>
+                        <img ng-src="{{coachingGroup.video[0].thumbnail}}" class="width100"/>
+                    </a>
+                </div>
+                <div flex layout="column" layout-align="start start">
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex ng-repeat="video in coachingGroup.video" ng-if="$index<loaded.video && $index>=1 && $index <=2" class="padding1">
+                    <a class="strip video" ng-href="{{video.link}}" data-strip-options="overlap: false" data-strip-group="groupVideos">
+                        <span></span>
+                        <img ng-src="{{video.thumbnail}}" class="width100"/>
+                    </a>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex ng-repeat="video in coachingGroup.video" ng-if="$index<loaded.video && $index>=3 && $index <=4" class="padding1">
+                    <a class="strip video" ng-href="{{video.link}}" data-strip-options="overlap: false" data-strip-group="groupVideos">
+                        <span></span>
+                        <img ng-src="{{video.thumbnail}}" class="width100"/>
+                    </a>
+                    </div>
+                </div>    
+                </div>
+                
+            </div>
             
             <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div flex="25" ng-repeat="faculty in coachingGroup.faculty" ng-if="$index < loaded.faculty" class="padding10">
+            <div flex="20" class="padding1" ng-repeat="video in coachingGroup.video" ng-if="$index<loaded.video && $index >=5">
+                <a class="strip video" ng-href="{{video.link}}" data-strip-options="overlap: false" data-strip-group="groupVideos">
+                    <span></span>
+                    <img ng-src="{{video.thumbnail}}" class="width100"/>
+                </a>
+            </div>
+            </div>
+            
+            
+            <div class="width100">
+                <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreVideos()" class="width100 spacedLetter1" ng-show="coachingGroup.video.length > loaded.video">
+                    Show More
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <div layout="column" layout-align="start start" class="width100 sectionBox" id="faculties" ng-if="coachingGroup.faculty.length > 0">
+        <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader margin0" layout-wrap>
+            Faculty of {{coachingGroup.name}}
+        </h2>
+        <div layout="column" layout-align="start start" class="width100 subSection">
+            
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                <div flex="20" ng-repeat="faculty in coachingGroup.faculty" ng-if="$index < loaded.faculty" class="padding1">
                     <a  ng-href="{{faculty.image}}" class="strip" data-strip-caption="{{faculty.name}} {{faculty.description}}" data-strip-options="overlap: false" data-strip-group="groupFaculty" data-strip-options="overlap: false" data-strip-group-options="minWidth: 100">
-                    <div ng-hide="$index >=loaded.faculty - 1" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
+                    <div ng-hide="$index >=loaded.faculty - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
                     </div>
                     <div layout="column" layout-align="center center" class="smallFont width100" ng-hide="$index >= loaded.faculty - 1">
                     <div layout="row" layout-align="center center" class="text-center width100">
@@ -700,7 +860,7 @@
                     </div>-->
                 </div>
                     </a>
-                    <div ng-show="$index == loaded.faculty - 1" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}" ng-click="loadMoreFaculty()">
+                    <div ng-show="$index == loaded.faculty - 1" id="n5thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}" ng-click="loadMoreFaculty()">
                         <div layout="row" layout-align="center center" class="width100 text-white text-center" id="thumbnailText">
                             +{{coachingGroup.faculty.length - loaded.faculty + 1}} more faculties
                         </div>
@@ -708,33 +868,12 @@
                 </div>
             </div>
             
-            <!--<div layout="row" layout-align="start start" class="width100" layout-wrap>
-                <div layout="column" layout-align="start start" flex="25" ng-repeat="faculty in coachingGroup.faculty" ng-if="$index < loaded.faculty" class="padding10">
-                    <div ng-hide="$index >= loaded.faculty - 1" id="thumbnailImage" title="{{faculty.name}}" ng-style="{'background-image':'url({{faculty.image}})'}">
-                    </div>
-
-                    <div layout="column" layout-align="center center" class="smallFont width100" ng-hide="$index >= loaded.faculty - 1">
-                        <div layout="row" layout-align="center center" class="text-center width100">
-                            {{faculty.name}}
-                        </div>
-                        <div layout="row" layout-align="center center" class=" text-center smallerFont width100" layout-wrap>
-                            {{faculty.description}}
-                        </div>
-                    </div>
-                    <div ng-if="$index == loaded.faculty - 1" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
-                        <div layout="row" layout-align="center center" class="width100 text-white" id="thumbnailText">
-                            +{{coachingGroup.faculty.length - loaded.faculty}} more results
-                        </div>
-                    </div>
-
-                </div>
-            </div>-->
-            <div class="width100 padding10">
+            <div class="width100">
                 <div layout="row" layout-align="center center" id="showmore" ng-click="loadMoreFaculty()" class="width100 spacedLetter1" ng-show="coachingGroup.faculty.length > loaded.faculty">
-                    SHOW MORE
+                    Show More
                 </div>
             </div>
-            <div layout="column" layout-align="center center" class="min20vh boxShadow padding10 marginB10 width100" ng-if="!coachingGroup.faculty || coachingGroup.faculty.length == 0">
+            <div layout="column" layout-align="center center" class="min20vh  padding10 marginB10 width100" ng-if="!coachingGroup.faculty || coachingGroup.faculty.length == 0">
                 Sorry, Exambazaar has no faculty information for {{coachingGroup.name}}
 
             </div>
@@ -746,9 +885,11 @@
     <div hide-xs flex="5">
     </div>
     <div flex="25" layout="column" layout-align="start start" class="width100" hide-xs>
-        <div layout="column" layout-align="start start" class="width100 subSection">
-            <div class="h2Font width100 bold brandBottomBorder">Other Centres</div>
-            <div layout="column" layout-align="start start" class="width100 subSection">
+        <div layout="column" layout-align="start start" class="width100 sectionBox ">
+            <h2 layout="row" layout-align="start start" class="width100 h2Font sectionHeader margin0" layout-wrap>
+                Other Centres
+            </h2>
+            <div layout="column" layout-align="start start" class="width100">
                 <div layout="column" layout-align="start start" class="width100 smallerFont" ng-repeat="centre in cityGroupCentres">
                     <div class="width100">{{centre.groupName}}<span ng-if="centre.location.area">, {{centre.location.area}}, {{centre.city}}</span></div>
                     <div ng-if="!centre.location.area" class="smallerFont width100">{{centre.address}}, {{centre.city}}<span ng-if="centre.pincode">, {{centre.pincode}}</span></div>
@@ -756,9 +897,9 @@
             </div>
         </div>
         
-        <div class="width100 subSection">Nearby Coachings</div>
     </div>
     <div hide-xs flex="5">
     </div>
+</div>
 </div>
 </div>

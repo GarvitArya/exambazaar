@@ -4544,13 +4544,16 @@ router.post('/coachingGroup2', function(req, res) {
                 if(thisCoaching.website && thisCoaching.website.length > 0 && !thisGroup.websiteUrl){
                     var websiteUrl = thisCoaching.website[0].trim();
                     var prefix = 'http://';
-                    if (websiteUrl.substr(0, prefix.length) !== prefix){
+                    if (websiteUrl != '' && websiteUrl.substr(0, prefix.length) !== prefix){
                         var prefix2 = 'https://';
                         if (websiteUrl.substr(0, prefix2.length) !== prefix2){
                             websiteUrl = prefix + websiteUrl;
                         }
                     }
-                    thisGroup.websiteUrl = websiteUrl;
+                    if(websiteUrl != ''){
+                        thisGroup.websiteUrl = websiteUrl;
+                    }
+                    
                 }
                 if(thisCoaching.facebookPage && thisCoaching.facebookPage != '' && !thisGroup.facebookPage){
                     var websiteUrl = thisCoaching.facebookPage.trim();
@@ -6360,11 +6363,59 @@ router.get('/generateurlslugs', function(req, res) {
         'subpremise',
     ];
     var googleMethods = [
-        'googlePlaceAddress',
+        'googlePlaceInfoAddress',
         'newGooglePlaceAddress',
-        'textGooglePlaceAddress',
         'wideGooglePlaceAddress',
+        'textGooglePlaceAddress',
+        
     ];
+    
+    /*
+    setInterval(function(){
+    var allCoachings = coaching
+        .find({googlePlaceInfo: {$exists: true}, disabled: false, googlePlaceInfoAddress: {$exists: false}}, {googlePlaceInfo: 1, areaslug: 1})
+        .limit(1000)
+        //.deepPopulate('location')
+        .exec(function (err, allCoachings) {
+        if (!err){
+            var nCoachings = allCoachings.length;
+            var counter = 0;
+            console.log('There are '  +allCoachings.length + " coachings!");
+            var allTypes = [];
+            allCoachings.forEach(function(thisCoaching, index){
+                thisCoaching.googlePlaceInfo.address_components.forEach(function(thisAddressComponent, acindex){
+                    var addressTypes = thisAddressComponent.types;
+                    var thisType = '';
+                    if(addressTypes && addressTypes.length > 0){
+                        thisType = addressTypes[0];
+                    }
+                    
+                    if(addressFields.indexOf(thisType) != -1){
+                        if(!thisCoaching.googlePlaceInfoAddress){
+                            thisCoaching.googlePlaceInfoAddress = {};
+                        }
+                        thisCoaching.googlePlaceInfoAddress[thisType] = thisAddressComponent.long_name;
+                        
+                    }
+                });
+                thisCoaching.save(function(err, thisCoaching) {
+                if (err) return console.error(err);
+                    counter += 1;
+                    console.log(counter + ". Coaching saved " + thisCoaching._id);
+                    
+                    if(counter == nCoachings){
+                        console.log("All Done");
+                    }
+                });
+                
+            });
+            
+            
+        } else {throw err;}
+    });
+    }, 30000);    
+    */    
+    
     /*var allCoachings = coaching
         .find({newGooglePlace: {$exists: true}, disabled: false, newGooglePlaceAddress: {$exists: true}}, {newGooglePlace: 1, areaslug: 1})
         .limit(1000)
@@ -6489,8 +6540,13 @@ router.get('/generateurlslugs', function(req, res) {
     });
     }, 30000);*/
     
-    var allCoachings = coaching
-        .find( { disabled: false, sublocality: {$exists: false}, $or: [ {newGooglePlaceAddress: {$exists: true}}, {googlePlaceAddress: {$exists: true}}, {wideGooglePlaceAddress: {$exists: true}}, {textGooglePlaceAddress: {$exists: true}} ] },  {name: 1, address: 1, wideGooglePlaceAddress: 1, newGooglePlaceAddress: 1, googlePlaceAddress: 1, textGooglePlaceAddress: 1, sublocality: 1})
+       
+    
+    //, sublocality: {$exists: false},
+    //_id: "587270cf89517d2a6c260d40", 
+        
+    /*var allCoachings = coaching
+        .find( { disabled: false, $or: [ {newGooglePlaceAddress: {$exists: true}}, {googlePlaceInfoAddress: {$exists: true}}, {wideGooglePlaceAddress: {$exists: true}}, {textGooglePlaceAddress: {$exists: true}} ] },  {name: 1, address: 1, wideGooglePlaceAddress: 1, newGooglePlaceAddress: 1, googlePlaceInfoAddress: 1, textGooglePlaceAddress: 1, sublocality: 1})
         //.limit(1000)
         .exec(function (err, allCoachings) {
         if (!err){
@@ -6502,6 +6558,7 @@ router.get('/generateurlslugs', function(req, res) {
                 var found = false;
                 googleMethods.forEach(function(thisMethod, mindex){
                     if(thisCoaching[thisMethod] && thisCoaching[thisMethod]['sublocality_level_1'] && !found){
+                        //console.log(thisMethod);
                         found = true;
                         if(!thisCoaching.sublocality){
                             thisCoaching.sublocality = {};
@@ -6518,7 +6575,7 @@ router.get('/generateurlslugs', function(req, res) {
             });
             
         }
-    });
+    });*/
 });
 
 router.get('/findsublocality', function(req, res) {

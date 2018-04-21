@@ -1142,11 +1142,11 @@ router.get('/googlePlacesById', function(req, res) {
 router.get('/googlePlacesInfoById', function(req, res) {
     res.json('Done');
     var GooglePlaces = require('google-places');
-
+    console.log('Starting Google Place Info');
     var limit = 100;
     var skip = 0;
     setInterval(function(){
-    
+    console.log(skip + " " + limit);
     var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
     var allProviders = coaching.find( {googlePlace: {$exists: true}, googlePlaceInfo: {$exists: false}}, {googlePlace: 1, googlePlaceInfo: 1},function(err, allProviders) {
     if (!err){
@@ -1185,7 +1185,7 @@ router.get('/googlePlacesInfoById', function(req, res) {
         
     } else {throw err;}
     }).limit(limit).skip(skip);
-    skip += limit;    
+    //skip += limit;    
     }, 20000);    
     
 });

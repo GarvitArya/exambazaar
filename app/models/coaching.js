@@ -232,6 +232,7 @@ var coachingSchema = mongoose.Schema({
     wideGooglePlace:Schema.Types.Mixed,
     textGooglePlace:Schema.Types.Mixed,
     textBasedGooglePlace:Schema.Types.Mixed,
+    googlePlaceInfoAddress:Schema.Types.Mixed,
     newGooglePlaceAddress:Schema.Types.Mixed,
     wideGooglePlaceAddress:Schema.Types.Mixed,
     textGooglePlaceAddress:Schema.Types.Mixed,

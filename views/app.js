@@ -107,6 +107,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
+              name: 'NgTruncate',
+              files: [
+                    'ng-text-truncate.js',
+              ]
+            },  
+              
+            {
               name: 'angularScreenfull',
               files: [
                     'screenfull.js',
@@ -2278,6 +2285,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.googlePlacesById = function() {
             return $http.get('/api/masters/googlePlacesById/');
+        };
+        this.googlePlacesInfoById = function() {
+            return $http.get('/api/masters/googlePlacesInfoById/');
         };
         this.wideGooglePlaceById = function() {
             return $http.get('/api/masters/wideGooglePlaceById/');
@@ -7760,6 +7770,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
      
     exambazaar.controller("n5Controller", 
     [ '$scope','$rootScope', 'coachingService', 'thisGroup', '$cookies', 'UserService', 'viewService', 'thisGroupResults', 'cityGroupCentres', 'thisGroupReviews', '$document', '$stateParams', function($scope,$rootScope, coachingService, thisGroup, $cookies, UserService, viewService,thisGroupResults, cityGroupCentres, thisGroupReviews, $document, $stateParams){
+        $scope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
         console.log($stateParams);
         if($stateParams.exam){
             $scope.selectedExam = $stateParams.exam;
@@ -7855,15 +7866,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
         $scope.reviewParams = [
-            {name: "faculty", displayname:"Faculty and Teaching Experience"},
-            {name: "competitive_environment", displayname:"Competitive Environment"},
-            {name: "quality_of_material", displayname:"Quality of material"},
-            {name: "infrastructure", displayname:"Infrastructure"},
+            {name: "faculty", displayname:"Faculty and Teaching Experience", shortname:"Faculty", icon: 'images/icons/n5/review/faculty.png'},
+            {name: "competitive_environment", displayname:"Competitive Environment", shortname:"Competition", icon: 'images/icons/n5/review/competition.png'},
+            {name: "quality_of_material", displayname:"Quality of material", shortname:"Material", icon: 'images/icons/n5/review/material.png'},
+            {name: "infrastructure", displayname:"Infrastructure", shortname:"Infrastructure", icon: 'images/icons/n5/review/infrastructure.png'},
         ];
-        var section3 = angular.element(document.getElementById('section-3'));
+        /*var section3 = angular.element(document.getElementById('section-3'));
         $scope.toSection3 = function() {
           $document.scrollToElementAnimated(section3, offset, duration);
-        }
+        }*/
         
         
         
@@ -7898,7 +7909,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             reviews: 4,    
             courses: 2,    
             faculty: 8,    
-            video: 4,    
+            video: 5,    
         };
         
         $scope.loadMorePhotos = function(){
@@ -7920,7 +7931,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
         $scope.loadMoreVideos = function(){
-            var loadMore = 4;
+            var loadMore = 5;
             if($scope.coachingGroup.video.length > $scope.loaded.video){
                 $scope.loaded.video += loadMore;
             }
@@ -7994,7 +8005,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
         }
-        
+        if($scope.coachingGroup && $scope.coachingGroup.facilities){
+            $scope.facilities.forEach(function(facility, findex){
+                if($scope.coachingGroup.facilities[facility.field]){
+                    facility.available = true;
+                }else{
+                    facility.available = false;
+                }
+            });
+        }
         if($scope.coachingGroup && $scope.coachingGroup.streamExams && $scope.coachingGroup.streamExams.length > 0){
             $scope.activeStream = $scope.coachingGroup.streamExams[0];
             if($scope.coachingGroup.streamExams[0].exams && $scope.coachingGroup.streamExams[0].exams.length > 0){
@@ -8024,6 +8043,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var thumb = getParameterByName(thisVideo.link, 'v');
                 var url = 'http://img.youtube.com/vi/' + thumb + '/hqdefault.jpg';
                 thisVideo.thumbnail = url;
+                console.log(url);
                 
             });
         }
@@ -19246,6 +19266,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });   
             };
+            $scope.googlePlacesInfoById = function(){
+                MasterService.googlePlacesInfoById().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });   
+            };
+            
             $scope.wideGooglePlaceById = function(){
                 MasterService.wideGooglePlaceById().success(function (data, status, headers) {
                     console.log(data);
@@ -37817,7 +37846,9 @@ function getLatLng(thisData) {
                 NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngRateit'], {serie: true});
                 }],
-                
+                NgTruncate: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['NgTruncate'], {serie: true});
+                }],
             }
         })
         .state('showGroupReviews', {
